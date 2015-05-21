@@ -1,0 +1,24 @@
+{% extends './master.html' %}
+{% block content %}
+
+ <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Blank</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                    <form action="" method="POST" class="form-group">
+                        <input type="text" name="domain" placeholder="Enter domain name" class="form-control domain">
+                        <button type="button" class="btn btn-default scan">Scan </button>
+                    </form>
+                    <div class="results"></div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+{% endblock %}
