@@ -13,7 +13,28 @@
                         <input type="text" name="domain" placeholder="Enter domain name" class="form-control domain">
                         <button type="button" class="btn btn-default scan">Scan </button>
                     </form>
-                    <div class="results"></div>
+                    <div class="col-lg-6 results-panel hide">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bell fa-fw"></i> MX Servers
+                            </div>
+                            <div class="panel-body">
+                                <ul class="list-group results-body">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 blacklist-results-panel hide">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bell fa-fw"></i> Blacklist Results 
+                            </div>
+                            <div class="panel-body">
+                                <ul class="list-group blacklist-results-body">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.row -->
             </div>
