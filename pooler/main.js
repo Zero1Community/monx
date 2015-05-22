@@ -56,6 +56,7 @@ var API_POST_URL = "http://monx.zero1.al:31416/api/service_data";
 
 //10 workers 
 
+// duhen lidh callbaqet qe te mos ndodhin te gjithe njeheresh / ose jo :P 
 
 amqp.connect('amqp://localhost').then(function(conn) {
   process.once('SIGINT', function() { conn.close(); });
@@ -86,37 +87,24 @@ processWork = function(tC,callback){
 	if(tC.type === "smtp_check"){
 		monxSmtp(tC);
 	}
+	if(tC.type === "pop_check"){
+		monxPop(tC);
+	}
+
+	if(tC.type === "blacklist_check"){
+		monxBlacklist(tC);
+	}
+	if(tC.type === "icmp_check"){
+		//
+	}
+
 }
 
 
-
-
-retreive_configs = function(){
-	var http = require('http');
-	console.log(debug ? "Getting " + api_url : "");
-	console.log(debug ? "Getting " + http : "");
-
-	http.get(api_url, function(res) {
-	    var body = '';
-		console.log(debug ? "Getting " + res.statusCode + " as status code from API " : "");
-	    
-	    res.on('data', function(chunk) {
-	        body += chunk;
-	    });
-
-	    res.on('end', function() {
-	        var node_config = JSON.parse(body)
-	        console.log("Got response: ", node_config);
-	    });
-	}).on('error', function(e) {
-	      console.log("Got error: ", e);
-	});
-	//node_config ? console.log("Got JSON obj") : return "-1";
-}
 
 // posting data to API function
-post_to_api = function(){
-
+postToAPI = function(){
+// postojm pra te api
 }
 
 // smtp_check
@@ -157,29 +145,197 @@ monxSmtp = function(smtpObject,callback){
 }
 
 // pop_check
-
-monxPop = function(){
-	var target = "127.0.0.1";
-	var target_port = 110;
+monxPop = function(popObject,callback){
 	var net = require('net');
-	var client = net.connect({hostname: target,port: target_port},function(){ //'connect' listener
-			console.log('OK ');	//client.write('world!\r\n');
+	var popResult = "";
+	var start = Date.now();
+	// per tu implementu timeouti
+	var client = net.connect({hostname: popObject.host,port: popObject.port},function(){ //'connect' listener
+			console.log('Sikur po lidhemi ');	//client.write('world!\r\n');
+		//var delta = (Date.now()) - start;
+			//smtp_result = "Connected ";
+			//smtp_result += "Connection Time : "+ delta + " ms";
 		});
 	client.on("error", function(err) { 
-		console.log("UNABLE TO CONNECT");
-		client.end();
+		console.log("Unable to Connect");client.end();
+		popResult = "Unable to Connect";
 	});
-	
+	client.on("timeout", function(err) { 
+		console.log("Connection Timeouted");client.end();
+		popResult = "Connection Timeouted";
+	});
+
 	client.on('data', function(data) {
-		console.log(data.toString());
+		//console.log(data.toString());
+		popResult = "Got data :" + data.toString();
 		client.end();
 	});
-	
 	client.on('end', function() {
-		// ktu duhet bo returni me ti 
-		// dhe jarebi duhet implementu timeout i me nej event me siper 
-		console.log('Disconnected from server');
+		var delta = (Date.now()) - start;
+		//console.log('Disconnected from server. Session time: ' + delta + " ms");
+		popResult += 'Disconnected from server. Session time: ' + delta + " ms";
+		//callback(smtp_result);
+		console.log(popResult);
 	});
+}
+
+// blacklist module
+monxBlacklist = function(blacklistObject,callback){
+	var dns = require('native-dns');
+	var async = require('async');
+
+	if(debug){
+		console.log("Checking blacklist for ip " + blacklistObject.ip);
+	}
+
+	var checkRBL = function(ip_to_check, callback){
+
+	var servers = [
+	  'spam.spamrats.com',
+	  'psbl.surriel.com',
+	  'pss.spambusters.org.ar',
+	  'rbl.schulte.org',
+	  'rbl.snark.net',
+	  'recent.dnsbl.sorbs.net',
+	  'relays.bl.gweep.ca',
+	  'relays.bl.kundenserver.de',
+	  'relays.nether.net',
+	  'rsbl.aupads.org',
+	  'sbl.spamhaus.org',
+	  'smtp.dnsbl.sorbs.net',
+	  'socks.dnsbl.sorbs.net',
+	  'spam.dnsbl.sorbs.net',
+	  'spam.olsentech.net',
+	  'spamguard.leadmon.net',
+	  'spamsources.fabel.dk',
+	  'tor.ahbl.org',
+	  'tor.dnsbl.sectoor.de',
+	  'ubl.unsubscore.com',
+	  'web.dnsbl.sorbs.net',
+	  'xbl.spamhaus.org',
+	  'zen.spamhaus.org',
+	  'zombie.dnsbl.sorbs.net',
+	  'dnsbl.inps.de',
+	  'dyn.shlink.org',
+	  'rbl.megarbl.net',
+	  'bl.mailspike.net',
+	  'aspews.ext.sorbs.net',
+	  'list.blogspambl.com',
+	  'dnsbl.burnt-tech.com',
+	  'tor.dan.me.uk',
+	  'torexit.dan.me.uk',
+	  'rbl.dns-servicios.com',
+	  'bl.drmx.org',
+	  'rbl.efnetrbl.org',
+	  'dnsrbl.swinog.ch',
+	  'lists.dsbl.org',
+	  'rbl.megarbl.net',
+	  'z.mailspike.net',
+	  'bl.mailspike.net',
+	  'dnsbl.madavi.de ',
+	  'ubl.lashback.com',
+	  'combined.rbl.msrbl.net',
+	  'images.rbl.msrbl.net',
+	  'virus.rbl.msrbl.net',
+	  'spam.rbl.msrbl.net',
+	  'phishing.rbl.msrbl.net',
+	  'orvedb.aupads.org',
+	  '0spamtrust.fusionzero.com',
+	  'in-adr.myfasttelco.com',
+	  'access.redhawk.org',
+	  'b.barracudacentral.org',
+	  'bl.shlink.org',
+	  'bl.spamcannibal.org',
+	  'bl.spamcop.net',
+	  'blackholes.wirehub.net',
+	  'blacklist.sci.kun.nl',
+	  'block.dnsbl.sorbs.net',
+	  'blocked.hilli.dk',
+	  'bogons.cymru.com',
+	  'cart00ney.surriel.com',
+	  'cbl.abuseat.org',
+	  'cblless.anti-spam.org.cn',
+	  'dev.null.dk',
+	  'dialup.blacklist.jippg.org',
+	  'dialups.mail-abuse.org',
+	  'dialups.visi.com',
+	  'dnsbl.abuse.ch',
+	  'dnsbl.anticaptcha.net',
+	  'dnsbl.antispam.or.id',
+	  'dnsbl.dronebl.org',
+	  'dnsbl.justspam.org',
+	  'dnsbl.kempt.net',
+	  'dnsbl.sorbs.net',
+	  'dnsbl.tornevall.org',
+	  'dnsbl-1.uceprotect.net',
+	  'duinv.aupads.org',
+	  'dnsbl-2.uceprotect.net',
+	  'dnsbl-3.uceprotect.net',
+	  'dul.dnsbl.sorbs.net',
+	  'escalations.dnsbl.sorbs.net',
+	  'hil.habeas.com',
+	  'black.junkemailfilter.com',
+	  'http.dnsbl.sorbs.net',
+	  'intruders.docs.uu.se',
+	  'ips.backscatterer.org',
+	  'korea.services.net',
+	  'l2.apews.org',
+	  'mail-abuse.blacklist.jippg.org',
+	  'misc.dnsbl.sorbs.net',
+	  'msgid.bl.gweep.ca',
+	  'new.dnsbl.sorbs.net',
+	  'no-more-funn.moensted.dk',
+	  'old.dnsbl.sorbs.net',
+	  'opm.tornevall.org',
+	  'pbl.spamhaus.org',
+	  'proxy.bl.gweep.ca',
+	  'dyna.spamrats.com'
+	 ];
+
+	var results = [];
+	var default_timeout = 1000;
+
+	var check_dns = function(rbl_server, doneCallback){
+
+	  var start = Date.now();
+	  var req = dns.Request({
+	    question: dns.Question({name: ip_to_check.split('.').reverse().join('.') + "." + rbl_server, type: 'A'}),
+	    server: { address: '208.67.222.222', port: 53, type: 'udp' },
+	    timeout: default_timeout,
+	  });
+	  if(debug){
+	  	console.log(blacklistObject.ip.split('.').reverse().join('.') + "." + rbl_server);
+	  }
+	  req.on('timeout', function () {
+	    var delta = (Date.now()) - start;
+	    results.push({server: rbl_server, status : 2, res_time : delta});
+	  });
+
+	  req.on('message', function (err, answer) {
+	    if(answer.answer.length < 1){
+	        var delta = (Date.now()) - start;
+	        results.push({server: rbl_server, status : 0, res_time : delta});
+	    }
+	    else{
+	        var delta = (Date.now()) - start;
+	        results.push({server: rbl_server, status : 1, res_time : delta});
+	      };
+	  });
+
+	  req.on('end', function () {
+	    return doneCallback(null);
+	  });
+
+	  req.send();
+	}
+
+	async.each(servers, check_dns, function(err) {
+	  //callback(results);
+	  console.log(results);
+	});
+
+	}
+	checkRBL(blacklistObject.ip);
 }
 
 // http_status
@@ -242,7 +398,7 @@ monx_http_match = function(url){
 	//};
 
 
-	http.request("http://arbl.zero1.al/", function(response) {
+	http.request(url, function(response) {
 			//console.log(response.statusCode)
 			
 			switch(true){
@@ -310,13 +466,6 @@ monx_ping = function(){
 	};	
 }
 
-
-
-
-//monx_ping()
-//monx_http_stat()
-//monx_http_match()
-//monx_pop()
 
 // localSmtp = {
 // 	target : "127.0.0.1",
