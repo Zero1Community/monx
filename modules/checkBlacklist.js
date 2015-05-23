@@ -1,7 +1,7 @@
 var dns = require('native-dns');
 var async = require('async');
 
-var checkRBL = function(ip_to_check, callback){
+var checkRBL = function(host, callback){
 
 var servers = [
   'spam.spamrats.com',
@@ -105,8 +105,11 @@ var servers = [
   'dyna.spamrats.com'
  ];
 
+
+
 var results = [];
 var default_timeout = 1000;
+var ip_to_check;
 
 var check_dns = function(rbl_server, doneCallback){
 
@@ -140,11 +143,39 @@ var check_dns = function(rbl_server, doneCallback){
   req.send();
 }
 
-async.each(servers, check_dns, function(err) {
-  callback(results);
+host_to_scan(host, function(){
+  async.each(servers, check_dns, function(err) {
+    callback(results);
+  });
 });
 
-
 }
+
+function host_to_scan(host, callback) {
+
+  if(!validateIp(host)) {
+    dns.resolve4(host, function(error, addr) {
+      if(error) {
+        console.log('Error resolving', err);
+      } else {
+        console.log(addr);
+        ip_to_check = addr[0];
+      }
+      callback();
+  });
+  } else {
+    ip_to_check = host;
+    callback();
+  }
+}
+
+function validateIp(ip)   
+{  
+  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip))  
+  {  
+    return true;
+  }  
+  return false;  
+} 
 
 module.exports = checkRBL;

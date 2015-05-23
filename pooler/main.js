@@ -4,58 +4,19 @@ var amqp = require('amqplib');
 // dhe zoti tha: prit i her mos ta vejm direkt ne production 
 var debug = 1;
 
-
-var api_url = "http://monx.zero1.al/api/v1/services";
-var API_POST_URL = "http://monx.zero1.al:31416/api/service_data";
-
-
-// funx 1 nga 1 ktu
-// objekti i tipit monitorim
-
+//var api_url = "http://monx.zero1.al/api/v1/services";
+//var API_POST_URL = "http://monx.zero1.al:31416/api/service_data";
 
 // per tu shtu:
+// throttle (kjo behet ne vend tjeter faktikisht)
+
 // web analysis per te identifiku sensoret automatikisht
 // tipit 
 // dns, web, match, snmpt,pop, etj..
 
+// SMS, Twitter, Email , Makjato , Kafe..
 
 //check if we have root
-
-// SENSORET:
-// http_load_time
-// blacklist check
-
-// # dom1.com 1
-// # dom2.com 5
-
-// [ 
-// 0
-// dom1
-// 1
-// dom1
-// 2
-// dom1
-// 3
-// dom1
-// 4
-// dom1 
-// 5
-// dom1
-// dom2
-// 6
-// dom1
-// 7
-// dom1
-// 8
-// dom1
-// 9
-// dom1 
-// dom2
-// 10
-// ]
-
-//10 workers 
-
 // duhen lidh callbaqet qe te mos ndodhin te gjithe njeheresh / ose jo :P 
 
 amqp.connect('amqp://localhost').then(function(conn) {
@@ -82,25 +43,87 @@ amqp.connect('amqp://localhost').then(function(conn) {
 }).then(null, console.warn);
 
 
+// duhet nje seksion per analysis
+// tipit blacklista, skano portat, shif ssl-ne
+
 
 processWork = function(tC,callback){
 	if(tC.type === "smtp_check"){
 		monxSmtp(tC);
 	}
+	if(tC.type === "imap_check"){
+		//monxSmtp(tC);
+	}
 	if(tC.type === "pop_check"){
 		monxPop(tC);
 	}
-
+	if(tC.type === "ftp_check"){
+		//monxBlacklist(tC);
+	}
+	if(tC.type === "btc_price_check"){
+		//monxBlacklist(tC);
+	}
+	if(tC.type === "cpannel_check"){
+		//monxBlacklist(tC);
+	}
+	if(tC.type === "mobile_app_check"){
+		//monxBlacklist(tC);
+	}
+	if(tC.type === "wordpress_ver_check"){
+		//monxBlacklist(tC);
+	}
+	// if(tC.type === "snmp_check"){
+	// 	//monxBlacklist(tC);
+	// }	
+	// if(tC.type === "ovpn_check"){
+	// 	//monxBlacklist(tC);
+	// }	
+	// if(tC.type === "ipsec_check"){
+	// 	//monxBlacklist(tC);
+	// }	
+	if(tC.type === "ssh_check"){
+		//monxBlacklist(tC);
+	}
 	if(tC.type === "blacklist_check"){
 		monxBlacklist(tC);
 	}
 	if(tC.type === "icmp_check"){
+		//monxIcmpCheck(tc)
+	}
+	if(tC.type === "dns_status_check"){
+		//monxDnsStatusCheck(tC)
+	}
+	if(tC.type === "dns_record_check"){
+		// kjo gjeja me duhet mua
+		//monxDnsStatusCheck(tC)
+	}
+	if(tC.type === "generic_routine_task_check"){
+		// test
 		//
 	}
+	if(tC.type === "dns_probpg_check"){
+		// query per nje record neper servera te ndryshem
+		// a eshte updatuar apo jo
+		// me harte e me te gjitha
+		// to-do: me gjet liste totale DNSsh sipas shteve psh
+		//monxDnsPropagandationStatusCheck(tC);
+	}
+	if(tC.type === "http_load_time"){
+		//monxHttpLoadTime(tC)
+	}
+	if(tC.type === "api_check"){
+		// post i gjo custom dhe merr dicka custom
+		//monxApiCheck(tC)
+	}
+	if(tC.type === "ssl_expiration_check"){
+		//monxSslCheck(tC)
+	}
+	if(tC.type === "ssl_security_check"){
+		//monxSslCheck(tC)
+	}
+
 
 }
-
-
 
 // posting data to API function
 postToAPI = function(){
@@ -183,9 +206,27 @@ monxPop = function(popObject,callback){
 monxBlacklist = function(blacklistObject,callback){
 	var dns = require('native-dns');
 	var async = require('async');
+	var dns = require('dns');
 
+	dns.resolve4('www.google.com', function (err, addresses) {
+	  if (err) throw err;
+
+	  console.log('addresses: ' + JSON.stringify(addresses));
+
+	  addresses.forEach(function (a) {
+	    dns.reverse(a, function (err, hostnames) {
+	      if (err) {
+	        throw err;
+	      }
+
+	      console.log('reverse for ' + a + ': ' + JSON.stringify(hostnames));
+	    });
+	  });
+	});
+	
+	 //blacklistObject.
 	if(debug){
-		console.log("Checking blacklist for ip " + blacklistObject.ip);
+		console.log("Checking blacklist for ip " + );
 	}
 
 	var checkRBL = function(ip_to_check, callback){
@@ -339,39 +380,42 @@ monxBlacklist = function(blacklistObject,callback){
 }
 
 // http_status
-monx_http_stat = function(url){
-	var url = "http://arbl.zero1.al";
+monxHttpStat = function(statObject,callback){
 	var http = url.match(/^https/) ? require('https') : require('http');
-
+	var httpStatOutcome = "";
 	// nqs marrim statuscode 3XX (redirect) duhet ta ndjekim linkun ?
 	// nqs po , 1 her
 	// per gjona shtese aktivizojme ket
-	//var options = {
-	//	  host: ''
-	//};
-
-   
-	http.request("http://www.zero1.al/", function(response) {
+	   
+	http.request(statObject.url, function(response) {
 			//console.log(response.statusCode)
 			
 			switch(true){
 				case ( response.statusCode >= 200 && response.statusCode< 300 ):
-					console.log("GOT 200 CODE - OK");
+					console.log("200 - OK");
+					httpStatOutcome = "200 - OK";
 				break;
 				case (response.statusCode >= 300 && response.statusCode < 400 ):
-					console.log("GOT 300 CODE - REDIRECT");
+					console.log("300 - Redirect");
+					httpStatOutcome = "300 - Redirect";
 					break;
 				case (response.statusCode >= 400 && response.statusCode < 500 ):
-					console.log("GOT 400 CODE - CLIENT MESSED UP SOMETHING");
+					console.log("400 - Clilent Request Error / Invalid Request");
+					httpStatOutcome = "400 - Clilent Request Error / Invalid Request";
 					break;
 				case (response.statusCode >= 500 && response.statusCode < 600 ):
-					console.log("GOT 500 CODE - SERVER MESSED UP SOMETHING");
+					console.log("500- Internal Server Error");
+					httpStatOutcome = "500- Internal Server Error";
 					break;
 				default:
-					console.log("GOT INVALID STATUS CODE");
+					console.log("Invalid Status Code received from server " + response.statusCode);
+					httpStatOutcome = "Invalid Status Code received from server "+ response.statusCode;
 			}
 			var str = '';
-
+			response.on('error', function(){
+				//error me ti 
+				 console.log('problem with request: ' + e.message);
+			});
 			//another chunk of data has been recieved, so append it to `str`
 			response.on('data', function (chunk) {
 					str += chunk;
@@ -379,14 +423,14 @@ monx_http_stat = function(url){
 
 	  //the whole response has been recieved, so we just print it out here
 			response.on('end', function () {
-					// ktu duhet returni 
+					// ktu duhet callbacku
 					//console.log(str);
 			});
 	}).end();
 }
 
 // http_match
-monx_http_match = function(url){
+monx_http_match = function(matchObject,callback){
 	var url = "http://arbl.zero1.al";
 	var http = url.match(/^https/) ? require('https') : require('http');
 
