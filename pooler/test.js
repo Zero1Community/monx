@@ -1,5 +1,5 @@
 var rblcheck = require('../modules/checkBlacklist.js');
 
-rblcheck('www.google.com', function(res){
+rblcheck('mail.zero1.al', function(res){
 	console.log(res);
 });

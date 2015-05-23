@@ -55,20 +55,12 @@ router.post('/mx', function(req, res){
 router.post('/blacklist', function(req, res){
 
 	var domain = req.body.domain;
-	
-	dns.resolve4(domain, function(error, addr) {
 
-		if(error) {
-			console.log(error);
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify({'success': 0, 'message': 'Domain not found'}));
-		} else {
-			checkRBL(addr[0], function(server_result){
-				res.setHeader('Content-Type', 'application/json');
-				res.end(JSON.stringify(server_result));
-			});
-		}
+	checkRBL(domain, function(server_result){
+		res.setHeader('Content-Type', 'application/json');
+		res.end(JSON.stringify(server_result));
 	});
+
 });
 
 module.exports = router;
