@@ -4,8 +4,17 @@ var dns = require('dns');
 var checkRBL = require('../modules/checkBlacklist.js');
 var Service = require('../models/service.js');
 var middleware = require('../middlewares/middlewares.js');
+var util = require('util');
 
-router.post('/add', middleware.isAuthenticated, function(req, res){
+router.post('/add', function(req, res){
+
+  	/*req.checkParams('domain', 'Invalid domain param').isAlpha();
+
+  	var errors = req.validationErrors();
+	  if (errors) {
+	    res.send('There have been validation errors:' + util.inspect(errors), 400);
+	    return;
+	  }*/
 
 	var newService = new Service();
 
