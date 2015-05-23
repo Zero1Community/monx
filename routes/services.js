@@ -3,9 +3,9 @@ var router = express.Router();
 var dns = require('dns');
 var checkRBL = require('../modules/checkBlacklist.js');
 var Service = require('../models/service.js');
+var middleware = require('../middlewares/middlewares.js');
 
-//authentication middleware here
-router.post('/add', function(req, res){
+router.post('/add', middleware.isAuthenticated, function(req, res){
 
 	var newService = new Service();
 
