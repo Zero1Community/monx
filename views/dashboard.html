@@ -6,32 +6,41 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Blank</h1>
+                        <h1 class="page-header">Scan Domain</h1>
                     </div>
-                    <!-- /.col-lg-12 -->
-                    <form action="" method="POST" class="form-group">
-                        <input type="text" name="domain" placeholder="Enter domain name" class="form-control domain">
-                        <button type="button" class="btn btn-default scan">Scan </button>
-                    </form>
-                    <div class="col-lg-6 results-panel hide">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bell fa-fw"></i> MX Servers
-                            </div>
-                            <div class="panel-body">
-                                <ul class="list-group results-body">
-                                </ul>
+
+
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                                <input type="text" name="domain" class="form-control domain" placeholder="www.example.com">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default scan" type="button">Scan</button>
+                                </span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                    <div class="row">
+                        <div class="col-lg-6 results-panel hide">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-bell fa-fw"></i> MX Servers
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group results-body">
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 blacklist-results-panel hide">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bell fa-fw"></i> Blacklist Results 
-                            </div>
-                            <div class="panel-body">
-                                <ul class="list-group blacklist-results-body">
-                                </ul>
+                    <div class="row">
+                        <div class="col-lg-6 blacklist-results-panel hide">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-bell fa-fw"></i> Blacklist Results 
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group blacklist-results-body">
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
