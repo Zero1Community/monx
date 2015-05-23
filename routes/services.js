@@ -2,6 +2,30 @@ var express = require('express');
 var router = express.Router();
 var dns = require('dns');
 var checkRBL = require('../modules/checkBlacklist.js');
+var Service = require('../models/service.js');
+var middleware = require('../middlewares/middlewares.js');
+
+router.post('/add', middleware.isAuthenticated, function(req, res){
+
+	var newService = new Service();
+
+    newService.host = req.body.host;
+    newService.type = req.body.type;
+    newService.interval = req.body.interval;
+
+    newService.user = req.user;
+   
+    newService.save(function(err) {
+       if(err) {
+       	console.log('There was an error saving the service', err);
+       } else {
+       	console.log('The new service was saved!');
+       }
+    });
+    
+	res.setHeader('Content-Type', 'application/json');
+	res.end(JSON.stringify({'success': 0, 'message': 'No mx records'}));
+});
 
 router.post('/mx', function(req, res){
 	"use strict";
