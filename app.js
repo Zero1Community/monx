@@ -1,10 +1,12 @@
 var express = require('express');
+var expressValidator = require('express-validator');
 var swig = require('swig');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
 
 //connect to MongoDB
 dbConfig = require('./config/db.js');
@@ -14,6 +16,7 @@ mongoose.connect(dbConfig.url);
 var routes = require('./routes/index');
 
 var app = express();
+app.use(expressValidator()); // this line must be immediately after express.bodyParser()!
 
 // view engine setup
 app.engine('html', swig.renderFile)
