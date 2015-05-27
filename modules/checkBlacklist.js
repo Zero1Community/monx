@@ -1,50 +1,45 @@
 var dns = require('native-dns');
 var async = require('async');
-  
-var results = [];
-var default_timeout = 2000;
 
-/**
- * Function to check status of an IP in a RBL Server
- * @param  {string} rbl_server  
- * @param  {string} ip           
- * @param  {function} doneCallback 
- * @return {function}
- */
-var check_dns = function(rbl_server, ip, doneCallback){
+function checkDNS(rbl_server, ip, callback, timeout){
+
+  var result;
+
+  //default timeout
+  timeout =  typeof timeout === 'undefined' ? 2000 : timeout; 
 
   var start = Date.now();
   var req = dns.Request({
     question: dns.Question({name: ip.split('.').reverse().join('.') + "." + rbl_server, type: 'A'}),
     server: { address: '208.67.222.222', port: 53, type: 'udp' },
-    timeout: default_timeout,
+    timeout: timeout,
   });
 
   req.on('timeout', function () {
     var delta = (Date.now()) - start;
-    results.push({server: rbl_server, status : 2, res_time : delta});
+    result = {server: rbl_server, status : 2, res_time : delta};
   });
 
   req.on('message', function (err, answer) {
     if(answer.answer.length < 1){
         var delta = (Date.now()) - start;
-        results.push({server: rbl_server, status : 0, res_time : delta});
+        result = {server: rbl_server, status : 0, res_time : delta};
     }
     else{
         var delta = (Date.now()) - start;
-        results.push({server: rbl_server, status : 1, res_time : delta});
+        result = {server: rbl_server, status : 1, res_time : delta};
       };
   });
 
   req.on('end', function () {
-    return doneCallback(null);
+    callback(result);
   });
 
   req.send();
 }
 
 
-var checkRBL = function(host, callback) {
+function checkRBL(host, callback) {
 
   var servers = [
     'spam.spamrats.com',
@@ -148,19 +143,22 @@ var checkRBL = function(host, callback) {
     'dyna.spamrats.com'
    ];
 
-  resolveIp(host, function(ip){
+  var results = [];
 
+  validateAndResolve(host, function(ip){
     async.each(servers, function(server, callback){
-      check_dns(server, host, callback);
+      checkDNS(server, ip, function(result){
+        results.push(result);
+        callback();
+      });
     }, function(err) {
       callback(results);
     });
-
   });
 
 }
 
-function resolveIp(host, callback) {
+function validateAndResolve(host, callback) {
 
   if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(host))  
   {  
