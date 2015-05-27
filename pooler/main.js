@@ -46,8 +46,7 @@ amqp.connect('amqp://localhost').then(function(conn) {
 // duhet nje seksion per analysis
 // tipit blacklista, skano portat, shif ssl-ne
 
-
-processWork = function(tC,callback){
+function processWork(tC,callback){
 	if(tC.type === "smtp_check"){
 		monxSmtp(tC);
 	}
@@ -131,7 +130,7 @@ postToAPI = function(){
 }
 
 // smtp_check
-monxSmtp = function(smtpObject,callback){
+function monxSmtp(smtpObject,callback){
 	var net = require('net');
 	//smtpObject.target = "127.0.0.1";
 	//smtpObject.target_port = 25;
@@ -168,7 +167,7 @@ monxSmtp = function(smtpObject,callback){
 }
 
 // pop_check
-monxPop = function(popObject,callback){
+function monxPop(popObject,callback){
 	var net = require('net');
 	var popResult = "";
 	var start = Date.now();
@@ -203,7 +202,7 @@ monxPop = function(popObject,callback){
 }
 
 // blacklist module
-monxBlacklist = function(blacklistObject){
+function monxBlacklist(blacklistObject){
 	var checkRBL = require('../modules/checkBlacklist.js');
 
 	checkRBL(blacklistObject.host, function(results){
@@ -214,7 +213,7 @@ monxBlacklist = function(blacklistObject){
 }
 
 // http_status
-monxHttpStat = function(statObject,callback){
+function monxHttpStat(statObject,callback){
 	var http = url.match(/^https/) ? require('https') : require('http');
 	var httpStatOutcome = "";
 	// nqs marrim statuscode 3XX (redirect) duhet ta ndjekim linkun ?
@@ -264,7 +263,7 @@ monxHttpStat = function(statObject,callback){
 }
 
 // http_match
-monx_http_match = function(matchObject,callback){
+function monx_http_match(matchObject,callback){
 	var url = "http://arbl.zero1.al";
 	var http = url.match(/^https/) ? require('https') : require('http');
 
@@ -310,7 +309,7 @@ monx_http_match = function(matchObject,callback){
 
 // icmp_check
 // duhet fut nje 1 sekondsh sleep per te shmangur floodin..
-monx_ping = function(){
+function monx_ping(){
 	var target = "8.8.8.8"
 	var ping = require ("net-ping");
 	var options = {
