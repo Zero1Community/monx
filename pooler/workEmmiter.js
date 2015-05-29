@@ -5,12 +5,12 @@ var when = require('when');
 
 var mongoose = require('mongoose');
 dbConfig = require('../config/db.js');
-mongoose.connect(dbConfig.url);
 var Service = require('../models/service.js');
 var User = require('../models/user.js');
-console.log("sikur u lidhem");
+//console.log("U lidhem");
 
-
+// kjo duhet bo me .then()
+mongoose.connect(dbConfig.url);
 //Service.find({}).populate('user').exec(function(err, services) {
 Service.find({}, function(err, services) {
     console.log(services);
@@ -29,12 +29,14 @@ Service.find({}, function(err, services) {
       // console.log(userMap[user._id]);
       // console.log(userMap[user.type]);
     });
+    // duhet kjo me verte ?
     mongoose.connection.close();
 });
 
 
 
 function scheduler(taskList){
+  // si ka mundesi qe jam kaq i trishte ne debug
   console.log("na erdhen gjona");
  console.log(taskList);
   taskList.forEach(function(task){
@@ -47,22 +49,31 @@ function scheduler(taskList){
 }
 
 
-workEmmiter = function(jobToDo){
+function workEmmiter(jobToDo){
 
   amqp.connect('amqp://localhost').then(function(conn) {
     return when(conn.createChannel().then(function(ch) {
       var q = 'all_checks';
 
+      var msg = {
+        host : "mail.bwbalkans.al",
+        port : "26",
+        interval: 5,
+        type : "smtp_check"
+      };
       // var msg = {
-      //   ip : "79.109.1.100",
-      //   //port : "110",
-      //   type : "blacklist_check"
+      //   host : "mail.bwbalkans.al",
+      //   port : "26",
+      //   interval: 5,
+      //   type : "smtp_check"
       // };
+
       //console.log(msg);
       var ok = ch.assertQueue(q, {durable: false});
       
       return ok.then(function(_qok) {
-        ch.sendToQueue(q, new Buffer(JSON.stringify(jobToDo)));
+        //ch.sendToQueue(q, new Buffer(JSON.stringify(jobToDo)));
+        ch.sendToQueue(q, new Buffer(JSON.stringify(msg)));
         console.log(" [x] Sent job to rabbitMQ");
         //console.log(msg);
         return ch.close();

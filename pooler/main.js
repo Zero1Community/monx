@@ -24,7 +24,7 @@ amqp.connect('amqp://localhost').then(function(conn) {
   return conn.createChannel().then(function(ch) {
     
     var ok = ch.assertQueue('all_checks', {durable: false});
-    
+    // todo : error catching per kur nuk lidhet queueja 
     ok = ok.then(function(_qok) {
       return ch.consume('all_checks', function(msg) {
         console.log(" [x] Received a task");
@@ -121,7 +121,6 @@ function processWork(tC,callback){
 		//monxSslCheck(tC)
 	}
 
-
 }
 
 // posting data to API function
@@ -134,6 +133,8 @@ function monxSmtp(smtpObject,callback){
 	var net = require('net');
 	//smtpObject.target = "127.0.0.1";
 	//smtpObject.target_port = 25;
+	console.log("Na erdhi ");
+	console.log(smtpObject);
 	var smtp_result = "";
 	var start = Date.now();
 	// per tu implementu timeouti
@@ -144,7 +145,7 @@ function monxSmtp(smtpObject,callback){
 			//smtp_result += "Connection Time : "+ delta + " ms";
 		});
 	client.on("error", function(err) { 
-		console.log("Unable to Connect");client.end();
+		console.log("Unable to Connect" + err);client.end();
 		smtp_result = "Unable to Connect";
 	});
 	client.on("timeout", function(err) { 
