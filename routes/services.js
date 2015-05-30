@@ -3,6 +3,7 @@ var router = express.Router();
 var dns = require('dns');
 var checkRBL = require('../modules/checkBlacklist.js');
 var Service = require('../models/service.js');
+var serviceData = require('../models/serviceData.js');
 var middleware = require('../middlewares/middlewares.js');
 var util = require('util');
 
@@ -62,6 +63,20 @@ router.post('/blacklist', function(req, res){
 		res.end(JSON.stringify(server_result));
 	});
 
+});
+
+router.get('/:id', function(req, res) {
+	var service_id = req.params.id;
+	serviceData.find(service_id, function(err, data) {
+		if(!err) {
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(data));
+		} else {
+			console.log(err);
+			res.end('No data for this service');
+		}
+
+	});
 });
 
 module.exports = router;
