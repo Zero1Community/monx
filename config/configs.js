@@ -1,3 +1,4 @@
 module.exports = {
-	'debug' : true
+	'debug' : true,
+	'api_url': 'http://localhost:3000/api/'
 }
