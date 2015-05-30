@@ -54,6 +54,7 @@ initPassport(passport);
 
 var users = require('./routes/users')(passport);
 var services = require('./routes/services');
+var api = require('./routes/api');
 
 app.use(function(req, res, next){
   if(req.user) {
@@ -67,6 +68,7 @@ app.use(function(req, res, next){
 app.use('/', routes);
 app.use('/users', users);
 app.use('/services', services);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

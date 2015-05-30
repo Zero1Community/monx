@@ -55,8 +55,9 @@ router.post('/mx', function(req, res){
 router.post('/blacklist', function(req, res){
 
 	var domain = req.body.domain;
-
+	console.log('routi');
 	checkRBL(domain, function(server_result){
+		console.log(server_result);
 		res.setHeader('Content-Type', 'application/json');
 		res.end(JSON.stringify(server_result));
 	});
