@@ -123,13 +123,13 @@ function getAndCacheServers(callback) {
     });
 
     client.on('ready', function(){
-        client.get('rbl_serverssa', function(err, result) {
+        client.get('rbl_servers', function(err, result) {
             if(configs.debug) console.log("Redis get error", err);
             if(configs.debug) console.log("Redis get result", result);
             if(result == null) {
                 getServersFromDB(function(err, result){
-                    if(configs.debug) console.log("Po shkruajme ne redis", result);
-                    client.set('rbl_serverssa', JSON.stringify(result), redis.print);
+                    if(configs.debug) console.log("Writing this to Redis", result);
+                    client.set('rbl_servers', JSON.stringify(result), redis.print);
                     client.end();
                 });
             } else {
