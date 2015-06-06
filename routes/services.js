@@ -65,6 +65,23 @@ router.post('/blacklist', function(req, res){
 
 });
 
+router.get('/mail', function(req, res) {
+
+	var mailer = require('../modules/mailer.js');
+	 var mailOptions = {
+          from: 'ScrubJ <agli.panci@gmail.com>', // sender address
+          to: 'agli.p.anci@gmail.com', 
+          subject: 'Activate account', // Subject line
+          html: 'asdasdads' // html body
+    };
+    mailer.sendOne(mailOptions, function(){
+    	console.log('gjoja');
+    });
+    res.end('kaq');
+
+
+});
+
 router.get('/:id', function(req, res) {
 	var service_id = req.params.id;
 	serviceData.find(service_id, function(err, data) {
@@ -78,5 +95,7 @@ router.get('/:id', function(req, res) {
 
 	});
 });
+
+
 
 module.exports = router;
