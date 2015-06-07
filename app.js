@@ -3,9 +3,9 @@ var expressValidator = require('express-validator');
 var swig = require('swig');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var logger = require('./modules/logger.js');
 
 
 //connect to MongoDB
@@ -26,7 +26,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//the old logger app.use(logger('dev'));
+  
+app.use(require('morgan')('combined', { "stream": logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

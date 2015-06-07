@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
-var dns = require('dns');
-var checkRBL = require('../modules/checkBlacklist.js');
-var Service = require('../models/service.js');
+var express     = require('express');
+var router      = express.Router();
+var dns         = require('dns');
+var checkRBL    = require('../modules/checkBlacklist.js');
+var Service     = require('../models/service.js');
 var serviceData = require('../models/serviceData.js');
-var middleware = require('../middlewares/middlewares.js');
-var util = require('util');
+var middleware  = require('../middlewares/middlewares.js');
+var util        = require('util');
+var logger      = require('../modules/logger.js');
 
 router.post('/add', function(req, res){
 
@@ -27,9 +28,9 @@ router.post('/add', function(req, res){
    
     newService.save(function(err) {
        if(err) {
-       	console.log('There was an error saving the service', err);
+       	logger.debug('There was an error saving the service', err);
        } else {
-       	console.log('The new service was saved!');
+       	logger.debug('The new service was saved!');
        }
     });
     
@@ -43,7 +44,7 @@ router.post('/mx', function(req, res){
 	dns.resolveMx(domain, function(error, addr) {
 
 		if(error) {
-			console.log(error);
+			logger.debug(error);
 			res.setHeader('Content-Type', 'application/json');
 			res.end(JSON.stringify({'success': 0, 'message': 'No mx records'}));
 		} else {
@@ -56,9 +57,9 @@ router.post('/mx', function(req, res){
 router.post('/blacklist', function(req, res){
 
 	var domain = req.body.domain;
-	console.log('routi');
+	logger.debug('routi');
 	checkRBL(domain, function(server_result){
-		console.log(server_result);
+		logger.debug(server_result);
 		res.setHeader('Content-Type', 'application/json');
 		res.end(JSON.stringify(server_result));
 	});
@@ -72,7 +73,7 @@ router.get('/:id', function(req, res) {
 			res.setHeader('Content-Type', 'application/json');
 			res.end(JSON.stringify(data));
 		} else {
-			console.log(err);
+			logger.debug(err);
 			res.end('No data for this service');
 		}
 
