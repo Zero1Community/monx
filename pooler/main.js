@@ -125,7 +125,7 @@ function monxBlacklist(blacklistObject){
 		for (var i = totalResults.length - 1; i >= 0; i--) {
 			if(totalResults[i]['status'] > 0){
 				console.log(totalResults[i]);
-				cleanStatus.push({totalResults[i]})
+				cleanStatus.push(totalResults[i]);
 			}
 		};
 		////// duhet fut nej gjo ne redis ne mes 
@@ -160,8 +160,8 @@ function monxBlacklist(blacklistObject){
 
 		var data = {
 			message: {
-				cleanStatus,
-				totalResults
+				listed : cleanStatus, 
+				clean: totalResults
 			},
 			status: 1,
 			service_id: blacklistObject._id
