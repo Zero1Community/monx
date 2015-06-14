@@ -73,7 +73,7 @@ function postToAPI(data){
 // blacklist module
 function monxBlacklist(blacklistObject){
 	var checkRBL = require('../modules/checkBlacklist.js');
-
+	console.log("eeeee " + blacklistObject.user);
 	checkRBL(blacklistObject.host, function(results){
 		if(configs.debug) console.log('Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
@@ -82,7 +82,8 @@ function monxBlacklist(blacklistObject){
 		var data = {
 			message: results,
 			status: 1,
-			service_id: blacklistObject._id
+			service_id: blacklistObject._id,
+			user: blacklistObject.user
 		}
 		postToAPI(data);
 		//API post here?
