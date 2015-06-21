@@ -1,5 +1,5 @@
 var configs = require('../config/configs.js');
-// libs and shit  ...
+// libs and shit 
 var amqp = require('amqplib');
 
 // I should use another lib for this: (just i dont want to waste my time)
