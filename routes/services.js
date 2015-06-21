@@ -66,16 +66,6 @@ router.post('/blacklist', function(req, res){
 
 });
 
-router.get('/logs', function(req, res){
-	var fs = require('fs');
-	fs.readFile('./logs/monx.log', 'utf8', function (err, data) {
-	  if (err) console.log(err);
-	  if (err) throw err;
-	  res.setHeader('Content-Type', 'application/json');
-		res.end(data);
-	});
-});
-
 router.get('/:id', function(req, res) {
 	var service_id = req.params.id;
 	serviceData.find(service_id, function(err, data) {

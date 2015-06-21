@@ -1,6 +1,9 @@
 var configs = require('../config/configs.js');
 // libs and shit 
 var amqp = require('amqplib');
+
+// I should use another lib for this: (just i dont want to waste my time)
+var db = require('mongojs').connect('noprod', ['notifications']);
 //var API_POST_URL = "http://monx.zero1.al:31416/api/service_data";
 
 // per tu shtu:
@@ -9,8 +12,6 @@ var amqp = require('amqplib');
 // web analysis per te identifiku sensoret automatikisht
 // tipit 
 // dns, web, match, snmpt,pop, etj..
-
-// SMS, Twitter, Email , Makjato , Kafe..
 
 amqp.connect('amqp://localhost').then(function(conn) {
 	process.once('SIGINT', function() { conn.close(); });
@@ -21,11 +22,11 @@ amqp.connect('amqp://localhost').then(function(conn) {
 		ok = ok.then(function(_qok) {
 			return ch.consume('all_checks', function(msg) {
 				if(configs.debug) console.log(" [x] Received a task");
-				// kemi objektin me vllai me gjonat mwena 
+				// we've got the stuff we need here
 				var toCheck = JSON.parse(msg.content.toString());
 				if(configs.debug) console.log(toCheck);
-			processWork(toCheck);
-				//console.log(msg);
+				processWork(toCheck);
+				if(configs.debug) console.log(msg);
 			}, {noAck: true});
 		});
 
@@ -36,8 +37,8 @@ amqp.connect('amqp://localhost').then(function(conn) {
 }).then(null, console.warn);
 
 
-// duhet nje seksion per analysis
-// tipit blacklista, skano portat, shif ssl-ne
+// atm here we have only blacklist_check but this eventually will be extended 
+// with port scan, ssl check, smtp, ping and other stuff like that
 
 function processWork(tC,callback){
 	if(tC.type === "blacklist_check"){
@@ -70,22 +71,37 @@ function postToAPI(data){
 	});
 }
 
+
 // blacklist module
 function monxBlacklist(blacklistObject){
 	var checkRBL = require('../modules/checkBlacklist.js');
-	console.log("eeeee " + blacklistObject.user);
-	checkRBL(blacklistObject.host, function(results){
+
+	checkRBL(blacklistObject.host, function(totalResults){
 		if(configs.debug) console.log('Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
-
+		var cleanStatus = {};
 		//The logic for the status to be handled
+		for (var i = totalResults.length - 1; i >= 0; i--) {
+			if(totalResults[i]['status'] > 0){
+				console.log(totalResults[i]);
+				cleanStatus.push(totalResults[i]);
+			}
+		};
+
 		var data = {
-			message: results,
+			message: {
+				listed : cleanStatus 
+				//clean: totalResults
+			},
 			status: 1,
-			service_id: blacklistObject._id,
-			user: blacklistObject.user
+			service_id: blacklistObject._id
 		}
-		postToAPI(data);
-		//API post here?
+		postToAPI(data, function(err) {
+			if(err){
+				//if(configs.debug) console.log(err)
+			} else {
+				//if(configs.debug) console.log('Bac is done');
+			}
+		});
 	});
 }

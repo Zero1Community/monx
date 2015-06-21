@@ -1,64 +1,117 @@
 var mongoose = require('mongoose');
-var Notify = require('../modules/notify.js');
+var Mailman = require('../modules/mailer.js');
 var dbConfig = require('../config/db.js');
+var User = require('../models/user.js');
+var Notification = require('../models/notification.js');
+var configs = require('../config/configs.js');
+
+function updateAndNotify(notific,status_subject){
+			// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
+			// in the notific object we have the user ID and the service ID 
+			// this enables us to get the email from the userID  
+			// console.log(notific);
+			// console.log(status_subject);
+			mongoose.connect(dbConfig.url);		
+			User.findOne({_id: notific.user}, function(err, user) {
+			   	if(err)	{
+			   		if(configs.debug) console.log(err);	
+			   		return;
+			   	}
+			   	//console.log("User found!");
+			    //console.log(user);
+					var collected_message = status_subject + " for "+ notific.status +"\n " + notific.message + " \n ";
+					var tick = {
+						message : collected_message,
+						subject : status_subject,
+						name : user.name,
+						email : user.email
+					}
+
+					Mailman.sendOne("newsletter",tick,function(err,res){
+							if(err){
+								if(configs.debug) console.log(err);
+							}else{
+								if(configs.debug) console.log(res);
+							}
+					});
+
+					var u = new Notification();
+					u.user = notific.user;
+					u.service = notific.service_id;
+					u.status = notific.status;
+					u.message = collected_message;
+					u.save(function(err) {
+						if(err){
+							if(configs.debug) console.log('Unable to save the event in the db : ');
+							if(configs.debug) console.log(err);
+						} else {
+							if(configs.debug) console.log('Event successfully saved');
+			    		mongoose.connection.close();
+						}
+					});
+			});
+}
+
 
 function checker(new_data){
 	mongoose.connect(dbConfig.url);
-
-	var serviceData = require('../models/service_data.js')(data.service_id);
-	var Notification = require('../models/notification.js');
-	
+	var serviceData = require('../models/service_data.js')(new_data.service_id);
 	serviceData.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, last_data) {
-		//a ka service data
+		//need to implement additional check here for service data
+		if(err){
+			if(configs.debug) console.log(err);
+			return err;
+		}
+		//console.log(last_data);	
 		Notification.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, notification_data){
-  		mongoose.connection.close();	
-  		if(err) console.log(err); return;
+			mongoose.connection.close();	
+			if(err) {
+				if(configs.debug) console.log(err); 
+				return;
+			}
+			//console.log(notification_data);
 
-  		//KOMENT I MADH
-  		//Notify();
-			
 			var last_status = last_data.status;
-		  var new_status = new_data.status;
-		  var notification_status = notification_data.status;
+			var new_status = new_data.status;
+			var notification_status = notification_data.status;
+			if(configs.debug) console.log("Current Status: \n")
+			if(configs.debug) console.log('Last status '+ last_status);
+			if(configs.debug) console.log('New status '+ new_status);
+			if(configs.debug) console.log('Last Notification status '+ notification_status);
 
-		  if(last_status === 'OK' && new_status === 'OK') {
-		  	if(notification_status === 'OK') return;
-		  	//dergo email shto notification
-		  }
+			if(last_status === 'OK' && new_status === 'OK') {
+				if(notification_status === 'OK') return;
+				//"RECOVERY" 
+				updateAndNotify(new_data,"SERVICE RECOVERY", function(){
+							//console.log("Mail sent");
+					}); 
+			}
 
-		  if(last_status === 'ERROR' && new_status === 'ERROR') {
-		  	//llogjina e errorit NQS ( ERROR_N != ERRORI_L )
-		  	if(notification_status === 'ERROR') return;
-		  	//dergo email shto notification
-		  }
+			if(last_status === 'ERROR' && new_status === 'ERROR') {
+				//we need to implement error checking here 
+				// IF ( new error != old error ) { email about status update of error }
+				// basically we need to check the message
+				if(notification_status === 'ERROR') return;
+				 updateAndNotify(new_data,"SERVICE NEW_ERROR", function(){
+							//console.log("Mail sent");
+					}); 
+			}
 
-		  if(last_status === 'OK' && new_status === 'ERROR') {
-		  	if(notification_status === 'ERROR') return;
+			if(last_status === 'OK' && new_status === 'ERROR') {
+				if(notification_status === 'ERROR') return;
+					updateAndNotify(new_data,"SERVICE ERROR", function(){
+							//console.log("Mail sent");
+					});
+			}
 
-		  	//dergo email plus notification
+			if(last_status === 'ERROR' && new_status === 'OK') {
+				if(notification_status === 'OK') return;
+				updateAndNotify(new_data,"SERVICE RECOVERY", function(){
+							//console.log("Mail sent");
+					}); //STATUS RECOVERY
+			}
 
-		  	/*var u = new Notification();
-		  	u.user = new_data.user;
-		  	u.service = new_data.service_id;
-		  	u.status = 'OK';
-		  	u.message = 'o boss te ka ra faqja';
-		  	u.save();*/
-		  }
-
-		  if(last_status === 'ERROR' && new_status === 'OK') {
-		  	if(notification_status === 'OK') return;
-
-		  	//dergo email plus notification qe u zgjidh
-		  }
-
-
-
-  		
-
-
-
-
-  	});
+		});
 	 // console.log( last_data );
 	});
 }
@@ -67,7 +120,15 @@ var data = {
 	message: [],
 	status: 'ERROR',
 	service_id: '556053920c3ae62c1488d102',
-	user: '5560537b0c3ae62c1488d101'
+	user: '55662ee347848748120601b4'
 }
 
-checker(data);
+if(configs.debug) console.log("Checking..");
+checker(data,function(err,res){
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log(res);
+		}
+});
