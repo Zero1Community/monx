@@ -6,7 +6,7 @@ var amqp = require('amqplib');
 var db = require('mongojs').connect('noprod', ['notifications']);
 //var API_POST_URL = "http://monx.zero1.al:31416/api/service_data";
 
-// per tu shtu:
+// per tu shtu: ------
 // throttle (kjo behet ne vend tjeter faktikisht)
 
 // web analysis per te identifiku sensoret automatikisht
