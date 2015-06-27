@@ -6,8 +6,14 @@ function serviceData(service_id){
 			status: String,
 			created_at: { type: Date, required: true, default: Date.now }
 		},{ strict: false });
+	
+	var service_data_model = mongoose.models['ServiceData_' + service_id];
+	if(service_data_model){
+		return ServiceData = service_data_model;
+	} else {
+		return mongoose.model('ServiceData_' + service_id, serviceDataSchema, collection);	
+	}
 
-	return mongoose.model('ServiceData', serviceDataSchema, collection);	
 }
 
 module.exports = serviceData;

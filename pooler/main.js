@@ -58,16 +58,21 @@ function postToAPI(data){
 	    data : {
 		    message: data.message,
 		    status: data.status,
-		    service_id: data.service_id
+		    service_id: data.service_id,
+		    user: data.user
 	    }
 	  }
 	};
 
 	request(options, function (error, response, body) {
-	  if (!error && response.statusCode == 200) {
+	  if (!error) {
   		if(configs.debug) console.log('Posted to API');
 	    if(configs.debug) console.log(body)
-	  }
+	  } else{
+	  	if(configs.debug) console.log('Error');
+	  	if(configs.debug) console.log(error);
+	    if(configs.debug) console.log(body)
+	}
 	});
 }
 
@@ -79,28 +84,33 @@ function monxBlacklist(blacklistObject){
 	checkRBL(blacklistObject.host, function(totalResults){
 		if(configs.debug) console.log('Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
-		var cleanStatus = {};
+		var cleanStatus = [];
+		var stat = 'OK';
 		//The logic for the status to be handled
 		for (var i = totalResults.length - 1; i >= 0; i--) {
 			if(totalResults[i]['status'] > 0){
+				stat = 'ERROR';
 				console.log(totalResults[i]);
 				cleanStatus.push(totalResults[i]);
 			}
 		};
+
 
 		var data = {
 			message: {
 				listed : cleanStatus 
 				//clean: totalResults
 			},
-			status: 1,
-			service_id: blacklistObject._id
+			status: stat,
+			service_id: blacklistObject._id,
+			user: blacklistObject.user
 		}
+
 		postToAPI(data, function(err) {
 			if(err){
-				//if(configs.debug) console.log(err)
+				if(configs.debug) console.log(err)
 			} else {
-				//if(configs.debug) console.log('Bac is done');
+				if(configs.debug) console.log('Bac is done');
 			}
 		});
 	});
