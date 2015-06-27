@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
-var Mailman = require('../modules/mailer.js');
-var dbConfig = require('../config/db.js');
+//var mongoose = require('mongoose');
+var Mailman = require('./mailer.js');
+//var dbConfig = require('../config/db.js');
 var User = require('../models/user.js');
 var Notification = require('../models/notification.js');
 var configs = require('../config/configs.js');
@@ -11,7 +11,7 @@ function updateAndNotify(notific,status_subject){
 			// this enables us to get the email from the userID  
 			// console.log(notific);
 			// console.log(status_subject);
-			mongoose.connect(dbConfig.url);		
+			//mongoose.connect(dbConfig.url);		
 			User.findOne({_id: notific.user}, function(err, user) {
 			   	if(err)	{
 			   		if(configs.debug) console.log(err);	
@@ -46,7 +46,7 @@ function updateAndNotify(notific,status_subject){
 							if(configs.debug) console.log(err);
 						} else {
 							if(configs.debug) console.log('Event successfully saved');
-			    		mongoose.connection.close();
+			    		//mongoose.connection.close();
 						}
 					});
 			});
@@ -54,7 +54,8 @@ function updateAndNotify(notific,status_subject){
 
 
 function checker(new_data){
-	mongoose.connect(dbConfig.url);
+	//mongoose.connect(dbConfig.url);
+	console.log(new_data);
 	var serviceData = require('../models/service_data.js')(new_data.service_id);
 	serviceData.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, last_data) {
 		//need to implement additional check here for service data
@@ -62,9 +63,15 @@ function checker(new_data){
 			if(configs.debug) console.log(err);
 			return err;
 		}
+		if(last_data === null){
+			last_data = {
+				status : 'OK'
+			}
+		}
 		//console.log(last_data);	
 		Notification.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, notification_data){
-			mongoose.connection.close();	
+			//mongoose.connection.close();	
+			console.log(notification_data);
 			if(err) {
 				if(configs.debug) console.log(err); 
 				return;
@@ -73,6 +80,11 @@ function checker(new_data){
 
 			var last_status = last_data.status;
 			var new_status = new_data.status;
+			if(notification_data === null){
+				notification_data = {
+					status : 'OK'
+				}
+			}
 			var notification_status = notification_data.status;
 			if(configs.debug) console.log("Current Status: \n")
 			if(configs.debug) console.log('Last status '+ last_status);
@@ -116,19 +128,4 @@ function checker(new_data){
 	});
 }
 
-var data = {
-	message: [],
-	status: 'ERROR',
-	service_id: '556053920c3ae62c1488d102',
-	user: '55662ee347848748120601b4'
-}
-
-if(configs.debug) console.log("Checking..");
-checker(data,function(err,res){
-		if(err){
-			console.log(err);
-		}
-		else{
-			console.log(res);
-		}
-});
+module.exports = checker;
