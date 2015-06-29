@@ -1,0 +1,9 @@
+{% if Object.keys(message).length > 0 %}	
+	<div class="alert alert-danger">
+		{% for key, val in message %}
+		{{ val.msg }} <br>
+		{% endfor %}
+	</div>
+{% endif %}
+
+

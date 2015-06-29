@@ -16,7 +16,6 @@ mongoose.connect(dbConfig.url);
 var routes = require('./routes/index');
 
 var app = express();
-app.use(expressValidator()); // this line must be immediately after express.bodyParser()!
 
 // view engine setup
 app.engine('html', swig.renderFile)
@@ -31,6 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(require('morgan')('combined', { "stream": logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator()); // this line must be immediately after express.bodyParser()!
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
