@@ -1,20 +1,19 @@
 #!/usr/bin/env node
 
-var amqp = require('amqplib');
 var when = require('when');
+var amqp = require('amqplib');
 var configs = require('../config/configs.js');
 
 var mongoose = require('mongoose');
+var User = require('../models/user.js');
 var dbConfig = require('../config/db.js');
 var Service = require('../models/service.js');
-var User = require('../models/user.js');
 
 // kjo duhet bo me .then()
 mongoose.connect(dbConfig.url);
 Service.find({}, function(err, services) {
     if(configs.debug) console.log(services);
     scheduler(services);
-
     mongoose.connection.close();
 });
 

@@ -2,9 +2,7 @@ var configs = require('../config/configs.js');
 // libs and shit
 var amqp = require('amqplib');
 
-// I should use another lib for this: (just i dont want to waste my time)
-var db = require('mongojs').connect('noprod', ['notifications']);
-//var API_POST_URL = "http://monx.zero1.al:31416/api/service_data";
+// TODO: error handling post to api
 
 // per tu shtu: ------
 // throttle (kjo behet ne vend tjeter faktikisht)

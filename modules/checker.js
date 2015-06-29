@@ -6,50 +6,50 @@ var Notification = require('../models/notification.js');
 var configs = require('../config/configs.js');
 
 function updateAndNotify(notific,status_subject){
-			// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
-			// in the notific object we have the user ID and the service ID 
-			// this enables us to get the email from the userID  
-			// console.log(notific);
-			// console.log(status_subject);
-			//mongoose.connect(dbConfig.url);		
-			User.findOne({_id: notific.user}, function(err, user) {
-			   	if(err)	{
-			   		if(configs.debug) console.log(err);	
-			   		return;
-			   	}
-			   	//console.log("User found!");
-			    //console.log(user);
-					var collected_message = status_subject + " for "+ notific.status +"\n " + notific.message + " \n ";
-					var tick = {
-						message : collected_message,
-						subject : status_subject,
-						name : user.name,
-						email : user.email
+	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
+	// in the notific object we have the user ID and the service ID 
+	// this enables us to get the email from the userID  
+	// console.log(notific);
+	// console.log(status_subject);
+	//mongoose.connect(dbConfig.url);		
+	User.findOne({_id: notific.user}, function(err, user) {
+	   	if(err)	{
+	   		if(configs.debug) console.log(err);	
+	   		return;
+	   	}
+	   	//console.log("User found!");
+	    //console.log(user);
+			var collected_message = status_subject + " for "+ notific.status +"\n " + notific.message + " \n ";
+			var tick = {
+				message : collected_message,
+				subject : status_subject,
+				name : user.name,
+				email : user.email
+			}
+
+			Mailman.sendOne("newsletter",tick,function(err,res){
+					if(err){
+						if(configs.debug) console.log(err);
+					}else{
+						if(configs.debug) console.log(res);
 					}
-
-					Mailman.sendOne("newsletter",tick,function(err,res){
-							if(err){
-								if(configs.debug) console.log(err);
-							}else{
-								if(configs.debug) console.log(res);
-							}
-					});
-
-					var u = new Notification();
-					u.user = notific.user;
-					u.service = notific.service_id;
-					u.status = notific.status;
-					u.message = collected_message;
-					u.save(function(err) {
-						if(err){
-							if(configs.debug) console.log('Unable to save the event in the db : ');
-							if(configs.debug) console.log(err);
-						} else {
-							if(configs.debug) console.log('Event successfully saved');
-			    		//mongoose.connection.close();
-						}
-					});
 			});
+
+			var u = new Notification();
+			u.user = notific.user;
+			u.service = notific.service_id;
+			u.status = notific.status;
+			u.message = collected_message;
+			u.save(function(err) {
+				if(err){
+					if(configs.debug) console.log('Unable to save the event in the db : ');
+					if(configs.debug) console.log(err);
+				} else {
+					if(configs.debug) console.log('Event successfully saved');
+	    		//mongoose.connection.close();
+				}
+			});
+		});
 }
 
 
@@ -69,7 +69,7 @@ function checker(new_data){
 			}
 		}
 		//console.log(last_data);	
-		Notification.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, notification_data){
+		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'created_at' : -1 } }, function(err, notification_data){
 			//mongoose.connection.close();	
 			console.log(notification_data);
 			if(err) {
