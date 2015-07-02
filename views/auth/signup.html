@@ -1,57 +1,108 @@
 {% extends '../master-visitor.html' %}
 {% block content %}
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Register</div>
-				<div class="panel-body">
-					{% if message.length > 0 %}
-						<div class="alert alert-danger">
-						{{ message }}
-						</div>
-					{% endif %}
+ <div class="admin-form theme-primary mw600" style="margin-top: 3%;" id="register">
 
-					<form class="form-horizontal" role="form" method="POST" action="/users/signup">
-						<div class="form-group">
-							<label class="col-md-4 control-label">Name</label>
-							<div class="col-md-6">
-								<input type="text" class="form-control" name="name">
-							</div>
-						</div>
+          <!-- Registration Logo -->
+          <div class="row table-layout">
+            <a href="dashboard.html" title="Return to Dashboard">
+              <img src="/assets/img/logos/logo.png" title="AdminDesigns Logo" class="center-block img-responsive" style="max-width: 275px;">
+            </a>
+          </div>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control" name="email">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">Confirm Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password_confirmation">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									Register
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
+      	<div class="mt40">
+			{% include "../includes/notifications.html" with message %}
 		</div>
-	</div>
-</div>
+
+          <!-- Registration Panel/Form -->
+          <div class="panel mt40">
+
+            <form method="post" action="/users/signup" id="contact">
+              <div class="panel-body bg-light p25 pb15">
+
+                <div class="section row">
+                  <div class="col-md-12">
+                    <label for="firstname" class="field prepend-icon">
+                      <input type="text" name="name" id="firstname" class="gui-input" placeholder="Your name...">
+                      <label for="firstname" class="field-icon">
+                        <i class="fa fa-user"></i>
+                      </label>
+                    </label>
+                  </div>
+                  <!-- end section -->
+                </div>
+                <!-- end .section row section -->
+
+                <div class="section">
+                  <label for="email" class="field prepend-icon">
+                    <input type="email" name="email" id="email" class="gui-input" placeholder="Email address">
+                    <label for="email" class="field-icon">
+                      <i class="fa fa-envelope"></i>
+                    </label>
+                  </label>
+                </div>
+                <!-- end section -->
+
+                <div class="section hidden">
+                  <div class="smart-widget sm-right smr-120">
+                    <label for="username" class="field prepend-icon">
+                      <input type="text" name="username" id="username" class="gui-input" placeholder="Choose your username">
+                      <label for="username" class="field-icon">
+                        <i class="fa fa-user"></i>
+                      </label>
+                    </label>
+                  </div>
+                  <!-- end .smart-widget section -->
+                </div>
+                <!-- end section -->
+
+
+                <hr class="alt short">
+
+                <div class="section">
+                  <label for="password" class="field prepend-icon">
+                    <input type="password" name="password" id="password" class="gui-input" placeholder="Create a password">
+                    <label for="password" class="field-icon">
+                      <i class="fa fa-unlock-alt"></i>
+                    </label>
+                  </label>
+                </div>
+                <!-- end section -->
+
+                <div class="section">
+                  <label for="password_confirmation" class="field prepend-icon">
+                    <input type="password" name="password_confirmation" id="confirmPassword" class="gui-input" placeholder="Retype your password">
+                    <label for="password_confirmation" class="field-icon">
+                      <i class="fa fa-lock"></i>
+                    </label>
+                  </label>
+                </div>
+                <!-- end section -->
+
+
+              </div>
+
+              <div class="panel-footer clearfix">
+                <button type="submit" class="button btn-primary mr10 pull-right">Register</button>
+
+                <label class="option mt10">
+                  <input type="checkbox" name="terms">
+                  <span class="checkbox"></span>I agree to the
+                  <a href="#" class="theme-link"> terms of use. </a>
+                </label>
+
+            </form>
+          </div>
+
+          <!-- Registration Links -->
+          <div class="login-links">
+            <p>
+              <a href="/users/forgot-password" class="active hidden" title="Sign In">Forgot Password?</a>
+            </p>
+            <p>Already registered?
+              <a href="/users/login" class="active" title="Sign In">Sign in here</a>
+            </p>
+          </div>
+
+
+        </div>
 {% endblock %}

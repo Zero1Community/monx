@@ -1,9 +1,12 @@
-{% if Object.keys(message).length > 0 %}	
-	<div class="alert alert-danger">
-		{% for key, val in message %}
-		{{ val.msg }} <br>
-		{% endfor %}
-	</div>
+{% if message.length > 0 %}	
+<div class="alert alert-danger alert-dismissable">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	{% for key, val in message %}
+		{% if val.msg %}
+			{{ val.msg }} <br>
+		{% else %}
+			{{ val }} <br>
+		{% endif %}
+	{% endfor %}
+</div>
 {% endif %}
-
-
