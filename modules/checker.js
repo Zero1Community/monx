@@ -1,5 +1,5 @@
 //var mongoose = require('mongoose');
-var Mailman = require('./mailer.js');
+var Mailer = require('./mailer.js');
 //var dbConfig = require('../config/db.js');
 var User = require('../models/user.js');
 var Notification = require('../models/notification.js');
@@ -27,7 +27,7 @@ function updateAndNotify(notific,status_subject){
 				email : user.email
 			}
 
-			Mailman.sendOne("newsletter",tick,function(err,res){
+			Mailer.sendOne("newsletter",tick,function(err,res){
 					if(err){
 						if(configs.debug) console.log(err);
 					}else{

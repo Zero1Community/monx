@@ -1,50 +1,64 @@
 {% extends '../master-visitor.html' %}
 {% block content %}
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">Login</div>
-				<div class="panel-body">
-						{% include "../includes/notifications.html" with message %}
-					<form class="form-horizontal" role="form" method="POST" action="/users/login">
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="text" class="form-control" name="username">
-							</div>
-						</div>
+<div class="admin-form theme-info mw500" id="login">
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="remember"> Remember Me
-									</label>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary" style="margin-right: 15px;">
-									Login
-								</button>
-
-								<a href="/password/email">Forgot Your Password?</a>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
+	<!-- Login Logo -->
+	<div class="row table-layout">
+	<a href="dashboard.html" title="Return to Dashboard">
+	  <img src="/assets/img/logos/logo.png" title="AdminDesigns Logo" class="center-block img-responsive" style="max-width: 275px;">
+	</a>
 	</div>
+
+	<div class="mt30 mb25">
+		{% include "../includes/notifications.html" with message %}
+	</div>
+	
+	<!-- Login Panel/Form -->
+	<div class="panel mt30 mb25">
+
+
+	<form method="post" action="/users/login" id="contact">
+	  <div class="panel-body bg-light p25 pb15">
+
+	    <!-- Username Input -->
+	    <div class="section">
+	      <label for="username" class="field-label text-muted fs18 mb10">Username</label>
+	      <label for="username" class="field prepend-icon">
+	        <input type="text" name="username" id="username" class="gui-input" placeholder="Enter username">
+	        <label for="username" class="field-icon">
+	          <i class="fa fa-user"></i>
+	        </label>
+	      </label>
+	    </div>
+
+	    <!-- Password Input -->
+	    <div class="section">
+	      <label for="username" class="field-label text-muted fs18 mb10">Password</label>
+	      <label for="password" class="field prepend-icon">
+	        <input type="password" name="password" id="password" class="gui-input" placeholder="Enter password">
+	        <label for="password" class="field-icon">
+	          <i class="fa fa-lock"></i>
+	        </label>
+	      </label>
+	    </div>
+	  </div>
+
+	  <div class="panel-footer clearfix">
+	    <button type="submit" class="button btn-primary mr10 pull-right">Sign In</button>
+	  </div>
+
+	</form>
+	</div>
+
+	<!-- Registration Links -->
+	<div class="login-links">
+	<p>
+	  <a href="/users/forgot-password" class="active" title="Sign In">Forgot Password?</a>
+	</p>
+	<p>Haven't yet Registered?
+	  <a href="/users/signup" title="Sign In">Sign up here</a>
+	</p>
+	</div>
+
 </div>
 {% endblock %}
