@@ -101,12 +101,6 @@ module.exports = function(passport){
 				    });
 				});
 
-				/*User.update({email: req.body.email}, {
-				   	resetPasswordToken: token,
-			    	resetPasswordExpires: Date.now() + 3600000,
-				}, function(err, numberAffected, rawResponse) {
-					done(err, token, user);
-				});*/
 			},
 			function(token, user, done) {
 			  Mailer.sendOne("newsletter",user,function(err,res){
@@ -123,6 +117,50 @@ module.exports = function(passport){
 			res.redirect('/users/forgot-password');
 			});
 
+	});
+
+	router.get('/reset/:token', function(req, res) {
+	  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+	    if (!user) {
+	      req.flash('error', 'Password reset token is invalid or has expired.');
+	      return res.redirect('/forgot');
+	    }
+	    res.render('users/reset', {
+	      user: req.user
+	    });
+	  });
+	});
+
+	router.post('/reset/:token', function(req, res) {
+	  async.waterfall([
+	    function(done) {
+	      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+	        if (!user) {
+	          req.flash('error', 'Password reset token is invalid or has expired.');
+	          return res.redirect('back');
+	        }
+
+	        user.password = req.body.password;
+	        user.resetPasswordToken = undefined;
+	        user.resetPasswordExpires = undefined;
+
+	        user.save(function(err) {
+	          req.logIn(user, function(err) {
+	            done(err, user);
+	          });
+	        });
+	      });
+	    },
+	    function(user, done) {
+	     
+	     	//Mailer
+	        //req.flash('success', 'Success! Your password has been changed.');
+	        //done(err);
+	      });
+	    }
+	  ], function(err) {
+	    res.redirect('/');
+	  });
 	});
 
 	/* Handle Logout */
