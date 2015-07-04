@@ -1,6 +1,7 @@
+{% include "includes/head.html" %}
 {% include "includes/header.html" %}
-    <div id="wrapper">
-        {% include "includes/nav.html" %}
+{% include "includes/nav.html" %}
+	<section id="content_wrapper">
         {% block content %}{% endblock %}
-    </div>
+	</section>
 {% include "includes/footer.html" %}

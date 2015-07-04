@@ -50,6 +50,12 @@ app.use(passport.session());
 
 var flash = require('connect-flash');
 app.use(flash());
+//the logic to have the message always
+app.use(function(req, res, next){
+    res.locals.success_messages = req.flash('success_messages');
+    res.locals.error_messages = req.flash('error_messages');
+    next();
+});
 
 var initPassport = require('./auth/init');
 initPassport(passport);

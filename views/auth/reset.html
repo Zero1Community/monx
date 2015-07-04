@@ -1,54 +1,63 @@
 {% extends '../master-visitor.html' %}
 {% block content %}
-  <div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
-    <div class="row mb15 table-layout">
+<div class="admin-form theme-info mw500" id="login">
 
-      <div class="col-xs-6 pln">
-        <a href="dashboard.html" title="Return to Dashboard">
-          <img src="/assets/img/logos/logo.png" title="AdminDesigns Logo" class="img-responsive w250">
-        </a>
-      </div>
-
-      <div class="col-xs-6 va-b">
-        <div class="login-links text-right">
-          <a href="#" class="" title="False Credentials">Password Reset</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt40">
-     {% include "../includes/notifications.html" with message %}
-    </div>
-
-    <div class="panel">
-
-      <form method="post" action="/users/forgot-password" id="contact">
-        <!-- end .form-body section -->
-        <div class="panel-footer p25 pv15">
-
-          <div class="section mn">
-
-            <div class="smart-widget sm-right smr-80">
-              <label for="email" class="field prepend-icon">
-                <input type="text" name="email" id="email" class="gui-input" placeholder="Your Email Address">
-                <label for="email" class="field-icon">
-                  <i class="fa fa-envelope-o"></i>
-                </label>
-              </label>
-              <button type="submit" class="button">Reset</button>  
-            </div>
-            <!-- end .smart-widget section -->
-
-          </div>
-          <!-- end section -->
-  
-        </div>
-        <!-- end .form-footer section -->
-
-      </form>
-
-    </div>
-
+  <!-- Login Logo -->
+  <div class="row table-layout">
+  <a href="dashboard.html" title="Return to Dashboard">
+    <img src="/assets/img/logos/logo.png" title="AdminDesigns Logo" class="center-block img-responsive" style="max-width: 275px;">
+  </a>
   </div>
 
+  <div class="mt30 mb25">
+    {% include "../includes/notifications.html" with message %}
+  </div>
+  
+  <!-- Login Panel/Form -->
+  <div class="panel mt30 mb25">
+
+
+  <form method="post" action="/users/reset/{{ token }}" id="contact">
+    <div class="panel-body bg-light p25 pb15">
+
+      <!-- Username Input -->
+      <div class="section">
+        <label for="username" class="field-label text-muted fs18 mb10">Username</label>
+        <label for="username" class="field prepend-icon">
+          <input type="text" name="username" id="username" class="gui-input" disabled="disabled" value="{{ user.email }}">
+          <label for="username" class="field-icon">
+            <i class="fa fa-user"></i>
+          </label>
+        </label>
+      </div>
+
+      <!-- Password Input -->
+      <div class="section">
+        <label for="username" class="field-label text-muted fs18 mb10">Password</label>
+        <label for="password" class="field prepend-icon">
+          <input type="password" name="password" id="password" class="gui-input" placeholder="Enter password">
+          <label for="password" class="field-icon">
+            <i class="fa fa-lock"></i>
+          </label>
+        </label>
+      </div>    
+      <div class="section">
+        <label for="username" class="field-label text-muted fs18 mb10">Confirm Password</label>
+        <label for="password" class="field prepend-icon">
+          <input type="password" name="password_confirmation" id="password" class="gui-input" placeholder="Enter password again">
+          <label for="password" class="field-icon">
+            <i class="fa fa-lock"></i>
+          </label>
+        </label>
+      </div>
+    </div>
+
+    <div class="panel-footer clearfix">
+      <button type="submit" class="button btn-primary mr10 pull-right">Reset</button>
+    </div>
+
+  </form>
+  </div>
+
+</div>
 {% endblock %}
