@@ -1,18 +1,27 @@
-    <!-- jQuery -->
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+        
+        </div> <!-- end of the main div -->
+        
+        <!-- jQuery -->
+        <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
+        <script src="vendor/jquery/jquery_ui/jquery-ui.min.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Theme Javascript -->
+        <script src="assets/js/utility/utility.js"></script>
+        <script src="assets/js/demo/demo.js"></script>
+        <script src="assets/js/main.js"></script>
+        <script type="text/javascript">
+        jQuery(document).ready(function() {
 
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+        "use strict";
 
-    <!-- Custom Theme JavaScript -->
-    <script src="/dist/js/sb-admin-2.js"></script>
-    <script src="/dist/js/monx.js"></script>
-    
-    {% block footer-scripts %}{% endblock %}
+        // Init Theme Core    
+        Core.init();
 
-</body>
 
+        });
+        </script>
+
+        {% block footer-scripts %}{% endblock %}
+
+    </body>
 </html>

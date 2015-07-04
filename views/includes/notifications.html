@@ -1,7 +1,20 @@
-{% if message.length > 0 %}	
+{% if success_messages.length > 0 %}	
+<div class="alert alert-success alert-dismissable">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	{% for key, val in success_messages %}
+		{% if val.msg %}
+			{{ val.msg }} <br>
+		{% else %}
+			{{ val }} <br>
+		{% endif %}
+	{% endfor %}
+</div>
+{% endif %}
+
+{% if error_messages.length > 0 %}	
 <div class="alert alert-danger alert-dismissable">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	{% for key, val in message %}
+	{% for key, val in error_messages %}
 		{% if val.msg %}
 			{{ val.msg }} <br>
 		{% else %}

@@ -6,25 +6,27 @@ var crypto = require('crypto');
 var Mailer = require('../modules/mailer.js');
 var async = require('async');
 var configs = require('../config/configs.js');
+var bCrypt = require('bcrypt-nodejs');
+
 
 module.exports = function(passport){
-
 	/* GET login page. */
 	router.get('/login', function(req, res, next) {
-		res.render('auth/login', { message: req.flash('message') });
+		res.render('auth/login');
 	});
 
 	/* Handle Login POST */
 	router.post('/login', function(req, res, next){
 			
-		req.check('username', 'A valid email is required').isEmail();
-        req.check('password', 'A password is required').notEmpty();
-        
-        var errors = req.validationErrors();
+	req.check('username', 'A valid email is required').isEmail();
+    req.check('password', 'A password is required').notEmpty();
+    
+    var errors = req.validationErrors();
 
-        if(errors){   //No errors were found.  Passed Validation!
-			return res.render('auth/login', { message: errors });
-        } 
+    if(errors){   //No errors were found.  Passed Validation!
+    	req.flash('error_messages', errors);
+    	return res.redirect('/users/login');
+	    } 
 		
 		passport.authenticate('login', {
 			successRedirect: '/dashboard',
@@ -36,7 +38,7 @@ module.exports = function(passport){
 
 	/* GET Registration Page */
 	router.get('/signup', function(req, res){
-		res.render('auth/signup', { message: req.flash('message') });
+		res.render('auth/signup');
 	});
 
 	/* Handle Registration POST */
@@ -52,7 +54,8 @@ module.exports = function(passport){
         var errors = req.validationErrors();
 
         if(errors){   //No errors were found.  Passed Validation!
-			return res.render('auth/signup', { message: errors });
+        	req.flash('error_messages', errors);
+        	return res.redirect('/users/signup');
         } 
 
 		passport.authenticate('signup', {
@@ -75,8 +78,8 @@ module.exports = function(passport){
         var errors = req.validationErrors();
 
         if(errors){   //No errors were found.  Passed Validation!
-        	console.log(errors);
-			return res.render('auth/forgotpassword', { message: errors });
+        	req.flash('error_messages', errors);
+        	return res.redirect('/users/forgot-password');
         } 
 
 
@@ -90,6 +93,12 @@ module.exports = function(passport){
 			function(token, done) {
 
 				User.findOne({email: req.body.email}, function (err, user) {
+
+					if(!user) {
+						req.flash('error_messages', 'User not found.');
+						return res.redirect('/users/forgot-password');
+					}
+
 				    user.resetPasswordToken = token;
 				    user.resetPasswordExpires = Date.now() + 3600000;
 
@@ -107,7 +116,7 @@ module.exports = function(passport){
 					if(err){
 						if(configs.debug) console.log(err);
 					}else{
-						req.flash('message', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+						req.flash('success_messages', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         				done(err, 'done');
 					}
 				});
@@ -120,27 +129,42 @@ module.exports = function(passport){
 	});
 
 	router.get('/reset/:token', function(req, res) {
+
 	  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
 	    if (!user) {
-	      req.flash('error', 'Password reset token is invalid or has expired.');
-	      return res.redirect('/forgot');
+	      req.flash('error_messages', 'Password reset token is invalid or has expired.');
+	      return res.redirect('/users/forgot-password');
 	    }
-	    res.render('users/reset', {
-	      user: req.user
+	    res.render('auth/reset', {
+	      user: user,
+	      token: req.params.token
 	    });
 	  });
 	});
 
 	router.post('/reset/:token', function(req, res) {
+
+    req.check('password', 'The password is required').notEmpty();
+		req.check('password_confirmation', 'The password confirmation is required').notEmpty();
+    req.check('password_confirmation', 'The password confirmation is not the same as password').equals(req.body.password);
+    
+    var errors = req.validationErrors();
+
+    if(errors) {
+    	req.flash('error_messages', errors);
+    	return res.redirect('/users/reset/' + req.params.token )
+;    }    
+
+
 	  async.waterfall([
 	    function(done) {
 	      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
 	        if (!user) {
-	          req.flash('error', 'Password reset token is invalid or has expired.');
+	          req.flash('error_messages', 'Password reset token is invalid or has expired.');
 	          return res.redirect('back');
 	        }
 
-	        user.password = req.body.password;
+	        user.password = createHash(req.body.password);
 	        user.resetPasswordToken = undefined;
 	        user.resetPasswordExpires = undefined;
 
@@ -152,14 +176,18 @@ module.exports = function(passport){
 	      });
 	    },
 	    function(user, done) {
-	     
-	     	//Mailer
-	        //req.flash('success', 'Success! Your password has been changed.');
-	        //done(err);
-	      });
+	     	
+	     	Mailer.sendOne("newsletter",user,function(err,res){
+				if(err){
+					if(configs.debug) console.log(err);
+				}else{
+	        		req.flash('success_messages', 'Success! Your password has been changed.');
+    				done(err, 'done');
+				}
+			});
 	    }
 	  ], function(err) {
-	    res.redirect('/');
+	    res.redirect('/users/login');
 	  });
 	});
 
@@ -198,6 +226,10 @@ module.exports = function(passport){
 		});
 
 	});
+
+	var createHash = function(password){
+        return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+    }
 
 	return router;
 }

@@ -15,11 +15,11 @@ module.exports = function(passport){
                         return done(err);
                     if (!user){
                         console.log('User Not Found with username '+email);
-                        return done(null, false, req.flash('message', 'User Not found.'));                 
+                        return done(null, false, req.flash('error_messages', 'User Not found.'));                 
                     }
                     if (!isValidPassword(user, password)){
                         console.log('Invalid Password');
-                        return done(null, false, req.flash('message', 'Invalid Password')); // redirect back to login page
+                        return done(null, false, req.flash('error_messages', 'Invalid Password')); // redirect back to login page
                     }
                     return done(null, user);
                 }
