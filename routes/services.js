@@ -8,6 +8,10 @@ var middleware  = require('../middlewares/middlewares.js');
 var util        = require('util');
 var logger      = require('../modules/logger.js');
 
+router.get('/add', function(req, res){
+	res.render('services/add');
+});
+
 router.post('/add', function(req, res){
 
   	/*req.checkParams('domain', 'Invalid domain param').isAlpha();
