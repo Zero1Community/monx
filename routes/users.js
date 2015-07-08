@@ -197,11 +197,11 @@ module.exports = function(passport){
 		res.redirect('/');
 	});
 
-	router.get('/view', middlewares.isAuthenticated, function(req, res){
+	router.get('/settings', middlewares.isAuthenticated, function(req, res){
 		res.render('users/view', { user:req.user });
 	});
 
-	router.get('/edit', middlewares.isAuthenticated, function(req, res){
+	router.get('/settings/edit', middlewares.isAuthenticated, function(req, res){
 		res.render('users/edit', { user:req.user });
 	});
 

@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
-  },
+    "start": "nodemon --ext \".html\" -w . -w public -w views -w routes -w models -w modules -w auth -w config -w middlewares ./bin/www"
+    },
   "dependencies": {
     "amqplib": "^0.3.2",
     "async": "^0.9.2",
