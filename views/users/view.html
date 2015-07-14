@@ -2,10 +2,16 @@
 {% block content %}
 
 <div id="content" class="">
+
+
+
         <div class="row">
 
-          <div class="col-md-12">
+          <div class="col-md-8 col-md-offset-2">
 
+			<div class="mt30 mb25">
+				{% include "../includes/notifications.html" %}
+			</div>
             <!-- Input Fields -->
             <div class="panel">
               <div class="panel-heading">
@@ -21,71 +27,63 @@
               <div class="panel-body">
 
               	<div class="col-md-6">
-              		
 	                <form class="form-horizontal" role="form">
 	                  <div class="form-group">
-	                    <label class="col-lg-3 control-label">Full name</label>
-	                    <div class="col-lg-8">
+	                    <label class="col-lg-6 control-label">Full name</label>
+	                    <div class="col-lg-6">
 	                      <div class="bs-component">
 	                        <p class="form-control-static text-muted">{{user.name}}</p>
 	                      </div>
 	                    </div>
 	                  </div>
 	                  <div class="form-group">
-	                    <label class="col-lg-3 control-label">Email</label>
-	                    <div class="col-lg-8">
+	                    <label class="col-lg-6 control-label">Email</label>
+	                    <div class="col-lg-6">
 	                      <div class="bs-component">
 	                        <p class="form-control-static text-muted">{{user.email}}</p>
 	                      </div>
 	                    </div>
 	                  </div>
+
+	                  <div class="form-group">
+	                    <label class="col-lg-6 control-label">Subscription Type </label>
+	                    <div class="col-lg-6">
+	                      <div class="bs-component">
+	                        <p class="form-control-static text-muted">Free</p>
+	                      </div>
+	                    </div>
+	                  </div>
 	                </form>
 
-              	</div>
-              	<div class="col-md-6">
               		<form class="form-horizontal" role="form">
 						<div class="form-group">
-							<label class="col-lg-3 control-label">Email</label>
-							<div class="col-lg-8">
+							<label class="col-lg-6 control-label">Email</label>
+							<div class="col-lg-6">
 							  <div class="bs-component">
-							    <div class="switch switch-info switch-inline">
-							      <input id="email_notification_checkbox" type="checkbox" checked="">
-							      <label for="email_notification_checkbox"></label>
-							    </div>
+							  	<p class="form-control-static text-muted">Enabled</p>
 							  </div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-lg-3 control-label">Twitter</label>
-							<div class="col-lg-8">
+							<label class="col-lg-6 control-label">Twitter</label>
+							<div class="col-lg-6">
 							  <div class="bs-component">
-							   <div class="switch switch-info switch-inline">
-							      <input id="twitter_notification_checkbox" type="checkbox" checked="">
-							      <label for="twitter_notification_checkbox"></label>
-							    </div>
+							  	<p class="form-control-static text-muted">Enabled</p>
 							  </div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-lg-3 control-label">SMS</label>
-							<div class="col-lg-8">
+							<label class="col-lg-6 control-label">SMS</label>
+							<div class="col-lg-6">
 							  <div class="bs-component">
-							   <div class="switch switch-info switch-inline">
-							      <input id="sms_notification_checkbox" type="checkbox" disabled>
-							      <label for="sms_notification_checkbox"></label>
-							    </div>
-						    	<p class="form-control-static text-muted pull-right">Comming soon!</p>
+							  	<p class="form-control-static text-muted">Enabled</p>
 							  </div>
 							</div>
 						</div>
 	                </form>
               	</div>
-
-             
               </div>
             </div>
-
-
           </div>
         </div>
 
