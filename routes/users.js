@@ -207,9 +207,22 @@ module.exports = function(passport){
 
 	router.post('/update', middlewares.isAuthenticated, function(req, res){
 		console.log(req.user.id);
+		req.check('name', 'Your name is required').notEmpty();
+    req.check('email', 'A valid email is required').isEmail();
+    req.check('password', 'The password is required').notEmpty();
+    req.check('password_confirmation', 'The password confirmation is required').notEmpty();
+    req.check('password_confirmation', 'The password confirmation is not the same as password').equals(req.body.password);
+    
+    var errors = req.validationErrors();
+
+    if(errors){   //No errors were found.  Passed Validation!
+    	req.flash('error_messages', errors);
+    	return res.redirect('/users/settings/edit'); 
+    } 
 
 		//TODO validation
-		User.update({_id:req.user.id}, { name: req.body.name, email: req.body.email }, { multi: false }, function(err, numa){
+		var temp_pass = createHash(req.body.password); 
+		User.update({_id:req.user.id}, { name: req.body.name, email: req.body.email, password: temp_pass }, { multi: false }, function(err, numa){
 			
 			var user = req.user;
 			user.name = req.body.name;
