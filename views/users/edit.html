@@ -1,561 +1,100 @@
 {% extends '../master_layout.html' %}
-{% block header-scripts %}
-  <link rel="stylesheet" type="text/css" href="/assets/admin-tools/admin-forms/css/admin-forms.css">
-{% endblock %}
 {% block content %}
 
-<section id="content" class="table-layout">
+<div id="content" class="">
 
-        <!-- begin: .tray-center -->
-        <div class="tray tray-center" style="height: 400px;">
-        <div>
 
-<div class="admin-form theme-success tab-pane mw700 active" id="order3" role="tabpanel">
-                <div class="panel panel-success heading-border">
-                  <div class="panel-heading">
-                    <span class="panel-title">
-                      <i class="fa fa-shopping-cart"></i> Checkout</span>
-                  </div>
-                  <!-- end .panel-heading section -->
+        <div class="row">
 
-                  <form method="post" action="/" id="form-order3">
-                    <div class="panel-body p25">
-                      <div class="section-divider">
-                        <span>Personal Information</span>
-                      </div>
-                      <!-- .section-divider -->
+          <div class="col-md-8 col-md-offset-2">
 
-                      <div class="section">
-                        <label for="firstname" class="field prepend-icon">
-                          <input type="text" name="firstname" id="firstname" class="gui-input" placeholder="First name...">
-                          <label for="firstname" class="field-icon">
-                            <i class="fa fa-user"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section">
-                        <label for="lastname" class="field prepend-icon">
-                          <input type="text" name="lastname" id="lastname" class="gui-input" placeholder="Last name...">
-                          <label for="lastname" class="field-icon">
-                            <i class="fa fa-user"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section">
-                        <label for="email" class="field prepend-icon">
-                          <input type="email" name="email" id="email" class="gui-input" placeholder="Email address">
-                          <label for="email" class="field-icon">
-                            <i class="fa fa-envelope"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section">
-                        <label for="mobile" class="field prepend-icon">
-                          <input type="tel" name="mobile" id="mobile" class="gui-input" placeholder="Telephone / moble number">
-                          <label for="mobile" class="field-icon">
-                            <i class="fa fa-phone-square"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section-divider mv40">
-                        <span>Payment Details</span>
-                      </div>
-                      <!-- .section-divider -->
-                      <p class="small-text text-muted mb20">Please choose a preferred method of payment below</p>
-                      <div class="section">
-                        <label class="field option">
-                          <input type="radio" name="payment" checked="">
-                          <span class="radio"></span>Credit Card</label>
-                        <label class="field option">
-                          <input type="radio" name="payment">
-                          <span class="radio"></span>Paypal</label>
-                        <label class="field option">
-                          <input type="radio" name="payment">
-                          <span class="radio"></span>Check</label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section">
-                        <label for="cardname" class="field prepend-icon">
-                          <input type="text" name="cardname" id="cardname" class="gui-input" placeholder="Name on card...">
-                          <label for="cardname" class="field-icon">
-                            <i class="fa fa-user"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section row">
-                        <div class="col-md-6">
-                          <label for="cardmonth" class="field select">
-                            <select id="cardmonth" name="cardmonth">
-                              <option value="">Expiryss month...</option>
-                              <option value="01">01 - Jan</option>
-                              <option value="02">02 - Feb</option>
-                              <option value="03">03 - Mar</option>
-                              <option value="04">04 - Apr</option>
-                              <option value="05">05 - May</option>
-                              <option value="06">06 - Jun</option>
-                              <option value="07">07 - Jul</option>
-                              <option value="08">08 - Aug</option>
-                              <option value="09">09 - Sep</option>
-                              <option value="10">10 - Oct</option>
-                              <option value="11">11 - Nov</option>
-                              <option value="12">12 - Dec</option>
-                            </select>
-                            <i class="arrow double"></i>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                        <div class="col-md-6">
-                          <label class="field select">
-                            <select id="cardyear" name="cardyear">
-                              <option value="">Expiry year...</option>
-                              <option value="2014">2014</option>
-                              <option value="2015">2015</option>
-                              <option value="2016">2016</option>
-                              <option value="2017">2017</option>
-                              <option value="2018">2018</option>
-                              <option value="2019">2019</option>
-                              <option value="2020">2020</option>
-                              <option value="2021">2021</option>
-                              <option value="2022">2022</option>
-                              <option value="2023">2023</option>
-                              <option value="2024">2024</option>
-                              <option value="2025">2025</option>
-                              <option value="2026">2026</option>
-                            </select>
-                            <i class="arrow double"></i>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                      </div>
-                      <!-- end section row section -->
-
-                      <div class="section">
-                        <label for="cardno" class="field prepend-icon">
-                          <input type="text" name="cardno" id="lastname" class="gui-input" placeholder="Card number...">
-                          <label for="cardno" class="field-icon">
-                            <i class="fa fa-credit-card"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section row">
-                        <div class="col-md-6">
-                          <label for="cardmonth" class="field select">
-                            <select id="cardmonth" name="cardmonth">
-                              <option value="">Expiry month...</option>
-                              <option value="01">01 - Jan</option>
-                              <option value="02">02 - Feb</option>
-                              <option value="03">03 - Mar</option>
-                              <option value="04">04 - Apr</option>
-                              <option value="05">05 - May</option>
-                              <option value="06">06 - Jun</option>
-                              <option value="07">07 - Jul</option>
-                              <option value="08">08 - Aug</option>
-                              <option value="09">09 - Sep</option>
-                              <option value="10">10 - Oct</option>
-                              <option value="11">11 - Nov</option>
-                              <option value="12">12 - Dec</option>
-                            </select>
-                            <i class="arrow double"></i>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                        <div class="col-md-6">
-                          <label class="field select">
-                            <select id="cardyear" name="cardyear">
-                              <option value="">Expiry year...</option>
-                              <option value="2014">2014</option>
-                              <option value="2015">2015</option>
-                              <option value="2016">2016</option>
-                              <option value="2017">2017</option>
-                              <option value="2018">2018</option>
-                              <option value="2019">2019</option>
-                              <option value="2020">2020</option>
-                              <option value="2021">2021</option>
-                              <option value="2022">2022</option>
-                              <option value="2023">2023</option>
-                              <option value="2024">2024</option>
-                              <option value="2025">2025</option>
-                              <option value="2026">2026</option>
-                            </select>
-                            <i class="arrow double"></i>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                      </div>
-                      <!-- end section row section -->
-
-                      <div class="section row">
-                        <div class="col-md-6">
-                          <label for="secno" class="field prepend-icon">
-                            <input type="text" name="secno" id="secno" class="gui-input" placeholder="Security number...">
-                            <b class="tooltip tip-left-top"><em> This is a four diigit number at the back of your card </em></b>
-                            <label for="secno" class="field-icon">
-                              <i class="fa fa-barcode"></i>
-                            </label>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                        <div class="col-md-6">
-                          <p class="field-align">
-                            <a href="#" class="theme-link"> What is this? </a>
-                          </p>
-                        </div>
-                        <!-- end section -->
-
-                      </div>
-                      <!-- end section row section -->
-
-                      <div class="section-divider mv40">
-                        <span>Shipping Address</span>
-                      </div>
-                      <!-- .tagline -->
-
-                      <div class="section">
-                        <label for="firstaddr" class="field prepend-icon">
-                          <input type="text" name="firstaddr" id="firstaddr" class="gui-input" placeholder="Street address">
-                          <label for="firstaddr" class="field-icon">
-                            <i class="fa fa-building-o"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section">
-                        <label for="lastaddr" class="field prepend-icon">
-                          <input type="text" name="lastaddr" id="lastaddr" class="gui-input" placeholder="Street address 2">
-                          <label for="lastaddr" class="field-icon">
-                            <i class="fa fa-map-marker"></i>
-                          </label>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section">
-                        <label class="field select">
-                          <select id="location" name="location">
-                            <option value="">Select country...</option>
-                            <option value="AL">Albania</option>
-                            <option value="DZ">Algeria</option>
-                            <option value="AD">Andorra</option>
-                            <option value="AO">Angola</option>
-                            <option value="AI">Anguilla</option>
-                            <option value="AG">Antigua and Barbuda</option>
-                            <option value="AR">Argentina</option>
-                            <option value="AM">Armenia</option>
-                            <option value="AW">Aruba</option>
-                            <option value="AU">Australia</option>
-                            <option value="AT">Austria</option>
-                            <option value="AZ">Azerbaijan Republic</option>
-                            <option value="BS">Bahamas</option>
-                            <option value="BH">Bahrain</option>
-                            <option value="BB">Barbados</option>
-                            <option value="BE">Belgium</option>
-                            <option value="BZ">Belize</option>
-                            <option value="BJ">Benin</option>
-                            <option value="BM">Bermuda</option>
-                            <option value="BT">Bhutan</option>
-                            <option value="BO">Bolivia</option>
-                            <option value="BA">Bosnia and Herzegovina</option>
-                            <option value="BW">Botswana</option>
-                            <option value="BR">Brazil</option>
-                            <option value="BN">Brunei</option>
-                            <option value="BG">Bulgaria</option>
-                            <option value="BF">Burkina Faso</option>
-                            <option value="BI">Burundi</option>
-                            <option value="KH">Cambodia</option>
-                            <option value="CA">Canada</option>
-                            <option value="CV">Cape Verde</option>
-                            <option value="KY">Cayman Islands</option>
-                            <option value="TD">Chad</option>
-                            <option value="CL">Chile</option>
-                            <option value="C2">China Worldwide</option>
-                            <option value="CO">Colombia</option>
-                            <option value="KM">Comoros</option>
-                            <option value="CK">Cook Islands</option>
-                            <option value="CR">Costa Rica</option>
-                            <option value="HR">Croatia</option>
-                            <option value="CY">Cyprus</option>
-                            <option value="CZ">Czech Republic</option>
-                            <option value="CD">Democratic Republic of the Congo</option>
-                            <option value="DK">Denmark</option>
-                            <option value="DJ">Djibouti</option>
-                            <option value="DM">Dominica</option>
-                            <option value="DO">Dominican Republic</option>
-                            <option value="EC">Ecuador</option>
-                            <option value="EG">Egypt</option>
-                            <option value="SV">El Salvador</option>
-                            <option value="ER">Eritrea</option>
-                            <option value="EE">Estonia</option>
-                            <option value="ET">Ethiopia</option>
-                            <option value="FK">Falkland Islands</option>
-                            <option value="FO">Faroe Islands</option>
-                            <option value="FJ">Fiji</option>
-                            <option value="FI">Finland</option>
-                            <option value="FR">France</option>
-                            <option value="GF">French Guiana</option>
-                            <option value="PF">French Polynesia</option>
-                            <option value="GA">Gabon Republic</option>
-                            <option value="GM">Gambia</option>
-                            <option value="GE">Georgia</option>
-                            <option value="DE">Germany</option>
-                            <option value="GI">Gibraltar</option>
-                            <option value="GR">Greece</option>
-                            <option value="GL">Greenland</option>
-                            <option value="GD">Grenada</option>
-                            <option value="GP">Guadeloupe</option>
-                            <option value="GT">Guatemala</option>
-                            <option value="GN">Guinea</option>
-                            <option value="GW">Guinea Bissau</option>
-                            <option value="GY">Guyana</option>
-                            <option value="HN">Honduras</option>
-                            <option value="HK">Hong Kong</option>
-                            <option value="HU">Hungary</option>
-                            <option value="IS">Iceland</option>
-                            <option value="IN">India</option>
-                            <option value="ID">Indonesia</option>
-                            <option value="IE">Ireland</option>
-                            <option value="IL">Israel</option>
-                            <option value="IT">Italy</option>
-                            <option value="JM">Jamaica</option>
-                            <option value="JP">Japan</option>
-                            <option value="JO">Jordan</option>
-                            <option value="KZ">Kazakhstan</option>
-                            <option value="KE">Kenya</option>
-                            <option value="KI">Kiribati</option>
-                            <option value="KW">Kuwait</option>
-                            <option value="KG">Kyrgyzstan</option>
-                            <option value="LA">Laos</option>
-                            <option value="LV">Latvia</option>
-                            <option value="LS">Lesotho</option>
-                            <option value="LI">Liechtenstein</option>
-                            <option value="LT">Lithuania</option>
-                            <option value="LU">Luxembourg</option>
-                            <option value="MG">Madagascar</option>
-                            <option value="MW">Malawi</option>
-                            <option value="MY">Malaysia</option>
-                            <option value="MV">Maldives</option>
-                            <option value="ML">Mali</option>
-                            <option value="MT">Malta</option>
-                            <option value="MH">Marshall Islands</option>
-                            <option value="MQ">Martinique</option>
-                            <option value="MR">Mauritania</option>
-                            <option value="MU">Mauritius</option>
-                            <option value="YT">Mayotte</option>
-                            <option value="MX">Mexico</option>
-                            <option value="FM">Micronesia</option>
-                            <option value="MN">Mongolia</option>
-                            <option value="MS">Montserrat</option>
-                            <option value="MA">Morocco</option>
-                            <option value="MZ">Mozambique</option>
-                            <option value="NA">Namibia</option>
-                            <option value="NR">Nauru</option>
-                            <option value="NP">Nepal</option>
-                            <option value="NL">Netherlands</option>
-                            <option value="AN">Netherlands Antilles</option>
-                            <option value="NC">New Caledonia</option>
-                            <option value="NZ">New Zealand</option>
-                            <option value="NI">Nicaragua</option>
-                            <option value="NE">Niger</option>
-                            <option value="NU">Niue</option>
-                            <option value="NF">Norfolk Island</option>
-                            <option value="NO">Norway</option>
-                            <option value="OM">Oman</option>
-                            <option value="PW">Palau</option>
-                            <option value="PA">Panama</option>
-                            <option value="PG">Papua New Guinea</option>
-                            <option value="PE">Peru</option>
-                            <option value="PH">Philippines</option>
-                            <option value="PN">Pitcairn Islands</option>
-                            <option value="PL">Poland</option>
-                            <option value="PT">Portugal</option>
-                            <option value="QA">Qatar</option>
-                            <option value="CG">Republic of the Congo</option>
-                            <option value="RE">Reunion</option>
-                            <option value="RO">Romania</option>
-                            <option value="RU">Russia</option>
-                            <option value="RW">Rwanda</option>
-                            <option value="KN">Saint Kitts and Nevis Anguilla</option>
-                            <option value="PM">Saint Pierre and Miquelon</option>
-                            <option value="VC">Saint Vincent and Grenadines</option>
-                            <option value="WS">Samoa</option>
-                            <option value="SM">San Marino</option>
-                            <option value="ST">São Tomé and Príncipe</option>
-                            <option value="SA">Saudi Arabia</option>
-                            <option value="SN">Senegal</option>
-                            <option value="RS">Serbia</option>
-                            <option value="SC">Seychelles</option>
-                            <option value="SL">Sierra Leone</option>
-                            <option value="SG">Singapore</option>
-                            <option value="SK">Slovakia</option>
-                            <option value="SI">Slovenia</option>
-                            <option value="SB">Solomon Islands</option>
-                            <option value="SO">Somalia</option>
-                            <option value="ZA">South Africa</option>
-                            <option value="KR">South Korea</option>
-                            <option value="ES">Spain</option>
-                            <option value="LK">Sri Lanka</option>
-                            <option value="SH">St. Helena</option>
-                            <option value="LC">St. Lucia</option>
-                            <option value="SR">Suriname</option>
-                            <option value="SJ">Svalbard and Jan Mayen Islands</option>
-                            <option value="SZ">Swaziland</option>
-                            <option value="SE">Sweden</option>
-                            <option value="CH">Switzerland</option>
-                            <option value="TW">Taiwan</option>
-                            <option value="TJ">Tajikistan</option>
-                            <option value="TZ">Tanzania</option>
-                            <option value="TH">Thailand</option>
-                            <option value="TG">Togo</option>
-                            <option value="TO">Tonga</option>
-                            <option value="TT">Trinidad and Tobago</option>
-                            <option value="TN">Tunisia</option>
-                            <option value="TR">Turkey</option>
-                            <option value="TM">Turkmenistan</option>
-                            <option value="TC">Turks and Caicos Islands</option>
-                            <option value="TV">Tuvalu</option>
-                            <option value="UG">Uganda</option>
-                            <option value="UA">Ukraine</option>
-                            <option value="AE">United Arab Emirates</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="US">United States</option>
-                            <option value="UY">Uruguay</option>
-                            <option value="VU">Vanuatu</option>
-                            <option value="VA">Vatican City State</option>
-                            <option value="VE">Venezuela</option>
-                            <option value="VN">Vietnam</option>
-                            <option value="VG">Virgin Islands (British)</option>
-                            <option value="WF">Wallis and Futuna Islands</option>
-                            <option value="YE">Yemen</option>
-                            <option value="ZM">Zambia</option>
-                          </select>
-                          <i class="arrow double"></i>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                      <div class="section row">
-                        <div class="col-md-3">
-                          <label for="zip" class="field prepend-icon">
-                            <input type="text" name="zip" id="zip" class="gui-input" placeholder="Zip">
-                            <label for="zip" class="field-icon">
-                              <i class="fa fa-certificate"></i>
-                            </label>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                        <div class="col-md-4">
-                          <label for="city" class="field prepend-icon">
-                            <input type="text" name="city" id="city" class="gui-input" placeholder="City">
-                            <label for="city" class="field-icon">
-                              <i class="fa fa-building-o"></i>
-                            </label>
-                          </label>
-                        </div>
-                        <!-- end section -->
-
-                        <div class="col-md-5">
-                          <label for="states" class="field select">
-                            <select id="states" name="states">
-                              <option value="">Choose state</option>
-                              <option value="AL">Alabama</option>
-                              <option value="AK">Alaska</option>
-                              <option value="AZ">Arizona</option>
-                              <option value="AR">Arkansas</option>
-                              <option value="CA">California</option>
-                              <option value="CO">Colorado</option>
-                              <option value="CT">Connecticut</option>
-                              <option value="DE">Delaware</option>
-                              <option value="DC">District Of Columbia</option>
-                              <option value="FL">Florida</option>
-                              <option value="GA">Georgia</option>
-                              <option value="HI">Hawaii</option>
-                              <option value="ID">Idaho</option>
-                              <option value="IL">Illinois</option>
-                              <option value="IN">Indiana</option>
-                              <option value="IA">Iowa</option>
-                              <option value="KS">Kansas</option>
-                              <option value="KY">Kentucky</option>
-                              <option value="LA">Louisiana</option>
-                              <option value="ME">Maine</option>
-                              <option value="MD">Maryland</option>
-                              <option value="MA">Massachusetts</option>
-                              <option value="MI">Michigan</option>
-                              <option value="MN">Minnesota</option>
-                              <option value="MS">Mississippi</option>
-                              <option value="MO">Missouri</option>
-                              <option value="MT">Montana</option>
-                              <option value="NE">Nebraska</option>
-                              <option value="NV">Nevada</option>
-                              <option value="NH">New Hampshire</option>
-                              <option value="NJ">New Jersey</option>
-                              <option value="NM">New Mexico</option>
-                              <option value="NY">New York</option>
-                              <option value="NC">North Carolina</option>
-                              <option value="ND">North Dakota</option>
-                              <option value="OH">Ohio</option>
-                              <option value="OK">Oklahoma</option>
-                              <option value="OR">Oregon</option>
-                              <option value="PA">Pennsylvania</option>
-                              <option value="RI">Rhode Island</option>
-                              <option value="SC">South Carolina</option>
-                              <option value="SD">South Dakota</option>
-                              <option value="TN">Tennessee</option>
-                              <option value="TX">Texas</option>
-                              <option value="UT">Utah</option>
-                              <option value="VT">Vermont</option>
-                              <option value="VA">Virginia</option>
-                              <option value="WA">Washington</option>
-                              <option value="WV">West Virginia</option>
-                              <option value="WI">Wisconsin</option>
-                              <option value="WY">Wyoming</option>
-                            </select>
-                            <i class="arrow double"></i>
-                          </label>
-                        </div>
-                        <!-- end .col8 section -->
-
-                      </div>
-                      <!-- end section row section -->
-
-                      <div class="section">
-                        <label class="field option">
-                          <input type="checkbox" name="info" checked="">
-                          <span class="checkbox"></span>Save my information
-                          <em class="small-text text-muted">(No worries, its secure)</em>
-                        </label>
-                      </div>
-                      <!-- end section -->
-
-                    </div>
-                    <!-- end .panel-body section -->
-                    <div class="panel-footer">
-                      <button type="submit" class="button btn-primary">Proceed to confirm</button>
-                    </div>
-                    <!-- end .form-footer section -->
-                  </form>
-                </div>
-                <!-- end: .panel -->
+			<div class="mt30 mb25">
+				{% include "../includes/notifications.html" %}
+			</div>
+            <!-- Input Fields -->
+            <div class="panel">
+              <div class="panel-heading">
+                <span class="panel-title">User Details</span>
               </div>
-</div>
-</div>
-</section>
-{% endblock %}
+              <div class="panel-body">
+
+				<form class="form-horizontal" role="form" method="POST" action="/users/update">
+	              	<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Full name</label>
+								<div class="col-lg-6">
+								<input type="text" id="inputStandard" class="form-control" name="name" value="{{user.name}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Email</label>
+								<div class="col-lg-6">
+								  <div class="bs-component">
+								<input type="text" id="inputStandard" class="form-control" name="email" value="{{user.email}}">
+								    <p class="form-control-static text-muted"></p>
+								  </div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Password</label>
+								<div class="col-lg-6">
+								<input type="text" id="inputPassword" class="form-control" name="password" placeholder="Password" >
+								    <p class="form-control-static text-muted"></p>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Retype Password</label>
+								<div class="col-lg-6">
+								<input type="text" id="inputPassword" class="form-control" name="retype-password" placeholder="Password Confirmation" >
+								    <p class="form-control-static text-muted"></p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Subscription Type </label>
+								<div class="col-lg-6">
+								    <p class="form-control-static text-muted">Free</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Email</label>
+								<div class="col-lg-6">
+								  <div class="bs-component">
+								  	<p class="form-control-static text-muted">Enabled</p>
+								  </div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-6 control-label">Twitter</label>
+								<div class="col-lg-6">
+								  <div class="bs-component">
+								  	<p class="form-control-static text-muted">Enabled</p>
+								  </div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-6 control-label">SMS</label>
+								<div class="col-lg-6">
+								  <div class="bs-component">
+								  	<p class="form-control-static text-muted">Enabled</p>
+								  </div>
+								</div>
+							</div>
+
+
+	              	</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary pull-right">Update</button>
+						</div>
+					</div>
+				</form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+{% endblock %} 	

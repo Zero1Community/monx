@@ -219,8 +219,9 @@ module.exports = function(passport){
 			//console.log(numa);
 
 			req.logIn(user, function(error) {
-            if (!error) {
-	               	res.render('users/view', { success: req.flash('success') });
+            if (!error) {	
+            		req.flash('success_messages', 'User updated.');
+            		res.redirect('/users/settings');
 	            }
 	        });
 		});
