@@ -4,26 +4,48 @@ var dns         = require('dns');
 var checkRBL    = require('../modules/checkBlacklist.js');
 var Service     = require('../models/service.js');
 var serviceData = require('../models/serviceData.js');
+var configs = require('../config/configs.js');
 var middleware  = require('../middlewares/middlewares.js');
 var util        = require('util');
 var logger      = require('../modules/logger.js');
+
+router.get('/index', function(req, res){
+
+  var user = req.user;
+
+  Service.find({ user: user._id }, function(err, services) {
+    
+    if(!err) {
+      res.render('services/index', { services: services });
+    }
+
+  });
+
+});
 
 router.get('/add', function(req, res){
 	res.render('services/add');
 });
 
 router.post('/add', function(req, res){
+  
+  //TODO fix messages
+  req.check('name', 'Service name is required').notEmpty();
+  req.check('host', 'Your name is required').notEmpty();
+  req.check('type', 'A valid email is required').notEmpty();
+  req.check('interval', 'The password is required').notEmpty();
+  req.check('status', 'The password confirmation is required').notEmpty();
 
-  	/*req.checkParams('domain', 'Invalid domain param').isAlpha();
+  var errors = req.validationErrors();
 
-  	var errors = req.validationErrors();
-	  if (errors) {
-	    res.send('There have been validation errors:' + util.inspect(errors), 400);
-	    return;
-	  }*/
+  if(errors){   //No errors were found.  Passed Validation!
+    req.flash('error_messages', errors);
+    return res.redirect('/services/add');
+  }   
 
 	var newService = new Service();
 
+    newService.name = req.body.name;
     newService.host = req.body.host;
     newService.type = req.body.type;
     newService.interval = req.body.interval;
@@ -35,11 +57,11 @@ router.post('/add', function(req, res){
        	logger.debug('There was an error saving the service', err);
        } else {
        	logger.debug('The new service was saved!');
+        req.flash('success_messages', 'Service added.');
+        res.redirect('/services/index');
        }
     });
     
-	res.setHeader('Content-Type', 'application/json');
-	res.end(JSON.stringify({'success': 0, 'message': 'No mx records'}));
 });
 
 router.post('/mx', function(req, res){

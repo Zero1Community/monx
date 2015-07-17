@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --ext \".html\" -w . -w public -w views -w routes -w models -w modules -w auth -w config -w middlewares ./bin/www"
+    "start": "nodemon --ext \".html .js\" -w . -w public -w views -w routes -w models -w modules -w auth -w config -w middlewares ./bin/www"
     },
   "dependencies": {
     "amqplib": "^0.3.2",
