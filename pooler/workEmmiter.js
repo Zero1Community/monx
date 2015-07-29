@@ -18,6 +18,7 @@ Service.find({}, function(err, services) {
 });
 
 function scheduler(taskList){
+  //TODO to start when is pulled for the first time
   if(configs.debug) console.log('Got service from DB', taskList);
   taskList.forEach(function(task){
     setInterval(function(task) {

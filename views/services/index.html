@@ -1,0 +1,84 @@
+{% extends '../master_layout.html' %}
+{% block content %}
+
+<div id="content" class="">
+
+
+        <div class="row">
+
+          <div class="col-md-8 col-md-offset-2">
+
+      <div class="mt30 mb25">
+        {% include "../includes/notifications.html" %}
+      </div>
+
+<div class="panel" id="spy9">
+            <div class="panel-heading">
+             <span class="glyphicon glyphicon-th-list fs11 mr5"></span> All Services
+               <div class="widget-menu pull-right mr10">
+                    <div class="btn-group">
+                      <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
+                          <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
+                      </a>
+                    </div>
+                  </div>
+            </div>
+            <div class="panel-body p5">
+              <div class="table-responsive">
+                <div class="bs-component">
+                  <table class="table mbn table-striped admin-form theme-info">
+                    <thead>
+                      <tr>
+                        <th>Service Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th class="text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for service in services -%}
+
+                    <tr>
+                        <td>{{service.name}}</td>
+                        <td>{{service.type}}</td>
+                        <td>OK</td>
+                        <td class="text-right">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-info btn-sm fs12 fw500 dropdown-toggle ph10" data-toggle="dropdown" aria-expanded="false">
+                              Dropdown
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                              <li>
+                                <a href="/service/{{ service.id }}">Edit</a>
+                              </li>
+                              <li>
+                                <a href="#">Stop</a>
+                              </li>
+                              <li>
+                                <a href="#">Mute</a>
+                              </li>
+                              <li>
+                                <a href="#">Delete</a>
+                              </li>
+                              <li class="divider"></li>
+                              <li>
+                                <a href="#">Separated link</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      {%- endfor %}
+
+                    </tbody>
+                  </table>
+                <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
+              </div>
+            </div>
+          </div>
+</div>
+</div>
+</div>
