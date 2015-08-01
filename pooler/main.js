@@ -39,13 +39,15 @@ amqp.connect('amqp://localhost').then(function(conn) {
 // with port scan, ssl check, smtp, ping and other stuff like that
 
 function processWork(tC,callback){
-	if(tC.type === "blacklist_check"){
+	//console.log(tC.type);
+	if(tC.type === "blacklist"){
 		monxBlacklist(tC);
 	}
 }
 
 // posting data to API function
 function postToAPI(data){
+	console.log("Posing to API");
 	var request = require('request');
 	if(configs.debug) console.log('Data received', data);
 
