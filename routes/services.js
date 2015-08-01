@@ -4,6 +4,7 @@ var dns         = require('dns');
 var checkRBL    = require('../modules/checkBlacklist.js');
 var Service     = require('../models/service.js');
 var serviceData = require('../models/serviceData.js');
+var Notification = require('../models/notification.js');
 var configs = require('../config/configs.js');
 var m  = require('../middlewares/middlewares.js');
 var util        = require('util');
@@ -12,7 +13,8 @@ var logger      = require('../modules/logger.js');
 router.get('/index', function(req, res){
 
   var user = req.user;
-
+  // TODO: LIMIT / PAGINATION ?
+// TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
   Service.find({ user: user._id }, function(err, services) {
     
     if(!err) {
@@ -27,6 +29,40 @@ router.get('/add', function(req, res){
 	res.render('services/add');
 });
 
+router.get('/notifications', function(req, res) {
+	var service_id = req.params.id;
+	Notification.find({user: req.user} ,function(err, notifics) {
+			if(!err && notifics) {
+				// res.setHeader('Content-Type', 'application/json');
+			 //  res.end(JSON.stringify(notifics));
+				// console.log(notifics);
+				res.render('services/notifics', {notifications : notifics});
+			} else {
+				logger.debug(err);
+				res.flash('error_messages', 'No notifications for this service');
+		    return res.redirect('/services/index');
+			}
+		});
+});
+
+
+
+router.get('/:id/data', function(req, res) {
+	var service_id = req.params.id;
+	serviceData.find(service_id ,function(err, data) {
+			if(!err && data) {
+				// res.setHeader('Content-Type', 'application/json');
+				// res.end(JSON.stringify(data));
+				res.render('services/data', {data : data});
+			} else {
+				logger.debug(err);
+				res.flash('error_messages', 'No data for this service');
+		    return res.redirect('/services/index');
+			}
+		});
+});
+
+
 router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 	//verifikim per fiksim ID
 	Service.findOne({_id: req.params.id}, function (err, service) {
@@ -34,9 +70,9 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 				res.end('No service found');
 			}
 		res.render('services/edit', {service : service});
-	});
-	
+	});	
 });
+
 
 router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   
@@ -51,33 +87,49 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
 	var errors = req.validationErrors();
 
-  if(errors){   //No errors were found.  Passed Validation!
-    req.flash('error_messages', errors);
-    return res.redirect('/services/add');
-  }   
+	  if(errors){   //No errors were found.  Passed Validation!
+	    req.flash('error_messages', errors);
+	    return res.redirect('/services/add');
+	  }   
 
-	  Service.findOne({_id:req.params.id}, function(err, service){
+		Service.findOne({_id:req.params.id}, function(err, service){
 
-	  	service.name = req.body.name;
-	  	service.host = req.body.host;
-	  	service.type = req.body.type;
-	  	service.interval = req.body.interval;
-	  	service.status = req.body.status;
+  	service.name = req.body.name;
+  	service.host = req.body.host;
+  	service.type = req.body.type;
+  	service.interval = req.body.interval;
+  	service.status = req.body.status;
 
-   
-	    service.save(function(err) {
-	       if(err) {
-	       	logger.debug('There was an error saving the service', err);
-	       } else {
-	       	logger.debug('The new service was saved!');
-	        req.flash('success_messages', 'Service updated.');
-	        res.redirect('/services/index');
-	       }
-	    });
-	    
- 		});
-
+		  service.save(function(err) {
+		     if(err) {
+		     	logger.debug('There was an error saving the service', err);
+		     } else {
+		     	logger.debug('The new service was saved!');
+		      req.flash('success_messages', 'Service updated.');
+		      res.redirect('/services/index');
+		     }
+		  });
+		});
 });
+
+router.get('/:id', function(req, res) {
+// ktu duhet marre thjesht configurimi total i atij sherbimi 
+
+	var service_id = req.params.id;
+	serviceData.find(service_id ,function(err, data) {
+			if(!err && data) {
+				// res.setHeader('Content-Type', 'application/json');
+				// res.end(JSON.stringify(data));
+				res.render('services/data', {data : data});
+			} else {
+				logger.debug(err);
+				res.flash('error_messages', 'No data for this service');
+		    return res.redirect('/services/index');
+			}
+		});
+});
+
+
 
 router.post('/add', function(req, res){
   
@@ -143,21 +195,6 @@ router.post('/blacklist', function(req, res){
 	});
 
 });
-
-router.get('/:id', function(req, res) {
-	var service_id = req.params.id;
-	serviceData.find(service_id, function(err, data) {
-		if(!err) {
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify(data));
-		} else {
-			logger.debug(err);
-			res.end('No data for this service');
-		}
-
-	});
-});
-
 
 
 module.exports = router;

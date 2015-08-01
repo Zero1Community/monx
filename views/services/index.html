@@ -40,13 +40,16 @@
                     {% for service in services -%}
 
                     <tr>
-                        <td>{{service.name}}</td>
+                        <td><a href="/services/{{ service.id }}">{{service.name}}</td>
                         <td>{{service.type}}</td>
-                        <td>OK</td>
+                        <td>Check Running</td>
+                        <td class="text-right">
+                          <a href="/services/{{ service.id }}/data"> View Data</a>
+                        </td>
                         <td class="text-right">
                           <div class="btn-group">
                             <button type="button" class="btn btn-info btn-sm fs12 fw500 dropdown-toggle ph10" data-toggle="dropdown" aria-expanded="false">
-                              Dropdown
+                              Actions
                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">
@@ -64,7 +67,7 @@
                               </li>
                               <li class="divider"></li>
                               <li>
-                                <a href="#">Separated link</a>
+                                <a href="#">View charts for this service</a>
                               </li>
                             </ul>
                           </div>
