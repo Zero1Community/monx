@@ -6,6 +6,8 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('./modules/logger.js');
+var m  = require('./middlewares/middlewares.js');
+
 
 
 //connect to MongoDB
@@ -76,7 +78,7 @@ app.use(function(req, res, next){
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/services', services);
+app.use('/services', m.isAuthenticated, services);
 app.use('/api', api);
 
 // catch 404 and forward to error handler
