@@ -38,18 +38,6 @@ router.post('/service-data/add', function(req, res){
 		}
     });
 
-	
-
-
-	/*serviceData.new(data, function(err, result){
-		if(!err) {
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify({'success': 1}));
-		} else {
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify({'success': 0, error: 3}));
-		}
-	});*/
 });
 
 module.exports = router;
