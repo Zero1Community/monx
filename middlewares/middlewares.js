@@ -1,3 +1,6 @@
+var Service     = require('../models/service.js');
+
+
 var middleware = {
     isAuthenticated: function (req, res, next) {
       // if user is authenticated in the session, call the next() to call the next request handler 
@@ -14,11 +17,11 @@ var middleware = {
 
       Service.findOne({_id:service_id }, function(err, service) {
         //TODO: Flash Message
-        if(err) {
+        if(err || !service) {
           res.redirect('/dashboard');
         }
 
-        if(service.user_id == user_id) {
+        if(service.user == user_id) {
           return next();
         }
 
