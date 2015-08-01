@@ -27,6 +27,73 @@ router.get('/add', function(req, res){
 	res.render('services/add');
 });
 
+router.get('/:id/edit', function(req, res){
+	//verifikim per fiksim ID
+	Service.findOne({_id: req.params.id}, function (err, service) {
+			if(err){
+				res.end('No service found');
+			}
+		res.render('services/edit', {service : service});
+	});
+	
+});
+
+router.post('/:id/edit', function(req, res){
+  
+  res.end('I morem');
+  //TODO fix messages
+  // kontroll shtese nqs kjo ID eshte e KTIJ useri
+ //  req.check('id', 'Service ID is required').notEmpty();
+ //  req.check('name', 'Service name is required').notEmpty();
+ //  req.check('host', 'Your name is required').notEmpty();
+ //  req.check('type', 'A valid type is required').notEmpty();
+ //  req.check('interval', 'The interval is required').notEmpty();
+ //  req.check('status', 'The status is required').notEmpty();
+
+	// var errors = req.validationErrors();
+
+ //  if(errors){   //No errors were found.  Passed Validation!
+ //    req.flash('error_messages', errors);
+ //    return res.redirect('/services/add');
+ //  }   
+
+	// var updateService = new Service();
+ //  Service.findOne({_id : id }, function(err, service) {
+ //    if (!service) {
+ //      req.flash('error_messages', 'Service does not exist.');
+ //      return res.redirect('/service/index');
+ //    }
+	//   Service.update({_id:req.user.id}, updated_user, { multi: false }, function(err, numa){
+			
+	// 		var user = req.user;
+	// 		user.name = req.body.name;
+	// 		user.email = req.body.email;
+
+	// 		//console.log(err);
+	// 		//console.log(numa);
+ //    newService.name = req.body.name;
+ //    newService.host = req.body.host;
+ //    newService.type = req.body.type;
+ //    newService.interval = req.body.interval;
+
+ //    newService.user = req.user;
+   
+ //    newService.save(function(err) {
+ //       if(err) {
+ //       	logger.debug('There was an error saving the service', err);
+ //       } else {
+ //       	logger.debug('The new service was saved!');
+ //        req.flash('success_messages', 'Service added.');
+ //        res.redirect('/services/index');
+ //       }
+ //    });
+
+	
+
+ //  });
+    
+});
+
 router.post('/add', function(req, res){
   
   //TODO fix messages
