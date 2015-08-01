@@ -5,7 +5,7 @@ var checkRBL    = require('../modules/checkBlacklist.js');
 var Service     = require('../models/service.js');
 var serviceData = require('../models/serviceData.js');
 var configs = require('../config/configs.js');
-var middleware  = require('../middlewares/middlewares.js');
+var m  = require('../middlewares/middlewares.js');
 var util        = require('util');
 var logger      = require('../modules/logger.js');
 
@@ -27,7 +27,7 @@ router.get('/add', function(req, res){
 	res.render('services/add');
 });
 
-router.get('/:id/edit', middleware.isAuthenticated, middleware.hasServiceAccess, function(req, res){
+router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 	//verifikim per fiksim ID
 	Service.findOne({_id: req.params.id}, function (err, service) {
 			if(err){
@@ -38,44 +38,44 @@ router.get('/:id/edit', middleware.isAuthenticated, middleware.hasServiceAccess,
 	
 });
 
-router.post('/:id/edit',middleware.isAuthenticated, middleware.hasServiceAccess, function(req, res){
+router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   
   //TODO fix messages
   // kontroll shtese nqs kjo ID eshte e KTIJ useri
-//   req.check('id', 'Service ID is required').notEmpty();
-//   req.check('name', 'Service name is required').notEmpty();
-//   req.check('host', 'Your name is required').notEmpty();
-//   req.check('type', 'A valid type is required').notEmpty();
-//   req.check('interval', 'The interval is required').notEmpty();
-//   req.check('status', 'The status is required').notEmpty();
+  req.check('id', 'Service ID is required').notEmpty();
+  req.check('name', 'Service name is required').notEmpty();
+  req.check('host', 'Your name is required').notEmpty();
+  req.check('type', 'A valid type is required').notEmpty();
+  req.check('interval', 'The interval is required').notEmpty();
+  req.check('status', 'The status is required').notEmpty();
 
-// 	var errors = req.validationErrors();
+	var errors = req.validationErrors();
 
-//   if(errors){   //No errors were found.  Passed Validation!
-//     req.flash('error_messages', errors);
-//     return res.redirect('/services/add');
-//   }   
+  if(errors){   //No errors were found.  Passed Validation!
+    req.flash('error_messages', errors);
+    return res.redirect('/services/add');
+  }   
 
-// 	  Service.update({_id:req.user.id}, updated_user, { multi: false }, function(err, service){
+	  Service.findOne({_id:req.params.id}, function(err, service){
 
-// 	  	service.name = req.body.name;
-// 	  	service.host = req.body.host;
-// 	  	service.type = req.body.type;
-// 	  	service.interval = req.body.interval;
-// 	  	service.status = req.body.status;
+	  	service.name = req.body.name;
+	  	service.host = req.body.host;
+	  	service.type = req.body.type;
+	  	service.interval = req.body.interval;
+	  	service.status = req.body.status;
 
    
-//     service.save(function(err) {
-//        if(err) {
-//        	logger.debug('There was an error saving the service', err);
-//        } else {
-//        	logger.debug('The new service was saved!');
-//         req.flash('success_messages', 'Service added.');
-//         res.redirect('/services/index');
-//        }
-//     });
-    
-// });
+	    service.save(function(err) {
+	       if(err) {
+	       	logger.debug('There was an error saving the service', err);
+	       } else {
+	       	logger.debug('The new service was saved!');
+	        req.flash('success_messages', 'Service updated.');
+	        res.redirect('/services/index');
+	       }
+	    });
+	    
+ 		});
 
 });
 
