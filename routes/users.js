@@ -152,8 +152,8 @@ module.exports = function(passport){
 
     if(errors) {
     	req.flash('error_messages', errors);
-    	return res.redirect('/users/reset/' + req.params.token )
-;    }    
+    	return res.redirect('/users/reset/' + req.params.token );    
+    }    
 
 
 	  async.waterfall([

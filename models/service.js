@@ -4,6 +4,7 @@ var serviceSchema = new mongoose.Schema({
       name: String,
       type: String,
       host: String,
+      status: String,
       enabled: Boolean,
       interval: Number,
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
