@@ -114,19 +114,18 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
 router.get('/:id', function(req, res) {
 // ktu duhet marre thjesht configurimi total i atij sherbimi 
-
-	var service_id = req.params.id;
-	serviceData.find(service_id ,function(err, data) {
-			if(!err && data) {
-				// res.setHeader('Content-Type', 'application/json');
-				// res.end(JSON.stringify(data));
-				res.render('services/data', {data : data});
-			} else {
-				logger.debug(err);
-				res.flash('error_messages', 'No data for this service');
-		    return res.redirect('/services/index');
-			}
-		});
+	Service.findOne({_id:req.params.id}, function(err, service){
+		if(err) {
+			logger.debug('There was an error saving the service', err);
+		} else {
+			res.render('services/view', {service : service});
+	  	// service.name 
+	  	// service.host ;
+	  	// service.type ;
+	  	// service.interval 
+	  	// service.status 
+		}	
+	});
 });
 
 

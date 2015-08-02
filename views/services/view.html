@@ -1,0 +1,71 @@
+{% extends '../master_layout.html' %}
+{% block content %}
+
+<div id="content" class="">
+
+
+        <div class="row">
+
+          <div class="col-md-8 col-md-offset-2">
+
+      <div class="mt30 mb25">
+        {% include "../includes/notifications.html" %}
+      </div>
+
+<div class="panel" id="spy9">
+        <div class="panel-heading">
+         <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Service Overview
+           <div class="widget-menu pull-right mr10">
+                <div class="btn-group">
+<!--                       <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
+                      <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
+                  </a> -->
+                </div>
+              </div>
+        </div>
+        <div class="panel-body p5">
+          <div class="table-responsive">
+            <div class="bs-component">
+              <table class="table mbn table-striped admin-form theme-info">
+                <thead>
+                  <tr>
+                    <th>Event Time</th>
+                    <th>Status</th>
+                    <th>Message</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                {% for record in data -%}
+
+                <tr>
+                    <td>{{record.created_at.toUTCString()}}</td>
+                    <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} OK {% endif %} </td>
+                    <td>
+                      {% set bl_total = 0 %}
+                      {% set timeout_total = 0 %}
+                      {% for bl in record.message.listed -%}
+                        {% if bl.status == '1' %} {%set bl_total += 1%} {% endif %}
+                        {% if bl.status == '2' %} {%set timeout_total += 1%} {% endif %}
+                      {%- endfor %}
+                      {{bl_total}} blacklists / {{timeout_total}} timeout
+                    </td>
+                    <td>{{service.type}}</td>
+                    <td class="text-right">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-primary pull-right">View Event</button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {%- endfor %}
+
+                </tbody>
+              </table>
+            <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
+          </div>
+        </div>
+      </div>
+</div>
+</div>
+</div>
