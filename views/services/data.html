@@ -36,19 +36,13 @@
                 </thead>
                 <tbody>
 
-                {% for record in data -%}
+                {% for record in data %}
 
                 <tr>
                     <td>{{record.created_at.toUTCString()}}</td>
-                    <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} OK {% endif %} </td>
+                    <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} CLEAN {% endif %} </td>
                     <td>
-                      {% set bl_total = 0 %}
-                      {% set timeout_total = 0 %}
-                      {% for bl in record.message.listed -%}
-                        {% if bl.status == '1' %} {%set bl_total += 1%} {% endif %}
-                        {% if bl.status == '2' %} {%set timeout_total += 1%} {% endif %}
-                      {%- endfor %}
-                      {{bl_total}} blacklists / {{timeout_total}} timeout
+                        Comming Soon
                     </td>
                     <td>{{service.type}}</td>
                     <td class="text-right">
@@ -58,7 +52,7 @@
                     </td>
                   </tr>
                   
-                  {%- endfor %}
+                  {% endfor %}
 
                 </tbody>
               </table>
