@@ -89,12 +89,28 @@ function monxBlacklist(blacklistObject){
 		//The logic for the status to be handled
 		for (var i = totalResults.length - 1; i >= 0; i--) {
 			if(totalResults[i]['status'] > 0){
+				if(totalResults[i]['status'] == 1){
 				stat = 'ERROR';
-				console.log(totalResults[i]);
 				cleanStatus.push(totalResults[i]);
+				}
+				//cleanStatus.push(totalResults[i]);
+				console.log(totalResults[i]);
 			}
 		};
 
+// TODO: FIX THIS
+//   Error
+// { [Error: connect ECONNREFUSED]
+//   code: 'ECONNREFUSED',
+//   errno: 'ECONNREFUSED',
+//   syscall: 'connect' }
+// undefined
+// Error
+// { [Error: connect ECONNREFUSED]
+//   code: 'ECONNREFUSED',
+//   errno: 'ECONNREFUSED',
+//   syscall: 'connect' }
+// undefined
 
 		var data = {
 			message: {

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var Service     = require('../models/service.js');
 var middleware = require('../middlewares/middlewares.js');
 //var serviceData = require('../models/serviceData.js');
 var configs = require('../config/configs.js');
@@ -26,17 +27,66 @@ router.post('/service-data/add', function(req, res){
 	var sData = new ServiceData({
 			message: data.message,
 			status: data.status,
+			source: req.ip 
+		});
+		sData.save(function(err) {
+	      if(!err) {
+
+				Service.findOne({_id:data.service_id}, function(err, service){
+
+					service.status = data.status;
+
+					service.save(function(err) {
+						 if(err) {
+							logger.debug('There was an error saving the service', err);
+						 } else {
+						  	logger.debug('The new service was saved!');
+								res.setHeader('Content-Type', 'application/json');
+								res.end(JSON.stringify({'success': 1}));
+						      // req.flash('success_messages', 'Service updated.');
+						      // res.redirect('/services/index');
+							}
+						});
+				});
+			} else {
+				res.setHeader('Content-Type', 'application/json');
+				res.end(JSON.stringify({'success': 0, error: 3}));
+			}
 		});
 
-	sData.save(function(err) {
-      if(!err) {
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify({'success': 1}));
-		} else {
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify({'success': 0, error: 3}));
-		}
-    });
+
+	// var ServiceData = require('../models/service_data.js')(data.service_id);
+	
+	// var sData = new ServiceData({
+	// 		message: data.message,
+	// 		status: data.status,
+	// 	});
+	// 	sData.save(function(err) {
+	//       if(!err) {
+
+	// 			Service.findOne({_id:data.service_id}, function(err, service){
+
+	// 				service.status = data.status;
+
+	// 				service.save(function(err) {
+	// 					 if(err) {
+	// 						logger.debug('There was an error saving the service', err);
+	// 					 } else {
+	// 					  	logger.debug('The new service was saved!');
+	// 							res.setHeader('Content-Type', 'application/json');
+	// 							res.end(JSON.stringify({'success': 1}));
+	// 					      // req.flash('success_messages', 'Service updated.');
+	// 					      // res.redirect('/services/index');
+	// 						}
+	// 					});
+	// 			});
+	// 		} else {
+	// 			res.setHeader('Content-Type', 'application/json');
+	// 			res.end(JSON.stringify({'success': 0, error: 3}));
+	// 		}
+	// 	});
+
+
 
 });
 

@@ -5,5 +5,6 @@ module.exports = mongoose.model('Notification',{
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     service: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' },
     status: String,
+    seen: Boolean,
     created_at: { type: Date, required: true, default: Date.now }
 });	

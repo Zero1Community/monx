@@ -11,6 +11,8 @@ var Service = require('../models/service.js');
 
 // kjo duhet bo me .then()
 mongoose.connect(dbConfig.url);
+
+// TODO: FILTER FIND ME ENABLED
 Service.find({}, function(err, services) {
     if(configs.debug) console.log(services);
     scheduler(services);
@@ -21,6 +23,10 @@ function scheduler(taskList){
   //TODO to start when is pulled for the first time
   if(configs.debug) console.log('Got service from DB', taskList);
   taskList.forEach(function(task){
+   // kjo zgjidhet kshu po duhet gjet nej mekanizem anti-bukosje
+   // nej queue lineare psh , boh..
+   // workEmmiter(task);
+// 
     setInterval(function(task) {
           //let's emmit the work on RabbitMQ
           workEmmiter(task);

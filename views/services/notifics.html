@@ -1,0 +1,65 @@
+{% extends '../master_layout.html' %}
+{% block content %}
+
+<div id="content" class="">
+
+
+        <div class="row">
+
+          <div class="col-md-12 col-md-offset-0">
+
+      <div class="mt30 mb25">
+        {% include "../includes/notifications.html" %}
+      </div>
+
+<div class="panel" id="spy9">
+        <div class="panel-heading">
+         <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Notifications Log Data
+           <div class="widget-menu pull-right mr10">
+                <div class="btn-group">
+<!--                       <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
+                      <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
+                  </a> -->
+                </div>
+              </div>
+        </div>
+        <div class="panel-body p5">
+          <div class="table-responsive">
+            <div class="bs-component">
+              <table class="table mbn table-striped admin-form theme-info">
+                <thead>
+                  <tr>
+                    <th>Event Time</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Service ID</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                {% for record in notifications -%}
+
+                <tr>
+                    <td>{{record.created_at.toUTCString()}}</td>
+                    <td>{{record.message}}</td>
+                    <td>{{record.status}}</td>
+                    <td>{{record.service.toString()}}</td>
+                    <td class="text-right">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-primary pull-right">View Event</button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {%- endfor %}
+
+                </tbody>
+              </table>
+            <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
+          </div>
+        </div>
+      </div>
+</div>
+</div>
+</div>
