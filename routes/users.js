@@ -27,9 +27,15 @@ module.exports = function(passport){
     	req.flash('error_messages', errors);
     	return res.redirect('/users/login');
 	    } 
+
+	    if(req.session.after_login_url) {
+	    	var success_redirect = req.session.after_login_url;
+	    } else {
+	    	var success_redirect = '/dashboard';
+	    }
 		
 		passport.authenticate('login', {
-			successRedirect: '/dashboard',
+			successRedirect: success_redirect,
 			failureRedirect: '/users/login',
 			failureFlash : true  
 		})(req, res, next);

@@ -27,6 +27,7 @@ router.post('/service-data/add', function(req, res){
 	var sData = new ServiceData({
 			message: data.message,
 			status: data.status,
+			// to be ndrruar me x-forwarded-for
 			source: req.ip 
 		});
 		sData.save(function(err) {

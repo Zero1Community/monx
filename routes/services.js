@@ -46,6 +46,89 @@ router.get('/notifications', function(req, res) {
 });
 
 
+router.get('/:id/edit', m.hasServiceAccess, function(req, res){
+	//verifikim per fiksim ID
+	Service.findOne({_id: req.params.id}, function (err, service) {
+			if(err){
+				res.end('No service found');
+			}
+		res.render('services/edit', {service : service});
+	});	
+});
+
+
+
+router.post('/:id/edit', m.hasServiceAccess, function(req, res){
+
+	  		  //TODO fix messages
+	  		  //TODO validation
+  req.check('id', 'Service ID is required').notEmpty();
+  req.check('name', 'Service name is required').notEmpty();
+  req.check('host', 'Your name is required').notEmpty();
+  req.check('type', 'A valid type is required').notEmpty();
+  req.check('interval', 'The interval is required').notEmpty();
+
+	var errors = req.validationErrors();
+
+	  if(errors){   //No errors were found.  Passed Validation!
+	    req.flash('error_messages', errors);
+	    return res.redirect('/services/' + req.params.id + '/edit');
+	  }
+	Service.findOne({_id:req.params.id}, function(err, service){
+
+  	service.name = req.body.name;
+  	service.host = req.body.host;
+  	service.type = req.body.type;
+  	service.interval = req.body.interval;
+  	service.running_status = req.body.running_status != '' ? true : false;
+
+		  service.save(function(err) {
+		     if(err) {
+		     	logger.debug('There was an error saving the service', err);
+		      req.flash('error_messages', 'There was an error saving the service');
+		      res.redirect('/services/index');
+		     } else {
+		     	logger.debug('Service updated!');
+		      req.flash('success_messages', 'Service updated.');
+		      res.redirect('/services/index');
+		     }
+		  });
+	});
+});
+
+router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
+	// TODO validation 
+	var action = req.params.action;
+
+	Service.findOne({_id:req.params.id}, function(err, service){
+		// ACTIONS: stop, mute, 
+			//delete duhet me konfirmimi
+	  if(!err){
+
+	  	switch(action) {
+	  		case 'start_stop':
+
+	  			var new_status = service.running_status ? false : true;
+
+	  			service.running_status = new_status;
+
+	  			service.save(function(err) {
+			     if(err) {
+			     	res.json({success:0});
+			     } else {
+			     	res.json({success:1, new_status: new_status});
+			     }
+			 	});
+
+	  			break;
+	  		case 'mute_unmute':
+	  			break;
+	  	}
+	  }
+	});
+});
+
+
 
 router.get('/:id/data/page/:page?', service_data);
 router.get('/:id/data', service_data);
@@ -94,54 +177,9 @@ function service_data(req, res) {
 }
 
 
-router.get('/:id/edit', m.hasServiceAccess, function(req, res){
-	//verifikim per fiksim ID
-	Service.findOne({_id: req.params.id}, function (err, service) {
-			if(err){
-				res.end('No service found');
-			}
-		res.render('services/edit', {service : service});
-	});	
-});
-
-
-router.post('/:id/edit', m.hasServiceAccess, function(req, res){
-  
-  //TODO fix messages
-  // kontroll shtese nqs kjo ID eshte e KTIJ useri
-  req.check('id', 'Service ID is required').notEmpty();
-  req.check('name', 'Service name is required').notEmpty();
-  req.check('host', 'Your name is required').notEmpty();
-  req.check('type', 'A valid type is required').notEmpty();
-  req.check('interval', 'The interval is required').notEmpty();
-  req.check('status', 'The status is required').notEmpty();
-
-	var errors = req.validationErrors();
-
-	  if(errors){   //No errors were found.  Passed Validation!
-	    req.flash('error_messages', errors);
-	    return res.redirect('/services/add');
-	  }   
-
-		Service.findOne({_id:req.params.id}, function(err, service){
-
-  	service.name = req.body.name;
-  	service.host = req.body.host;
-  	service.type = req.body.type;
-  	service.interval = req.body.interval;
-  	service.status = req.body.status;
-
-		  service.save(function(err) {
-		     if(err) {
-		     	logger.debug('There was an error saving the service', err);
-		     } else {
-		     	logger.debug('The new service was saved!');
-		      req.flash('success_messages', 'Service updated.');
-		      res.redirect('/services/index');
-		     }
-		  });
-		});
-});
+//router.post('/:id/edit', m.hasServiceAccess, function(req, res){
+// ket e kaluam lart te actioni   
+//});
 
 router.get('/:id', function(req, res) {
 // ktu duhet marre thjesht configurimi total i atij sherbimi 

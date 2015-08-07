@@ -6,10 +6,13 @@ var middleware = {
       // if user is authenticated in the session, call the next() to call the next request handler 
       // Passport adds this method to request object. A middleware is allowed to add properties to
       // request and response objects
-      if (req.isAuthenticated())
+      if (req.isAuthenticated()) {
         return next();
+      } else {
+        req.session.after_login_url = req.originalUrl;
+        res.redirect('/users/login');
+      }
       // if the user is not authenticated then redirect him to the login page
-      res.redirect('/users/login');
     },
     hasServiceAccess: function (req, res, next) {
       var user_id = req.user.id;
