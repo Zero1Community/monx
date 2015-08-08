@@ -11,7 +11,11 @@ function updateAndNotify(notific,status_subject){
 	// this enables us to get the email from the userID  
 	// console.log(notific);
 	// console.log(status_subject);
-	//mongoose.connect(dbConfig.url);		
+	//mongoose.connect(dbConfig.url);
+
+	// TODO : kjo sduhet bere ktu, duhet marre nga sherbimi perkates 
+	// lista e emaileve te cileve duhen cuar emailet 
+	// pasi notificationi eshte ne baze sherbimi
 	User.findOne({_id: notific.user}, function(err, user) {
 	   	if(err)	{
 	   		if(configs.debug) console.log(err);	
@@ -19,12 +23,14 @@ function updateAndNotify(notific,status_subject){
 	   	}
 	   	//console.log("User found!");
 	    //console.log(user);
-			var collected_message = status_subject + " for "+ notific.status +"\n " + notific.message + " \n ";
+			var collected_message = status_subject + " for "+ notific.status + " " + notific.message + " \n ";
 			var tick = {
 				message : collected_message,
-				subject : status_subject,
+				subject : status_subject + ' for service ' + notific.service_name,
 				name : user.name,
-				email : user.email
+				email : user.email,
+				event_id : notific.notification_id,
+				service_id : notific.service_id
 			}
 
 			Mailer.sendOne("newsletter",tick,function(err,res){
@@ -67,8 +73,12 @@ function checker(new_data){
 			last_data = {
 				status : 'OK'
 			}
+		}else{
+			new_data['notification_id'] = last_data.id;
 		}
+
 		//console.log(last_data);	
+		// TODO : check if this is OK
 		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'created_at' : -1 } }, function(err, notification_data){
 			//mongoose.connection.close();	
 			console.log(notification_data);
@@ -85,6 +95,7 @@ function checker(new_data){
 					status : 'OK'
 				}
 			}
+
 			var notification_status = notification_data.status;
 			if(configs.debug) console.log("Current Status: \n")
 			if(configs.debug) console.log('Last status '+ last_status);
@@ -94,8 +105,8 @@ function checker(new_data){
 			if(last_status === 'OK' && new_status === 'OK') {
 				if(notification_status === 'OK') return;
 				//"RECOVERY" 
-				updateAndNotify(new_data,"SERVICE RECOVERY", function(){
-							//console.log("Mail sent");
+				updateAndNotify(new_data,"** Service Recovery", function(){
+							console.log("Mail sent");
 					}); 
 			}
 
@@ -104,22 +115,22 @@ function checker(new_data){
 				// IF ( new error != old error ) { email about status update of error }
 				// basically we need to check the message
 				if(notification_status === 'ERROR') return;
-				 updateAndNotify(new_data,"SERVICE NEW_ERROR", function(){
-							//console.log("Mail sent");
+				 updateAndNotify(new_data,"** New Service Error", function(){
+							console.log("Mail sent");
 					}); 
 			}
 
 			if(last_status === 'OK' && new_status === 'ERROR') {
 				if(notification_status === 'ERROR') return;
-					updateAndNotify(new_data,"SERVICE ERROR", function(){
-							//console.log("Mail sent");
+					updateAndNotify(new_data,"** Service Error", function(){
+							console.log("Mail sent");
 					});
 			}
 
 			if(last_status === 'ERROR' && new_status === 'OK') {
 				if(notification_status === 'OK') return;
-				updateAndNotify(new_data,"SERVICE RECOVERY", function(){
-							//console.log("Mail sent");
+				updateAndNotify(new_data,"** Service Recovery", function(){
+							console.log("Mail sent");
 					}); //STATUS RECOVERY
 			}
 

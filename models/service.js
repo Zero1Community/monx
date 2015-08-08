@@ -5,7 +5,9 @@ var serviceSchema = new mongoose.Schema({
       type: String,
       host: String,
       status: String,
-      enabled: Boolean,
+      running_status: Boolean,
+      notification_status: {
+      },
       interval: Number,
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       created_at: { type: Date, required: true, default: Date.now },

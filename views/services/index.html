@@ -1,4 +1,9 @@
 {% extends '../master_layout.html' %}
+{% block header-scripts %}
+  <!-- Glyphicons Pro CSS(font) -->
+  <link rel="stylesheet" type="text/css" href="/assets/fonts/glyphicons-pro/glyphicons-pro.css">
+{% endblock %}
+
 {% block content %}
 
 <div id="content" class="">
@@ -31,7 +36,8 @@
                       <tr>
                         <th>Service Name</th>
                         <th>Type</th>
-                        <th>Status</th>
+                        <th>Health Status</th>
+                        <th>Check Status</th>
                         <th class="text-right">Actions</th>
                       </tr>
                     </thead>
@@ -43,6 +49,13 @@
                         <td><a href="/services/{{ service.id }}">{{service.name}}</td>
                         <td>{{service.type}}</td>
                         <td>{{service.status}}</td>
+                        <td>
+                          {% if service.running_status %}
+                          <span class='glyphicons glyphicons-stop'></span> 
+                          {% else %}
+                          <span class='glyphicons glyphicons-play'></span> 
+                          {% endif %}
+                        </td>
                         <td class="text-right">
                           <a href="/services/{{ service.id }}/data"> View Data</a>
                         </td>
