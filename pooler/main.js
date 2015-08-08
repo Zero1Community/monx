@@ -4,6 +4,7 @@ var amqp = require('amqplib');
 
 // TODO: error handling post to api
 
+
 // per tu shtu: ------
 // throttle (kjo behet ne vend tjeter faktikisht)
 
@@ -122,12 +123,6 @@ function monxBlacklist(blacklistObject){
 			user: blacklistObject.user
 		}
 
-		postToAPI(data, function(err) {
-			if(err){
-				if(configs.debug) console.log(err)
-			} else {
-				if(configs.debug) console.log('Bac is done');
-			}
-		});
+		postToAPI(data);
 	});
 }

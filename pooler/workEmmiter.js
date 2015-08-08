@@ -12,12 +12,14 @@ var Service = require('../models/service.js');
 // kjo duhet bo me .then()
 mongoose.connect(dbConfig.url);
 
-// TODO: FILTER FIND ME ENABLED
-Service.find({}, function(err, services) {
+Service.find({running_status : true}, function(err, services) {
     if(configs.debug) console.log(services);
     scheduler(services);
     mongoose.connection.close();
 });
+
+// TODO: nqs caktivizohet ne DB si do updatohet ktu
+// duhet shtu nji funksion me tick 30 sekonda qe shef sherbimet qe jane caktivizu dhe i ben clearInterval ktyre te startuarave
 
 function scheduler(taskList){
   //TODO to start when is pulled for the first time
