@@ -6,7 +6,11 @@
 <body>
 {{subject}}
 <br>
-To find more open:
+{{event_body}}
+<br>
+<br>
+<br>
+To find more:
 <br>
  http://localhost:3000/services/event/{{service_id}}/{{event_id}}/
 </body>

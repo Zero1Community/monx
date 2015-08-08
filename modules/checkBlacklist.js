@@ -73,8 +73,9 @@ function validateAndResolve(host, callback) {
 
   dns.resolve4(host, function(error, addr) {
     if(error) {
-      if(error) logger.debug('Error resolving', err);
+      if(error) logger.debug('Error resolving', error);
     } else {
+      // TODO : po kto qe kane shume IP ?
       return callback(addr[0]);
     }
   });

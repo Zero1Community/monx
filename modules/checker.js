@@ -30,7 +30,8 @@ function updateAndNotify(notific,status_subject){
 				name : user.name,
 				email : user.email,
 				event_id : notific.notification_id,
-				service_id : notific.service_id
+				service_id : notific.service_id,
+				event_body : JSON.stringify(notific.message)
 			}
 
 			Mailer.sendOne("newsletter",tick,function(err,res){
