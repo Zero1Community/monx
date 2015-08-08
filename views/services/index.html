@@ -1,9 +1,8 @@
-{% extends '../master_layout.html' %}
-{% block header-scripts %}
-  <!-- Glyphicons Pro CSS(font) -->
-  <link rel="stylesheet" type="text/css" href="/assets/fonts/glyphicons-pro/glyphicons-pro.css">
+{% extends "../master_layout.html" %}
+{% block header_scripts %}
+<!-- Glyphicons Pro CSS(font) -->
+<link rel="stylesheet" type="text/css" href="/assets/fonts/glyphicons-pro/glyphicons-pro.css">
 {% endblock %}
-
 {% block content %}
 
 <div id="content" class="">
@@ -43,7 +42,7 @@
                     </thead>
                     <tbody>
 
-                    {% for service in services -%}
+                    {% for service in services %}
 
                     <tr>
                         <td><a href="/services/{{ service.id }}">{{service.name}}</td>
@@ -87,7 +86,7 @@
                         </td>
                       </tr>
                       
-                      {%- endfor %}
+                      {% endfor %}
 
                     </tbody>
                   </table>
@@ -98,3 +97,4 @@
 </div>
 </div>
 </div>
+{% endblock %}

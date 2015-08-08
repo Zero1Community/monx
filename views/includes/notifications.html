@@ -1,11 +1,11 @@
 {% if success_messages.length > 0 %}	
 <div class="alert alert-success alert-dismissable">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	{% for key, val in success_messages %}
-		{% if val.msg %}
-			{{ val.msg }} <br>
+	{% for success_message in success_messages %}
+		{% if success_message.msg %}
+			{{ success_message.msg }} <br>
 		{% else %}
-			{{ val }} <br>
+			{{ success_message }} <br>
 		{% endif %}
 	{% endfor %}
 </div>
@@ -14,11 +14,12 @@
 {% if error_messages.length > 0 %}	
 <div class="alert alert-danger alert-dismissable">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	{% for key, val in error_messages %}
-		{% if val.msg %}
-			{{ val.msg }} <br>
+
+	{% for error_message in error_messages %}
+		{% if error_message.msg %}
+			{{ error_message.msg }} <br>
 		{% else %}
-			{{ val }} <br>
+			{{ error_message }} <br>
 		{% endif %}
 	{% endfor %}
 </div>
