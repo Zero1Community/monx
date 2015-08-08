@@ -49,11 +49,14 @@
                         <td>{{service.type}}</td>
                         <td>{{service.status}}</td>
                         <td>
-                          {% if service.running_status %}
-                          <span class='glyphicons glyphicons-stop'></span> 
-                          {% else %}
-                          <span class='glyphicons glyphicons-play'></span> 
-                          {% endif %}
+                            
+                            <button class="{% if service.running_status != true %} hide  {% endif %} btn btn-xs btn-secondary stop-button" data-serviceid="{{service.id}}">  
+                              <span class='glyphicons glyphicons-stop'></span> 
+                            </button>
+                            <button class="{% if service.running_status %} hide {% endif %} btn btn-xs btn-secondary start-button" data-serviceid="{{service.id}}">  
+                              <span class='glyphicons glyphicons-play'></span> 
+                            </button>
+                            
                         </td>
                         <td class="text-right">
                           <a href="/services/{{ service.id }}/data"> View Data</a>
@@ -75,7 +78,7 @@
                                 <a href="#">Mute</a>
                               </li>
                               <li>
-                                <a href="#">Delete</a>
+                                <a href="/services/{{ service.id }}/delete">Delete</a>
                               </li>
                               <li class="divider"></li>
                               <li>
@@ -97,4 +100,41 @@
 </div>
 </div>
 </div>
+{% endblock %}
+{% block footer_scripts %}
+
+<script type="text/javascript">
+    
+    $('.stop-button').click(function(){
+
+      var stop_button = $(this);
+      var service_id = stop_button.data('serviceid');
+      var req_url = '/services/' + service_id + '/action/start_stop';
+     
+      $.getJSON(req_url, function(data){
+        if(data.success == 1 && data.new_status == false) {
+          stop_button.hide();
+          stop_button.parent().find('.start-button').removeClass('hide').show();
+        }
+      });
+      
+    });    
+
+    $('.start-button').click(function(){
+
+      var start_button = $(this);
+      var service_id = start_button.data('serviceid');
+      var req_url = '/services/' + service_id + '/action/start_stop';
+     
+      $.getJSON(req_url, function(data){
+        if(data.success == 1 && data.new_status == true) {
+          start_button.hide();
+          start_button.parent().find('.stop-button').removeClass('hide').show();
+        }
+      });
+
+    });
+
+</script>    
+
 {% endblock %}

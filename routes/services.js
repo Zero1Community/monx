@@ -119,13 +119,28 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 	});
 });
 
+router.get('/:id/delete', m.hasServiceAccess, function(req, res){
+  //TODO: validations
+  Service.findOne({_id:req.params.id}).remove(function(){
+
+    var serviceData = ServiceData(req.params.id);
+
+    //TODO: delete collection
+    serviceData.remove(function(){
+      req.flash('success_messages', 'Service deleted.');
+      res.redirect('/services/index');
+    });
+
+  });
+
+});
+
 router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	// TODO validation 
 	var action = req.params.action;
 
 	Service.findOne({_id:req.params.id}, function(err, service){
 		// ACTIONS: stop, mute, 
-			//delete duhet me konfirmimi
 	  if(!err){
 
 	  	switch(action) {
@@ -146,6 +161,9 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	  			break;
 	  		case 'mute_unmute':
 	  			break;
+        default:
+          res.json({success:0});
+        break;
 	  	}
 	  }
 	});
