@@ -243,11 +243,13 @@ router.get('/:id', function(req, res) {
 router.post('/add', function(req, res){
   
   //TODO fix messages
+  // TODO : create collection on service add
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
   req.check('type', 'A valid email is required').notEmpty();
-  req.check('interval', 'The password is required').notEmpty();
-  req.check('status', 'The password confirmation is required').notEmpty();
+  req.check('interval', 'An interval is required').notEmpty();
+  req.check('running_status', 'The status is required').notEmpty();
+//  req.check('notification_status', 'The password confirmation is required').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -262,6 +264,7 @@ router.post('/add', function(req, res){
     newService.host = req.body.host;
     newService.type = req.body.type;
     newService.interval = req.body.interval;
+    newService.running_status = req.body.running_status;
 
     newService.user = req.user;
    

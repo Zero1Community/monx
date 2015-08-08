@@ -42,7 +42,7 @@ function checkDNS(rbl_server, ip, callback, timeout){
 }
 
 
-function checkRBL(host, callback) {
+function checkRBL(host, timeout, callback) {
 
   var results = [];
 
@@ -55,7 +55,7 @@ function checkRBL(host, callback) {
                   checkDNS(server, ip, function(result){
                     results.push(result);
                     callback();
-                  });
+                  }, timeout);
                 }, function(err) {
                   return callback(results);
                 });

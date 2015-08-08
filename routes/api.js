@@ -6,6 +6,7 @@ var middleware = require('../middlewares/middlewares.js');
 var configs = require('../config/configs.js');
 var checker = require('../modules/checker.js');
 var mongoose = require('mongoose');
+var ServiceData = require('../models/service_data.js');
 
 router.post('/service-data/add', function(req, res){
 
@@ -15,10 +16,12 @@ router.post('/service-data/add', function(req, res){
 	var data = req.body.data;
 	if(configs.debug) console.log(data);
 
+	var serviceData = ServiceData(data.service_id);
 
-	var ServiceData = require('../models/service_data.js')(data.service_id);
-	
-	var sData = new ServiceData({
+
+
+	// TODO check before hand
+	var sData = new serviceData({
 			message: data.message,
 			status: data.status,
 			// to be ndrruar me x-forwarded-for
@@ -28,8 +31,9 @@ router.post('/service-data/add', function(req, res){
 	      if(!err) {
 
 				Service.findOne({_id:data.service_id}, function(err, service){
-
+					
 					data['service_name'] = service.name;
+					//data['service_name'] = "service";
 					checker(data,function(err,res){
 						if(err){
 							console.log(err);
@@ -37,10 +41,8 @@ router.post('/service-data/add', function(req, res){
 						else{
 							console.log(res);
 						}
-					});
-					
+					});					
 					service.status = data.status;
-
 
 					service.save(function(err) {
 						 if(err) {
@@ -49,8 +51,8 @@ router.post('/service-data/add', function(req, res){
 						  	logger.debug('The new service was saved!');
 								res.setHeader('Content-Type', 'application/json');
 								res.end(JSON.stringify({'success': 1}));
-						      // req.flash('success_messages', 'Service updated.');
-						      // res.redirect('/services/index');
+					// 	      // req.flash('success_messages', 'Service updated.');
+					// 	      // res.redirect('/services/index');
 							}
 						});
 				});
@@ -94,6 +96,18 @@ router.post('/service-data/add', function(req, res){
 
 
 
+	
+
+
+	/*serviceData.new(data, function(err, result){
+		if(!err) {
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify({'success': 1}));
+		} else {
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify({'success': 0, error: 3}));
+		}
+	});*/
 });
 
 module.exports = router;

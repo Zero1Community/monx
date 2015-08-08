@@ -18,8 +18,27 @@ Service.find({running_status : true}, function(err, services) {
     mongoose.connection.close();
 });
 
+
 // TODO: nqs caktivizohet ne DB si do updatohet ktu
 // duhet shtu nji funksion me tick 30 sekonda qe shef sherbimet qe jane caktivizu dhe i ben clearInterval ktyre te startuarave
+
+// function dbCheckForUpdates () {
+//     mongoose.connect(dbConfig.url);
+
+//     Service.find({running_status : true}, function(err, services) {
+//         if(configs.debug) console.log(services);
+//         scheduler(services);
+//         mongoose.connection.close();
+//     });
+
+//     setInterval(function(task) {
+//           //let's emmit the work on RabbitMQ
+//           workEmmiter(task);
+//           if(configs.debug) console.log(task);
+//     }, task.interval*30000, task);
+// }
+
+
 
 function scheduler(taskList){
   //TODO to start when is pulled for the first time

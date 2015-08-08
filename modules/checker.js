@@ -21,7 +21,7 @@ function updateAndNotify(notific,status_subject){
 	   		if(configs.debug) console.log(err);	
 	   		return;
 	   	}
-	   	//console.log("User found!");
+	   	console.log("User found!");
 	    //console.log(user);
 			var collected_message = status_subject + " for "+ notific.status + " " + notific.message + " \n ";
 			var tick = {

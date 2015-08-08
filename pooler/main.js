@@ -82,7 +82,7 @@ function postToAPI(data){
 function monxBlacklist(blacklistObject){
 	var checkRBL = require('../modules/checkBlacklist.js');
 
-	checkRBL(blacklistObject.host, function(totalResults){
+	checkRBL(blacklistObject.host, 8000, function(totalResults){
 		if(configs.debug) console.log('Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
 		var cleanStatus = [];
