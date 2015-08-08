@@ -9,6 +9,7 @@ var configs = require('../config/configs.js');
 var m  = require('../middlewares/middlewares.js');
 var util        = require('util');
 var logger      = require('../modules/logger.js');
+var mongoose = require('mongoose');
 
 router.get('/index', function(req, res){
 
@@ -123,12 +124,15 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
   //TODO: validations
   Service.findOne({_id:req.params.id}).remove(function(){
 
-    var serviceData = ServiceData(req.params.id);
+    var service_data_collection = 'service_data_' + req.params.id;
 
-    //TODO: delete collection
-    serviceData.remove(function(){
-      req.flash('success_messages', 'Service deleted.');
-      res.redirect('/services/index');
+    mongoose.connection.db.dropCollection(service_data_collection, function(err, result) {
+
+      if(!err) {
+        req.flash('success_messages', 'Service deleted.');
+        res.redirect('/services/index');
+      }
+      
     });
 
   });
