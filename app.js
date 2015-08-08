@@ -1,6 +1,7 @@
 var express = require('express');
 var expressValidator = require('express-validator');
-var swig = require('swig');
+//var swig = require('swig');
+var nunjucks = require('nunjucks');
 var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
@@ -19,8 +20,13 @@ var routes = require('./routes/index');
 
 var app = express();
 
+nunjucks.configure('views', {
+    autoescape: true,
+    express: app
+});
+
 // view engine setup
-app.engine('html', swig.renderFile)
+//app.engine('html', swig.renderFile)
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
 
