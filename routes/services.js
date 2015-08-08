@@ -29,16 +29,16 @@ router.get('/add', function(req, res){
 	res.render('services/add');
 });
 
-router.get('/event/:s_id/:n_id', function(req, res){
+router.get('/:id/events/:event_id', function(req, res){
 	// TODO : validation
-	var serviceData = require('../models/service_data.js')(req.params.s_id);
-	console.log('Service id ' + req.params.s_id);
-	console.log('Event id ' + req.params.n_id);
-	serviceData.findOne({_id: req.params.n_id}, function(err, data) {
+	var serviceData = require('../models/service_data.js')(req.params.id);
+	console.log('Service id ' + req.params.id);
+	console.log('Event id ' + req.params.event_id);
+	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
 			if(!err) {
 				//res.setHeader('Content-Type', 'application/json');
+				console.log(data);
 				res.end(JSON.stringify(data));
-				//console.log(data);
 				//res.render('services/data', {data : data});
 			} else {
 				logger.debug(err);
@@ -49,7 +49,7 @@ router.get('/event/:s_id/:n_id', function(req, res){
 
 		});
 
-	res.end('nuk u gjet gje');
+//	res.end('nuk u gjet gje');
 });
 
 router.get('/notifications', function(req, res) {
