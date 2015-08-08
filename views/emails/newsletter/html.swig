@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>aksodaskdsa</title>
+	<title>Monx</title>
 </head>
 <body>
-;lwdlkejkjwdhlkjwhefljrhkwjlegrjewhg
+{{subject}}
+<br>
+To find more open:
+<br>
+ http://localhost:3000/services/event/{{service_id}}/{{event_id}}/
 </body>
 </html>

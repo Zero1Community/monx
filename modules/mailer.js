@@ -34,6 +34,8 @@ var Mailer = {
               to: data.email,
               subject: data.subject,
               html: html,
+              event_id :data.notification_id,
+              service_id :data.service_id,
               // generateTextFromHTML: true,
               text: text
             }, function(err, responseStatus) {
