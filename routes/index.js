@@ -8,24 +8,20 @@ var m  = require('../middlewares/middlewares.js');
 router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
 	Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
-				// res.setHeader('Content-Type', 'application/json');
-			 //  res.end(JSON.stringify(notifics));
-				// console.log(notifics);
+
 					Service.find({ user: req.user }, function(err, services) {
 				    
-				    console.log(services);
 				    if(!err) {
-				    var data_input = 0;
-				    var services_number = 0;
-				    var notifications_sent = notifics.length;
+					    var data_input = 0;
+					    var services_number = 0;
+					    var notifications_sent = notifics.length;
 
-					for (var i = 0, len = services.length; i < len; i++) {
-					  services_number += 1;
-					  data_input += 60/services[i].interval;
-					}
+							for (var i = 0, len = services.length; i < len; i++) {
+							  services_number += 1;
+							  data_input += 60/services[i].interval;
+							}
 				  		res.render('dashboard', {services_number : services_number,data_input : data_input,notifications_sent : notifics.length});
 				    }
-				  	//res.render('dashboard');
 				});
 			} else {
 				logger.debug(err);

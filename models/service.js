@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 
 var serviceSchema = new mongoose.Schema({
       name: String,
@@ -13,5 +14,7 @@ var serviceSchema = new mongoose.Schema({
       created_at: { type: Date, required: true, default: Date.now },
       updated_at: { type: Date, required: true, default: Date.now }
     },{ strict: false });
+
+serviceSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Service', serviceSchema);

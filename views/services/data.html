@@ -56,6 +56,17 @@
 
                 </tbody>
               </table>
+              {% if paginate.hasPreviousPages or paginate.hasNextPages(pageCount) %}
+              <ul class="pagination">
+                {% if paginate.hasPreviousPages %}
+                  <li class="paginate_button active" aria-controls="datatable2" tabindex="0"><a href="{{ paginate.href(true) }}">Prev</a></li>
+                {% endif %}
+                {% if paginate.hasNextPages(pageCount) %}
+                  <li class="paginate_button " aria-controls="datatable2" tabindex="0"><a href="{{paginate.href()}}">Next</a></li>
+                {% endif %}
+              </ul>
+              {% endif %}
+
             <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
           </div>
         </div>

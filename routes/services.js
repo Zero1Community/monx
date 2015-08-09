@@ -26,6 +26,7 @@ router.get('/index', function(req, res){
 
 });
 
+
 router.get('/add', function(req, res){
 	res.render('services/add');
 });
@@ -173,44 +174,23 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	});
 });
 
-
-
-router.get('/:id/data/page/:page?', service_data);
-router.get('/:id/data', service_data);
-function service_data(req, res) {
+router.get('/:id/data', function service_data(req, res) {
 	var service_id = req.params.id;
-	var page = req.params.page;
-	var limit = 10;
-
-	if(!page) {
-		page = 1;
-	}
-
-	var skip = ( page - 1 ) * limit; 
-
-	console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
-	console.log(skip);
 	
-//  { skip: 10, limit: 5 }, 
-//MyModel.find(query, fields, { skip: 10, limit: 5 }, function(err, results) { ... });
+	var serviceData = ServiceData(service_id);
 
-	var serviceData = require('../models/service_data.js')(service_id);
-	serviceData.count({}, function(err, count){
-		var pages = count / limit;
-		var rounded_pages = Math.round(pages);
-		if(pages > rounded_pages) {
-			pages = Math.round(pages + 1);
-		}	else {
-			pages = Math.round(pages);
-		}
-		console.log(pages);	
-	});
-	serviceData.find({}, {}, { skip: skip, limit: limit, sort: { 'created_at' : -1 } }, function(err, data) {
+  serviceData.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, data, pageCount, itemCount) {
+
+	//serviceData.find({}, {}, { skip: skip, limit: limit, sort: { 'created_at' : -1 } }, function(err, data) {
 			if(!err && data) {
 				//res.setHeader('Content-Type', 'application/json');
 				//res.end(JSON.stringify(data));
 				console.log(data);
-				res.render('services/data', {data : data});
+				res.render('services/data', {
+          data: data, 
+          pageCount: pageCount,
+          itemCount: itemCount
+        });
 			} else {
 				logger.debug(err);
 				res.flash('error_messages', 'No data for this service');
@@ -219,7 +199,7 @@ function service_data(req, res) {
 
 		});
 		
-}
+});
 
 
 //router.post('/:id/edit', m.hasServiceAccess, function(req, res){

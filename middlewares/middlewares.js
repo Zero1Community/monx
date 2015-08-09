@@ -18,6 +18,10 @@ var middleware = {
       var user_id = req.user.id;
       var service_id = req.params.id;
 
+      if(middleware.isAdmin(req.user)) {
+        return next();
+      }
+
       Service.findOne({_id:service_id }, function(err, service) {
         //TODO: Flash Message
         if(err || !service) {
@@ -31,6 +35,20 @@ var middleware = {
         res.redirect('/dashboard');
 
       });
+
+    },
+    isAdmin: function(user) {
+      if(user.isAdmin && user.isAdmin === true) {
+        return true;
+      }
+      return false;
+    },
+    hasAdminAccess: function(req, res, next) {
+      var user = req.user;
+      if(middleware.isAdmin(user)) {
+        return next();
+      }
+      res.redirect('/dashboard');
 
     }
 }
