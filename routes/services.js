@@ -116,12 +116,10 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
 
     mongoose.connection.db.dropCollection(service_data_collection, function(err, result) {
 
-      if(!err || result) {
+      if(!err) {
         req.flash('success_messages', 'Service deleted.');
         res.redirect('/services/index');
       }
-        req.flash('success_messages', 'Service deleted.');
-        res.redirect('/services/index');
       
     });
 
