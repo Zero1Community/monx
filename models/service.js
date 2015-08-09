@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
+var timestamps = require('mongoose-timestamp');
 
 var serviceSchema = new mongoose.Schema({
       name: String,
@@ -10,11 +11,10 @@ var serviceSchema = new mongoose.Schema({
       notification_status: {
       },
       interval: Number,
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      created_at: { type: Date, required: true, default: Date.now },
-      updated_at: { type: Date, required: true, default: Date.now }
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     },{ strict: false });
 
 serviceSchema.plugin(mongoosePaginate);
+serviceSchema.plugin(timestamps);
 
 module.exports = mongoose.model('Service', serviceSchema);

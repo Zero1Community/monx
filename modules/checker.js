@@ -1,9 +1,8 @@
-//var mongoose = require('mongoose');
 var Mailer = require('./mailer.js');
-//var dbConfig = require('../config/db.js');
 var User = require('../models/user.js');
 var Notification = require('../models/notification.js');
 var configs = require('../config/configs.js');
+var ServiceData = require('../models/service_data.js');
 
 function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
@@ -21,8 +20,7 @@ function updateAndNotify(notific,status_subject){
 	   		if(configs.debug) console.log(err);	
 	   		return;
 	   	}
-	   	console.log("User found!");
-	    //console.log(user);
+
 			var collected_message = status_subject + " for "+ notific.status + " " + notific.message + " \n ";
 			var tick = {
 				message : collected_message,
@@ -53,7 +51,6 @@ function updateAndNotify(notific,status_subject){
 					if(configs.debug) console.log(err);
 				} else {
 					if(configs.debug) console.log('Event successfully saved');
-	    		//mongoose.connection.close();
 				}
 			});
 		});
@@ -61,10 +58,9 @@ function updateAndNotify(notific,status_subject){
 
 
 function checker(new_data){
-	//mongoose.connect(dbConfig.url);
 	console.log(new_data);
-	var serviceData = require('../models/service_data.js')(new_data.service_id);
-	serviceData.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, last_data) {
+	var serviceData = ServiceData(new_data.service_id);
+	serviceData.findOne({}, {}, { sort: { 'createdAt' : -1 } }, function(err, last_data) {
 		//need to implement additional check here for service data
 		if(err){
 			if(configs.debug) console.log(err);
@@ -78,9 +74,8 @@ function checker(new_data){
 			new_data['notification_id'] = last_data.id;
 		}
 
-		//console.log(last_data);	
 		// TODO : check if this is OK
-		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'created_at' : -1 } }, function(err, notification_data){
+		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'createdAt' : -1 } }, function(err, notification_data){
 			//mongoose.connection.close();	
 			console.log(notification_data);
 			if(err) {
@@ -136,7 +131,6 @@ function checker(new_data){
 			}
 
 		});
-	 // console.log( last_data );
 	});
 }
 

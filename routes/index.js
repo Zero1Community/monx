@@ -1,10 +1,10 @@
-var express = require('express');
-var Service     = require('../models/service.js');
+var express      = require('express');
+var Service      = require('../models/service.js');
 var Notification = require('../models/notification.js');
-var router = express.Router();
-var m  = require('../middlewares/middlewares.js');
+var router       = express.Router();
+var m            = require('../middlewares/middlewares.js');
+var logger       = require('../modules/logger.js');
 
-/* GET home page. */
 router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
 	Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
@@ -25,8 +25,7 @@ router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
 				});
 			} else {
 				logger.debug(err);
-			//	res.flash('error_messages', 'No notifications for this service');
-		    //return res.redirect('/services/index');
+				res.end('No data at all!');
 			}
 		});
 
@@ -34,7 +33,7 @@ router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
 });
 
 router.get('/', function(req, res, next){
-	res.render('home');
+	res.redirect('/dashboard');
 });
 
 module.exports = router;

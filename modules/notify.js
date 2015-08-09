@@ -2,7 +2,7 @@ var Mailer = require('./mailer.js');
 var Notification = require('../models/notification.js');
 var User = require('../models/user.js');
 
-//to be deleted
+//TODO: to be deleted
 var mongoose = require('mongoose');
 var dbConfig = require('../config/db.js');
 

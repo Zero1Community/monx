@@ -9,32 +9,29 @@ var logger = require('./modules/logger.js');
 var m  = require('./middlewares/middlewares.js');
 var paginate = require('express-paginate');
 
-
-
-//connect to MongoDB
+//Connect to MongoDB
 dbConfig = require('./config/db.js');
 var mongoose = require('mongoose');
 mongoose.connect(dbConfig.url);
 
-var routes = require('./routes/index');
 
 var app = express();
 
+//Templating Engine Config
 nunjucks.configure('views', {
     autoescape: true,
     express: app
 });
 
-// view engine setup
-//app.engine('html', swig.renderFile)
+//View engine setup
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
 
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-//the old logger app.use(logger('dev'));
-  
+
+//Express Configs
 app.use(require('morgan')('combined', { "stream": logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -43,22 +40,24 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-var passport = require('passport');
+//Express Session
 var expressSession = require('express-session');
-
-
 app.use(expressSession({
     secret: 'mySecretKey',
     resave: true,
     saveUninitialized: true
 }));
 
+//Passport Config
+var passport = require('passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
 var flash = require('connect-flash');
 app.use(flash());
-//the logic to have the message always
+
+//Flash Messages Middleware
+//TODO: Move at Middlewares Dir
 app.use(function(req, res, next){
     res.locals.success_messages = req.flash('success_messages');
     res.locals.error_messages = req.flash('error_messages');
@@ -66,27 +65,30 @@ app.use(function(req, res, next){
     next();
 });
 
+//Init Passport
 var initPassport = require('./auth/init');
 initPassport(passport);
 
-var users = require('./routes/users')(passport);
-var services = require('./routes/services');
-var api = require('./routes/api');
-
+//Move user to locals
 app.use(function(req, res, next){
   if(req.user) {
     res.locals.user = req.user;
-    res.locals.authenticated = ! req.user.anonymous;
-    console.log(res.locals.user);
+    res.locals.authenticated =! req.user.anonymous;
   }
   next();
 });
 
-app.use('/', routes);
-app.use('/users', users);
+var users_routes = require('./routes/users')(passport);
+var services_routers = require('./routes/services');
+var api_routes = require('./routes/api');
+var index_routes = require('./routes/index');
+
 app.use(paginate.middleware(3, 6));
-app.use('/services', m.isAuthenticated, services);
-app.use('/api', api);
+
+app.use('/', index_routes);
+app.use('/users', users_routes);
+app.use('/services', m.isAuthenticated, services_routers);
+app.use('/api', api_routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

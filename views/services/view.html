@@ -39,7 +39,7 @@
                 {% for record in data -%}
 
                 <tr>
-                    <td>{{record.created_at.toUTCString()}}</td>
+                    <td>{{record.createdAt.toUTCString()}}</td>
                     <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} OK {% endif %} </td>
                     <td>
                       {% set bl_total = 0 %}

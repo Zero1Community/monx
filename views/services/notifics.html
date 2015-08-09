@@ -41,7 +41,7 @@
                 {% for record in notifications %}
 
                 <tr>
-                    <td>{{record.created_at.toUTCString()}}</td>
+                    <td>{{record.createdAt.toUTCString()}}</td>
                     <td>{{record.message}}</td>
                     <td>{{record.status}}</td>
                     <td>{{record.service.toString()}}</td>

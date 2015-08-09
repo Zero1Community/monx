@@ -12,20 +12,16 @@ var logger      = require('../modules/logger.js');
 var mongoose = require('mongoose');
 
 router.get('/index', function(req, res){
-
   var user = req.user;
   // TODO: LIMIT / PAGINATION ?
-// TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
+  // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
   Service.find({ user: user._id }, function(err, services) {
-    
     if(!err) {
       res.render('services/index', { services: services });
     }
 
   });
-
 });
-
 
 router.get('/add', function(req, res){
 	res.render('services/add');
@@ -34,33 +30,24 @@ router.get('/add', function(req, res){
 router.get('/:id/events/:event_id', function(req, res){
 	// TODO : validation
 	var serviceData = require('../models/service_data.js')(req.params.id);
-	console.log('Service id ' + req.params.id);
-	console.log('Event id ' + req.params.event_id);
 	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
 			if(!err) {
-				//res.setHeader('Content-Type', 'application/json');
-				console.log(data);
+
 				res.end(JSON.stringify(data));
 				//res.render('services/data', {data : data});
 			} else {
 				logger.debug(err);
-				// res.flash('error_messages', 'No data for this service');
-		  //   return res.redirect('/services/index');
-		  		res.end('error');
+				  res.flash('error_messages', 'No data for this service');
+		      res.redirect('/services/index');
 			}
 
 		});
-
-//	res.end('nuk u gjet gje');
 });
 
 router.get('/notifications', function(req, res) {
 	var service_id = req.params.id;
 	Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
-				// res.setHeader('Content-Type', 'application/json');
-			 //  res.end(JSON.stringify(notifics));
-				// console.log(notifics);
 				res.render('services/notifics', {notifications : notifics});
 			} else {
 				logger.debug(err);
@@ -85,8 +72,8 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 
 router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
-	  		  //TODO fix messages
-	  		  //TODO validation
+  //TODO fix messages
+  //TODO validation
   req.check('id', 'Service ID is required').notEmpty();
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
@@ -145,7 +132,6 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	var action = req.params.action;
 
 	Service.findOne({_id:req.params.id}, function(err, service){
-		// ACTIONS: stop, mute, 
 	  if(!err){
 
 	  	switch(action) {
@@ -156,16 +142,18 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	  			service.running_status = new_status;
 
 	  			service.save(function(err) {
-			     if(err) {
-			     	res.json({success:0});
-			     } else {
-			     	res.json({success:1, new_status: new_status});
-			     }
-			 	});
+            if(err) {
+            	res.json({success:0});
+            } else {
+            	res.json({success:1, new_status: new_status});
+            }
+  			 	});
 
 	  			break;
+
 	  		case 'mute_unmute':
 	  			break;
+          
         default:
           res.json({success:0});
         break;
@@ -180,16 +168,13 @@ router.get('/:id/data', function service_data(req, res) {
 	var serviceData = ServiceData(service_id);
 
   serviceData.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, data, pageCount, itemCount) {
-
-	//serviceData.find({}, {}, { skip: skip, limit: limit, sort: { 'created_at' : -1 } }, function(err, data) {
-			if(!err && data) {
-				//res.setHeader('Content-Type', 'application/json');
-				//res.end(JSON.stringify(data));
-				console.log(data);
+			
+      if(!err && data) {
 				res.render('services/data', {
           data: data, 
           pageCount: pageCount,
-          itemCount: itemCount
+          itemCount: itemCount,
+          currentPage: req.query.page
         });
 			} else {
 				logger.debug(err);
@@ -200,11 +185,6 @@ router.get('/:id/data', function service_data(req, res) {
 		});
 		
 });
-
-
-//router.post('/:id/edit', m.hasServiceAccess, function(req, res){
-// ket e kaluam lart te actioni   
-//});
 
 router.get('/:id', function(req, res) {
 // ktu duhet marre thjesht configurimi total i atij sherbimi 
