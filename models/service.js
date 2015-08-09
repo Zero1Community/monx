@@ -16,10 +16,12 @@ var serviceSchema = new mongoose.Schema({
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     },{ strict: false });
 
-//TODO: Create a new collection for the service
-/*serviceSchema.post('save', function (service) {
-
-});*/
+serviceSchema.post('save', function (service) {
+  var collection = 'service_data_' + service._id;
+  mongoose.connection.db.createCollection(collection, function(err, collection) {
+    //console.log(collection + " was created!");
+  });
+});
 
 serviceSchema.plugin(mongoosePaginate);
 serviceSchema.plugin(timestamps);
