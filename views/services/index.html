@@ -55,6 +55,13 @@
                             </button>
                             <button class="{% if service.running_status %} hide {% endif %} btn btn-xs btn-secondary start-button" data-serviceid="{{service.id}}">  
                               <span class='glyphicons glyphicons-play'></span> 
+                            </button>  
+
+                            <button class="{% if service.notification_status.mute != true %} hide  {% endif %} btn btn-xs btn-secondary mute-button" data-serviceid="{{service.id}}">  
+                              <span class='glyphicons glyphicons-ban'></span> 
+                            </button>
+                            <button class="{% if service.notification_status.mute %} hide {% endif %} btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">  
+                              <span class='glyphicons glyphicons-bell'></span> 
                             </button>
                             
                         </td>
@@ -134,6 +141,36 @@
         if(data.success == 1 && data.new_status == true) {
           start_button.hide();
           start_button.parent().find('.stop-button').removeClass('hide').show();
+        }
+      });
+
+    }); 
+
+    $('.mute-button').click(function(){
+
+      var stop_button = $(this);
+      var service_id = stop_button.data('serviceid');
+      var req_url = '/services/' + service_id + '/action/mute_unmute';
+     
+      $.getJSON(req_url, function(data){
+        if(data.success == 1 && data.new_status == false) {
+          stop_button.hide();
+          stop_button.parent().find('.unmute-button').removeClass('hide').show();
+        }
+      });
+      
+    });    
+
+    $('.unmute-button').click(function(){
+
+      var start_button = $(this);
+      var service_id = start_button.data('serviceid');
+      var req_url = '/services/' + service_id + '/action/mute_unmute';
+     
+      $.getJSON(req_url, function(data){
+        if(data.success == 1 && data.new_status == true) {
+          start_button.hide();
+          start_button.parent().find('.mute-button').removeClass('hide').show();
         }
       });
 

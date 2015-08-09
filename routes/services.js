@@ -116,10 +116,12 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
 
     mongoose.connection.db.dropCollection(service_data_collection, function(err, result) {
 
-      if(!err) {
+      if(!err || result) {
         req.flash('success_messages', 'Service deleted.');
         res.redirect('/services/index');
       }
+        req.flash('success_messages', 'Service deleted.');
+        res.redirect('/services/index');
       
     });
 
@@ -152,6 +154,19 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	  			break;
 
 	  		case 'mute_unmute':
+
+          var new_status = service.notification_status.mute ? false : true;
+
+          service.notification_status.mute = new_status;
+
+          service.save(function(err) {
+            if(err) {
+              res.json({success:0});
+            } else {
+              res.json({success:1, new_status: new_status});
+            }
+          });
+
 	  			break;
           
         default:
@@ -210,7 +225,7 @@ router.post('/add', function(req, res){
   // TODO : create collection on service add
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
-  req.check('type', 'A valid email is required').notEmpty();
+  req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'An interval is required').notEmpty();
   req.check('running_status', 'The status is required').notEmpty();
 //  req.check('notification_status', 'The password confirmation is required').notEmpty();
@@ -236,7 +251,6 @@ router.post('/add', function(req, res){
        if(err) {
        	logger.debug('There was an error saving the service', err);
        } else {
-       	logger.debug('The new service was saved!');
         req.flash('success_messages', 'Service added.');
         res.redirect('/services/index');
        }
