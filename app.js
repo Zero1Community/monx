@@ -1,6 +1,5 @@
 var express = require('express');
 var expressValidator = require('express-validator');
-//var swig = require('swig');
 var nunjucks = require('nunjucks');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('./modules/logger.js');
 var m  = require('./middlewares/middlewares.js');
+var paginate = require('express-paginate');
 
 
 
@@ -84,6 +84,7 @@ app.use(function(req, res, next){
 
 app.use('/', routes);
 app.use('/users', users);
+app.use(paginate.middleware(3, 6));
 app.use('/services', m.isAuthenticated, services);
 app.use('/api', api);
 

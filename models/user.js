@@ -6,5 +6,6 @@ module.exports = mongoose.model('User',{
     email: String,
     address: String,
     resetPasswordToken: String,
-	resetPasswordExpires: Number
+    resetPasswordExpires: Number,
+    isAdmin: { type: Boolean, default: false }
 });	
