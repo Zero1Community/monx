@@ -3,6 +3,7 @@ var async    = require('async');
 var dbConfig = require('../config/db.js');
 var configs  = require('../config/configs.js');
 var logger   = require('./logger.js');
+var redis = require('redis');
 
 function checkDNS(rbl_server, ip, callback, timeout){
 
@@ -15,7 +16,7 @@ function checkDNS(rbl_server, ip, callback, timeout){
   var req = dns.Request({
     question: dns.Question({name: ip.split('.').reverse().join('.') + "." + rbl_server, type: 'A'}),
     //server: { address: '208.67.222.222', port: 53, type: 'udp' },
-    server: { address: '8.8.8.8', port: 53, type: 'udp' },
+    server: { address: '127.0.0.1', port: 53, type: 'udp' },
     timeout: timeout,
   });
 
@@ -112,7 +113,6 @@ function getServersFromDB(callback) {
 
 function getAndCacheServers(callback) {
 
-  var redis = require("redis");
   var client = redis.createClient();
   redis.debug_mode = configs.debug;
 
