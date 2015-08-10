@@ -14,7 +14,8 @@ function checkDNS(rbl_server, ip, callback, timeout){
   var start = Date.now();
   var req = dns.Request({
     question: dns.Question({name: ip.split('.').reverse().join('.') + "." + rbl_server, type: 'A'}),
-    server: { address: '208.67.222.222', port: 53, type: 'udp' },
+    //server: { address: '208.67.222.222', port: 53, type: 'udp' },
+    server: { address: '8.8.8.8', port: 53, type: 'udp' },
     timeout: timeout,
   });
 

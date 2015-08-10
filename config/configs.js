@@ -4,9 +4,9 @@ module.exports = {
 	email: {
 		service: 'Gmail',
 		auth: {
-          user: 'agli.panci@gmail.com',
-          pass: 'oldfswvcuufrpvhh'
+          user: 'monx.notifications@gmail.com',
+          pass: 'asdayhri7werhvnssadni8as'
         },
-        from: 'Monx <agli.panci@gmail.com>'
+        from: 'Monx <monx.notifications@gmail.com>'
 	}
 }
