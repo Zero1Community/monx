@@ -75,7 +75,7 @@ function validateAndResolve(host, callback) {
 
   dns.resolve4(host, function(error, addr) {
     if(error) {
-      if(error) logger.debug('Error resolving', error);
+      logger.debug('Error resolving', error);
     } else {
       // TODO : po kto qe kane shume IP ?
       return callback(addr[0]);
@@ -114,7 +114,7 @@ function getServersFromDB(callback) {
 function getAndCacheServers(callback) {
 
   var client = redis.createClient();
-  redis.debug_mode = configs.debug;
+  //redis.debug_mode = configs.debug;
 
 
     client.on("error", function (err) {
@@ -127,16 +127,18 @@ function getAndCacheServers(callback) {
 
     client.on('ready', function(){
         client.get('rbl_servers', function(err, result) {
-            if(configs.debug) logger.debug("Redis get error", err);
-            if(configs.debug) logger.debug("Redis get result", result);
+            if(err) logger.debug("Redis get error", err);
+            if(configs.debug) logger.debug("Got data from redis ");
             if(result == null) {
-                getServersFromDB(function(err, result){
-                    if(configs.debug) logger.debug("Writing this to Redis", result);
-                    client.set('rbl_servers', JSON.stringify(result), redis.print);
-                    client.end();
-                });
+              if(configs.debug) logger.debug("Got null from redis, falling back to DB ");
+              getServersFromDB(function(err, result){
+                if(configs.debug) logger.debug("Writing this to Redis");
+                //if(configs.debug) logger.debug("Writing this to Redis", result);
+                client.set('rbl_servers', JSON.stringify(result), redis.print);
+                client.end();
+              });
             } else {
-                if(configs.debug) logger.debug("Result from Redis ", result);
+                //if(configs.debug) logger.debug("Result from Redis ", result);
                 client.end();
                 return callback(null, JSON.parse(result));
             }

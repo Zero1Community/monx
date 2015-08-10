@@ -21,11 +21,10 @@ amqp.connect('amqp://localhost').then(function(conn) {
 		ok = ok.then(function(_qok) {
 			return ch.consume('all_checks', function(msg) {
 				if(configs.debug) console.log(" [x] Received a task");
-				// we've got the stuff we need here
 				var toCheck = JSON.parse(msg.content.toString());
-				if(configs.debug) console.log(toCheck);
+				//if(configs.debug) console.log(toCheck);
 				processWork(toCheck);
-				if(configs.debug) console.log(msg);
+				//if(configs.debug) console.log(msg);
 			}, {noAck: true});
 		});
 
@@ -68,11 +67,13 @@ function postToAPI(data){
 	request(options, function (error, response, body) {
 	  if (!error) {
   		if(configs.debug) console.log('Posted to API');
-	    if(configs.debug) console.log(body)
+	    if(configs.debug) console.log(body);
+	    request.end();
 	  } else{
 	  	if(configs.debug) console.log('Error');
 	  	if(configs.debug) console.log(error);
 	    if(configs.debug) console.log(body)
+	    request.end();
 	}
 	});
 }
