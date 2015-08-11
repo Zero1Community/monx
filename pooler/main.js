@@ -45,14 +45,15 @@ function processWork(tC,callback){
 	}
 }
 
-// posting data to API function
-function postToAPI(data){
-	console.log("Posing to API");
-	var request = require('request');
-	if(configs.debug) console.log('Data received', data);
 
+// posting data to API function
+function postToAPI (data) {
+	var request = require('request');
+	console.log("Posting to API");
+	//if(configs.debug) console.log('Data received', data);
 	var options = {
 	  uri: configs.api_url + 'service-data/add',
+	  //headers: { 'Content-Type': 'application/json', },
 	  method: 'POST',
 	  json: {
 	    data : {
@@ -63,18 +64,14 @@ function postToAPI(data){
 	    }
 	  }
 	};
-
-	request(options, function (error, response, body) {
-	  if (!error) {
-  		if(configs.debug) console.log('Posted to API');
-	    if(configs.debug) console.log(body);
-	    request.end();
-	  } else{
-	  	if(configs.debug) console.log('Error');
-	  	if(configs.debug) console.log(error);
-	    if(configs.debug) console.log(body)
-	    request.end();
-	}
+	request(options, function(error, response, body){
+	  if(error) {
+	      console.log('Got error while posting data to API !');
+	      console.log(error);
+	  } else {
+	      console.log('Data posted to API!');
+	      console.log(response.statusCode);
+		}
 	});
 }
 
@@ -124,6 +121,12 @@ function monxBlacklist(blacklistObject){
 			user: blacklistObject.user
 		}
 
-		postToAPI(data);
+		postToAPI(data, function(err) {
+			if(err){
+				if(configs.debug) console.log(err)
+			} else {
+				if(configs.debug) console.log('Data posted!');
+			}
+		}, 3000);
 	});
 }

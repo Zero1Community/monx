@@ -29,11 +29,13 @@ router.post('/service-data/add', function(req, res){
 		});
 		sData.save(function(err) {
 	      if(!err) {
+  				console.log('Closing the connection');
+					res.setHeader('Content-Type', 'application/json');
+					res.end(JSON.stringify({'success': 1}));
 
 				Service.findOne({_id:data.service_id}, function(err, service){
 					
 					data['service_name'] = service.name;
-					//data['service_name'] = "service";
 					checker(data,function(err,res){
 						if(err){
 							console.log(err);
@@ -43,20 +45,19 @@ router.post('/service-data/add', function(req, res){
 						}
 					});					
 					service.status = data.status;
-
+					console.log('Saving the service status');
 					service.save(function(err) {
 						 if(err) {
 							logger.debug('There was an error saving the service', err);
 						 } else {
 						  	logger.debug('The new service was saved!');
-								res.setHeader('Content-Type', 'application/json');
-								res.end(JSON.stringify({'success': 1}));
-					// 	      // req.flash('success_messages', 'Service updated.');
+						// // 	      // req.flash('success_messages', 'Service updated.');
 					// 	      // res.redirect('/services/index');
 							}
 						});
 				});
 			} else {
+				console.log('Closing the connection');
 				res.setHeader('Content-Type', 'application/json');
 				res.end(JSON.stringify({'success': 0, error: 3}));
 			}
