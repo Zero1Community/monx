@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # comenti merret si parameter
-git checkout turi
 git add -A .
 git commit -a -m "$1"
 git push
 git checkout master
 git pull
 git fetch
-git merge turi
+git merge agli
 git push
-git checkout turi
+git checkout agli
 git status
