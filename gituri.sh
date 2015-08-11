@@ -1,6 +1,8 @@
 #!/bin/bash
+
+# comenti merret si parameter
 git add -A .
-git commit -a -m 'Something something'
+git commit -a -m '$1'
 git push
 git checkout master
 git pull
