@@ -10,27 +10,58 @@ var dbConfig = require('../config/db.js');
 var Service = require('../models/service.js');
 
 var intervals = [];
+var total_services = [];
 // kjo duhet bo me .then()
 
-var total_services = [];
 
 function DbUpdateServices () {
-    mongoose.connect(dbConfig.url);
-    Service.find({running_status : true}, function(err, services) {
-        //if(configs.debug) console.log(services);
-        total_services = services;
-        mongoose.connection.close();
+  mongoose.connect(dbConfig.url);
+  console.log('Duke marre nga DB');
+  Service.find({running_status : true}, function(err, services) {
+      //if(configs.debug) console.log(services);
+      scheduler(services);
+      mongoose.connection.close();
+  });
+}
+
+DbUpdateServices();
+
+amqp.connect('amqp://localhost').then(function(conn) {
+  process.once('SIGINT', function() { conn.close(); });
+  return conn.createChannel().then(function(ch) {
+    
+    var ok = ch.assertQueue('service_updates', {durable: false});
+    // todo : error catching per kur nuk lidhet queueja 
+    ok = ok.then(function(_qok) {
+      return ch.consume('service_updates', function(msg) {
+        if(configs.debug) console.log(" [x] Received a service update task");
+        var toCheck = JSON.parse(msg.content.toString());
+        //if(configs.debug) console.log(toCheck);
+        startInterval(toCheck);
+        //if(configs.debug) console.log(msg);
+      }, {noAck: true});
     });
 
+    return ok.then(function(_consumeOk) {
+      if(configs.debug) console.log(' [*] Waiting for messages. To exit press CTRL+C');
+    });
+  });
+}).then(null, console.warn);
 
 
-mongoose.connect(dbConfig.url);
-console.log('Duke marre nga DB');
-Service.find({running_status : true}, function(err, services) {
-    //if(configs.debug) console.log(services);
-    scheduler(services);
-    mongoose.connection.close();
-});
+function startInterval (rabbit_task) {
+          //if(configs.debug) console.log(services);
+      clearInterval(intervals[rabbit_task._id]);
+          if(rabbit_task.running_status == true){
+              console.log('Creating interval with ID ' + rabbit_task._id);
+              intervals[rabbit_task._id] = setInterval(function(rabbit_task) {
+                      //let's emmit the work on RabbitMQ
+                      console.log('Po monitorojme '+ rabbit_task.name);
+                      //workEmmiter(task);
+                      //if(configs.debug) console.log(task);
+                }, rabbit_task.interval*1000, rabbit_task);          
+          }
+}
 
 
 // TODO: nqs caktivizohet ne DB si do updatohet ktu
@@ -46,63 +77,14 @@ Service.find({running_status : true}, function(err, services) {
 
 
 function scheduler(taskList){
-  //TODO to start when is pulled for the first time
-  //if(configs.debug) console.log('Got service from DB', taskList);
   console.log('Hyme ne scheduler');
   taskList.forEach(function(task){
-   // kjo zgjidhet kshu po duhet gjet nej mekanizem anti-bukosje
-   // nej queue lineare psh , boh..
-   // workEmmiter(task);
-// 
   console.log('Creating interval with ID ' + task._id);
   intervals[task._id] = setInterval(function(task) {
-          //let's emmit the work on RabbitMQ
           console.log('Po monitorojme '+ task.name);
           //workEmmiter(task);
-          //if(configs.debug) console.log(task);
     }, task.interval*1000, task);
 //  console.log('mbaroi foreach');
   });
 //  console.log('mbaroi funksioni');
 }
-
-//console.log('dylem nga funksioni');
-var test3 = 0;
-
-var controller = setInterval(function() {
-          //let's emmit the work on RabbitMQ
-          test3 += 1;
-          console.log('Po kontrollojme');
-          if(test3 == 8){
-            clearInterval(intervals['55c68ba3f90c636a6ffc444d']);
-            DbUpdateServices(function () {
-              intervals['55c68ba3f90c636a6ffc444d'] = 
-            });
-          }
-          //workEmmiter(task);
-          //if(configs.debug) console.log(task);
-}, 5000);
-
-
-// intervals.forEach(function(inter){
-//       console.log(inter);
-// });
-
-// function workEmmiter(jobToDo){
-
-//   amqp.connect('amqp://localhost').then(function(conn) {
-//     return when(conn.createChannel().then(function(ch) {
-
-//       var q = 'all_checks';
-//       var ok = ch.assertQueue(q, {durable: false});
-
-//       return ok.then(function(_qok) {
-//         ch.sendToQueue(q, new Buffer(JSON.stringify(jobToDo)));
-//         if(configs.debug) console.log(" [x] Sent job to rabbitMQ");
-//         return ch.close();
-//       });
-//     })).ensure(function() { conn.close(); });;
-//   }).then(null, console.warn);
-
-// }
-
