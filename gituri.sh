@@ -2,7 +2,7 @@
 
 # comenti merret si parameter
 git add -A .
-git commit -a -m '$1'
+git commit -a -m "$1"
 git push
 git checkout master
 git pull
