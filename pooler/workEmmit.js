@@ -12,7 +12,21 @@ var Service = require('../models/service.js');
 var intervals = [];
 var total_services = [];
 // kjo duhet bo me .then()
+var workEmmiter = require('../modules/emmiter.js');
 
+function scheduler(taskList){
+  console.log('Hyme ne scheduler');
+  taskList.forEach(function(task){
+  console.log('Creating interval with ID ' + task._id);
+  intervals[task._id] = setInterval(function(task) {
+          console.log('Po monitorojme '+ task.name);
+          console.log('Me interval '+ task.interval);
+          workEmmiter(task,'all_checks');
+    }, task.interval*1000, task);
+//  console.log('mbaroi foreach');
+  });
+//  console.log('mbaroi funksioni');
+}
 
 function DbUpdateServices () {
   mongoose.connect(dbConfig.url);
@@ -23,6 +37,23 @@ function DbUpdateServices () {
       mongoose.connection.close();
   });
 }
+
+function startInterval (rabbit_task) {
+          //if(configs.debug) console.log(services);
+      clearInterval(intervals[rabbit_task._id]);
+          if(rabbit_task.running_status == true){
+              console.log('Creating interval with ID ' + rabbit_task._id);
+              intervals[rabbit_task._id] = setInterval(function(rabbit_task) {
+                      //let's emmit the work on RabbitMQ
+                      console.log('Po monitorojme '+ rabbit_task.name);
+                      console.log('Me interval '+ rabbit_task.interval);
+                      workEmmiter(rabbit_task,'all_checks');
+                      //if(configs.debug) console.log(task);
+                }, rabbit_task.interval*1000, rabbit_task);          
+          }
+}
+
+
 
 DbUpdateServices();
 
@@ -47,44 +78,3 @@ amqp.connect('amqp://localhost').then(function(conn) {
     });
   });
 }).then(null, console.warn);
-
-
-function startInterval (rabbit_task) {
-          //if(configs.debug) console.log(services);
-      clearInterval(intervals[rabbit_task._id]);
-          if(rabbit_task.running_status == true){
-              console.log('Creating interval with ID ' + rabbit_task._id);
-              intervals[rabbit_task._id] = setInterval(function(rabbit_task) {
-                      //let's emmit the work on RabbitMQ
-                      console.log('Po monitorojme '+ rabbit_task.name);
-                      //workEmmiter(task);
-                      //if(configs.debug) console.log(task);
-                }, rabbit_task.interval*1000, rabbit_task);          
-          }
-}
-
-
-// TODO: nqs caktivizohet ne DB si do updatohet ktu
-// duhet shtu nji funksion me tick 30 sekonda qe shef sherbimet qe jane caktivizu dhe i ben clearInterval ktyre te startuarave
-
-
-//     setInterval(function(task) {
-//           //let's emmit the work on RabbitMQ
-//           workEmmiter(task);
-//           if(configs.debug) console.log(task);
-//     }, task.interval*30000, task);
-// }
-
-
-function scheduler(taskList){
-  console.log('Hyme ne scheduler');
-  taskList.forEach(function(task){
-  console.log('Creating interval with ID ' + task._id);
-  intervals[task._id] = setInterval(function(task) {
-          console.log('Po monitorojme '+ task.name);
-          //workEmmiter(task);
-    }, task.interval*1000, task);
-//  console.log('mbaroi foreach');
-  });
-//  console.log('mbaroi funksioni');
-}
