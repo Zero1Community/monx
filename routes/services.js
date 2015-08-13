@@ -35,12 +35,13 @@ router.get('/:id/events/:event_id', function(req, res){
 			if(!err) {
 
 				var event_data = data;
-				console.log(typeof data.message);
-				console.log(event_data);
-				console.log(event_data['status']);
-				console.log(event_data.status);
-				console.log(event_data['message']);
-				console.log(event_data.message);
+				// TODO: kjo ka hall, duhet rregullu
+				// console.log(typeof data.message);
+				// console.log(event_data);
+				// console.log(event_data['status']);
+				// console.log(event_data.status);
+				// console.log(event_data['message']);
+				// console.log(event_data.message);
 				res.render('services/event', {event_data : event_data});
 			} else {
 				logger.debug(err);
@@ -100,7 +101,7 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   	service.type = req.body.type;
   	service.interval = req.body.interval;
   	service.running_status = req.body.running_status != '' ? true : false;
-
+  	workEmmiter(service,'service_updates');
 		  service.save(function(err) {
 		     if(err) {
 		     	logger.debug('There was an error saving the service', err);
@@ -117,6 +118,7 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
 router.get('/:id/delete', m.hasServiceAccess, function(req, res){
   //TODO: validations
+  //TODO: STOP SERVICE workEmmiter(service,'service_updates');
   Service.findOne({_id:req.params.id}).remove(function(){
 
     var service_data_collection = 'service_data_' + req.params.id;
@@ -252,7 +254,7 @@ router.post('/add', function(req, res){
     newService.running_status = req.body.running_status;
 
     newService.user = req.user;
-   
+    workEmmiter(newService,'service_updates');
     newService.save(function(err) {
        if(err) {
        	logger.debug('There was an error saving the service', err);
