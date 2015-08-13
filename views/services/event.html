@@ -1,0 +1,99 @@
+{% extends '../master_layout.html' %}
+{% block content %}
+
+
+<div id="content" class="">
+
+
+
+        <div class="row">
+
+          <div class="col-md-10 col-md-offset-1">
+
+<!--       <div class="mt30 mb25">
+        {% include "../includes/notifications.html" %}
+      </div>
+ -->            <!-- Input Fields -->
+            <div class="panel">
+              <div class="panel-heading">
+                <span class="panel-title">Event Details</span>
+                <div class="widget-menu mr10">
+                    <div class="btn-group">
+                      <a href="/users/settings/edit" class="btn btn-xs btn-default dropdown-toggle">
+                          <span class="glyphicon glyphicon-edit fs11 mr5"></span>Edit</button>
+                      </a>
+                    </div>
+                  </div>
+              </div>
+              <div class="panel-body">
+
+                <div class="col-md-6">
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label class="col-lg-6 control-label">Event ID</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{event_data._id}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-lg-6 control-label">Event Status</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{event_data.status}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-lg-6 control-label">Node Source </label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{event_data.source}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label class="col-lg-6 control-label">Event Date</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{event_data.createdAt}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-md-6">
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label class="col-lg-6 control-label">Event Message</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{ event_data.message.listed }}</p>
+                        </div>
+                      </div>
+                    </div>
+<!--                     <div class="form-group">
+                      <label class="col-lg-6 control-label">Server</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{record.server}}</p>
+                        </div>
+                      </div>
+                    </div>
+ --> 
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+{% endblock %}

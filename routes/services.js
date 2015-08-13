@@ -10,6 +10,7 @@ var m  = require('../middlewares/middlewares.js');
 var util        = require('util');
 var logger      = require('../modules/logger.js');
 var mongoose = require('mongoose');
+var workEmmiter = require('../modules/emmiter.js');
 
 router.get('/index', function(req, res){
   var user = req.user;
@@ -33,8 +34,14 @@ router.get('/:id/events/:event_id', function(req, res){
 	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
 			if(!err) {
 
-				res.end(JSON.stringify(data));
-				//res.render('services/data', {data : data});
+				var event_data = data;
+				console.log(typeof data.message);
+				console.log(event_data);
+				console.log(event_data['status']);
+				console.log(event_data.status);
+				console.log(event_data['message']);
+				console.log(event_data.message);
+				res.render('services/event', {event_data : event_data});
 			} else {
 				logger.debug(err);
 				  res.flash('error_messages', 'No data for this service');
@@ -140,13 +147,13 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	  			var new_status = service.running_status ? false : true;
 
 	  			service.running_status = new_status;
-
+	  			workEmmiter(service,'service_updates');
 	  			service.save(function(err) {
-            if(err) {
-            	res.json({success:0});
-            } else {
-            	res.json({success:1, new_status: new_status});
-            }
+		            if(err) {
+		            	res.json({success:0});
+		            } else {
+		            	res.json({success:1, new_status: new_status});
+		            }
   			 	});
 
 	  			break;
@@ -164,7 +171,7 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
               res.json({success:1, new_status: new_status});
             }
           });
-
+          		
 	  			break;
           
         default:
@@ -185,6 +192,7 @@ router.get('/:id/data', function service_data(req, res) {
       if(!err && data) {
 				res.render('services/data', {
           data: data, 
+          service_id : service_id,
           pageCount: pageCount,
           itemCount: itemCount,
           currentPage: req.query.page
