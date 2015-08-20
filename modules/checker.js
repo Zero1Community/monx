@@ -113,6 +113,7 @@ function checker(new_data){
 				//we need to implement error checking here 
 				// IF ( new error != old error ) { email about status update of error }
 				// basically we need to check the message
+				// diff te eventeve
 				if(notification_status === 'ERROR') return;
 				 updateAndNotify(new_data,"** New Service Error", function(){
 							console.log("Mail sent");
