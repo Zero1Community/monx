@@ -12,6 +12,6 @@
 <br>
 To find more:
 <br>
- http://localhost:3000/services/event/{{service_id}}/{{event_id}}/
+ http://localhost:3000/services/{{service_id}}/events/{{event_id}}/
 </body>
 </html>
