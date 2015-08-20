@@ -21,7 +21,10 @@ function updateAndNotify(notific,status_subject){
 	   		return;
 	   	}
 
-			var collected_message = status_subject + " for "+ notific.status + " " + notific.message + " \n ";
+		var collected_message = status_subject + " for "+ notific.status + " " + notific.service_name + " \n ";
+			
+		if(notific.mute_status){
+
 			var tick = {
 				message : collected_message,
 				subject : status_subject + ' for service ' + notific.service_name,
@@ -39,7 +42,7 @@ function updateAndNotify(notific,status_subject){
 						if(configs.debug) console.log(res);
 					}
 			});
-
+		}
 			var u = new Notification();
 			u.user = notific.user;
 			u.service = notific.service_id;
