@@ -23,7 +23,7 @@ function updateAndNotify(notific,status_subject){
 
 		var collected_message = status_subject + " for "+ notific.status + " " + notific.service_name + " \n ";
 			
-		if(notific.mute_status){
+		if(!notific.mute_status){
 
 			var tick = {
 				message : collected_message,
