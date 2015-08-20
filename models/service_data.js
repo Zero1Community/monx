@@ -7,7 +7,8 @@ function serviceData(service_id){
 	var collection = 'service_data_' + service_id;
 	var serviceDataSchema = new mongoose.Schema({
 			status: String,
-			source: String
+			source: String,
+			message: {}
 			},{ strict: false });
 
 	serviceDataSchema.plugin(mongoosePaginate);

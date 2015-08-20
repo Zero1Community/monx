@@ -34,15 +34,7 @@ router.get('/:id/events/:event_id', function(req, res){
 	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
 			if(!err) {
 
-				var event_data = data;
-				// TODO: kjo ka hall, duhet rregullu
-				// console.log(typeof data.message);
-				// console.log(event_data);
-				// console.log(event_data['status']);
-				// console.log(event_data.status);
-				// console.log(event_data['message']);
-				// console.log(event_data.message);
-				res.render('services/event', {event_data : event_data});
+				res.render('services/event', {event_data : data});
 			} else {
 				logger.debug(err);
 				  res.flash('error_messages', 'No data for this service');

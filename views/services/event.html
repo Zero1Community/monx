@@ -72,7 +72,17 @@
                       <label class="col-lg-6 control-label">Event Message</label>
                       <div class="col-lg-6">
                         <div class="bs-component">
-                          <p class="form-control-static text-muted">{{ event_data.message.listed }}</p>
+                          <p class="form-control-static text-muted">
+
+                          {% for item in event_data.message.listed %}
+                          
+                          {{ item.server }}
+                          {{ item.status }}
+
+                          {% endfor %}
+
+
+                          </p>
                         </div>
                       </div>
                     </div>
