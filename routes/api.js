@@ -36,6 +36,7 @@ router.post('/service-data/add', function(req, res){
 				Service.findOne({_id:data.service_id}, function(err, service){
 					
 					data['service_name'] = service.name;
+					data['mute_status'] = service.notification_status.mute;
 					checker(data,function(err,res){
 						if(err){
 							console.log(err);
