@@ -1,13 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var Service     = require('../models/service.js');
 var middleware = require('../middlewares/middlewares.js');
 //var serviceData = require('../models/serviceData.js');
 var configs = require('../config/configs.js');
 var checker = require('../modules/checker.js');
 var mongoose = require('mongoose');
 var ServiceData = require('../models/service_data.js');
-var _ = require('underscore');
+
 
 
 router.post('/service-data/add', function(req, res){
@@ -18,113 +17,23 @@ router.post('/service-data/add', function(req, res){
 	var data = req.body.data;
 	if(configs.debug) console.log(data);
 
-	var serviceData = ServiceData(data.service_id);
-
-	serviceData.findOne({}, {}, { sort: { 'createdAt' : -1 } }, function(err, last_data) {
-		//need to implement additional check here for service data
+	// TODO check before hand
+	data['source'] = req.ip;
+	console.log('Calling checker');
+	checker(data,function(err,res){
 		if(err){
-			if(configs.debug) console.log(err);
-			return err;
+			console.log('Got error in phase 1 on checker ');
+			console.log(err);
 		}
-
-		if(last_data){
-
-			var last_data_servers = []; 
-			var new_data_servers = []; 
-			last_data.message.listed.forEach(function (element) {
-					console.log("last data");
-					console.dir(element.server);
-					last_data_servers.push(element.server);
-			});
-			data.message.listed.forEach(function (element) {
-					console.log("new data");
-					console.dir(element.server);
-					new_data_servers.push(element.server);
-			});
-
-			var removed = _.difference(last_data_servers,new_data_servers);
-			var added = _.difference(new_data_servers,last_data_servers);
-
-			if(removed.length == 0 && added.length == 0) {
-					Service.findById(data.service_id, function(err, service){
-						
-						service.last_checked = new Date();
-
-						service.save(function(err) {
-							if(err) {
-								logger.debug('There was an error saving the service tek api', err);
-							} else {
-								logger.debug('The new service was saved!');
-							}
-
-								res.setHeader('Content-Type', 'application/json');
-								return res.end(JSON.stringify({'success': 1}));
-							});
-					});
-			}
-
-			var diff = [];
-			if(removed.length > 0){
-				removed.forEach(function (server) {
-						diff.push({server: server, action: 'removed'});
-				});
-			}
-
-			if(added.length > 0){
-				added.forEach(function (server) {
-						diff.push({server: server, action: 'added'});
-				});
-			}
-
-			data.message.diff = diff;
-
+		else{
+			console.log(res);
+			console.log('Success! Closing the connection');
 		}
-
-		// TODO check before hand
-		var sData = new serviceData({
-				message: data.message,
-				status: data.status,
-				// to be ndrruar me x-forwarded-for
-				source: req.ip 
-			});
-			sData.save(function(err) {
-		      if(!err) {
-
-					Service.findById(data.service_id, function(err, service){
-						
-						data['service_name'] = service.name;
-						data['mute_status'] = service.notification_status.mute;
-						checker(data,function(err,res){
-							if(err){
-								console.log(err);
-							}
-							else{
-								console.log(res);
-							}
-						});
-						service.status = data.status;
-						console.log('Saving the service status');
-						service.save(function(err) {
-							 if(err) {
-								logger.debug('There was an error saving the service', err);
-							 } else {
-							  	logger.debug('The new service was saved!');
-							// // 	      // req.flash('success_messages', 'Service updated.');
-						// 	      // res.redirect('/services/index');
-								}
-		  				console.log('Closing the connection');
-							res.setHeader('Content-Type', 'application/json');
-							res.end(JSON.stringify({'success': 1}));
-							});
-					});
-				} else {
-					console.log('Closing the connection');
-					res.setHeader('Content-Type', 'application/json');
-					res.end(JSON.stringify({'success': 0, error: 3}));
-				}
-			});
-		});
-
+	});
+	// 
+	console.log('Closing the connection');
+	res.setHeader('Content-Type', 'application/json');
+	res.end(JSON.stringify({'success': 1, error: 0}));
 });
 
 module.exports = router;

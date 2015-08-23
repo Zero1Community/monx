@@ -1,8 +1,10 @@
 var Mailer = require('./mailer.js');
 var User = require('../models/user.js');
 var Notification = require('../models/notification.js');
+var Service     = require('../models/service.js');
 var configs = require('../config/configs.js');
 var ServiceData = require('../models/service_data.js');
+var _ = require('underscore');
 
 function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
@@ -18,6 +20,7 @@ function updateAndNotify(notific,status_subject){
 	User.findOne({_id: notific.user}, function(err, user) {
 	   	if(err)	{
 	   		if(configs.debug) console.log(err);	
+	   		//TODO: fix this return
 	   		return;
 	   	}
 
@@ -55,16 +58,48 @@ function updateAndNotify(notific,status_subject){
 				} else {
 					if(configs.debug) console.log('Event successfully saved');
 				}
+				//return;
 			});
 		});
 }
 
 
 function checker(new_data){
+
+	console.log('Got into phase 2 in checker');
 	console.log(new_data);
+	// TODO: handle kur ska sherbim ?
+	Service.findById(new_data.service_id, function(err, service){
+		console.log('Finding the service ');
+		if(err) {
+			console.log('Error finding the service with id' + data.service_id );
+			console.log(err);
+			return err;
+		}
+
+		new_data['service_name'] = service.name;
+		new_data['mute_status'] = service.notification_status.mute;
+
+		service.status = new_data.status;
+		service.last_checked = new Date();
+		console.log('Saving the service status and last checked');
+		service.save(function(err) {
+			 if(err) {
+				logger.debug('There was an error saving the service', err);
+				//TODO: hmm nej return ktu ?
+			 } else {
+			  	logger.debug('The new service was saved!');
+				}
+			});
+	});
+
 	var serviceData = ServiceData(new_data.service_id);
 	serviceData.findOne({}, {}, { sort: { 'createdAt' : -1 } }, function(err, last_data) {
 		//need to implement additional check here for service data
+		
+		var last_data_servers = []; 
+		var new_data_servers = []; 
+		
 		if(err){
 			if(configs.debug) console.log(err);
 			return err;
@@ -75,7 +110,57 @@ function checker(new_data){
 			}
 		}else{
 			new_data['notification_id'] = last_data.id;
+			last_data.message.listed.forEach(function (element) {
+					console.log("Listing last data");
+					console.dir(element.server);
+					last_data_servers.push(element.server);
+			});
 		}
+
+		new_data.message.listed.forEach(function (element) {
+				console.log("Listing new data");
+				console.dir(element.server);
+				new_data_servers.push(element.server);
+		});
+
+		var removed = _.difference(last_data_servers,new_data_servers);
+		var added = _.difference(new_data_servers,last_data_servers);
+
+		if(removed.length > 0 || added.length > 0) {
+			var diff = [];
+			if(removed.length > 0){
+				removed.forEach(function (server) {
+						diff.push({server: server, action: 'removed'});
+				});
+			}
+
+			if(added.length > 0){
+				added.forEach(function (server) {
+						diff.push({server: server, action: 'added'});
+				});
+			}
+
+			new_data.message.diff = diff;
+			if(diff.length > 0){
+				//ruajme eventin 
+				// TODO check before hand
+				// TODO: if type blaclist
+				var sData = new serviceData({
+						message: new_data.message,
+						status: new_data.status,
+						// to be ndrruar source_IP me x-forwarded-for me vone
+				});
+				sData.save(function(err) {
+		      if(!err) {
+		      	console.log('Event successfully saved');
+		      }
+		      else{
+		      	console.log('Error saving the event' + err);
+		      }	
+				});
+			}
+		}
+	//});
 
 		// TODO : check if this is OK
 		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'createdAt' : -1 } }, function(err, notification_data){
