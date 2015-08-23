@@ -111,15 +111,22 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 router.get('/:id/delete', m.hasServiceAccess, function(req, res){
   //TODO: validations
   //TODO: STOP SERVICE workEmmiter(service,'service_updates');
-  Service.findOne({_id:req.params.id}).remove(function(){
+  Service.findById(req.params.id).remove(function(){
 
+	var service = {
+	  	_id: req.params.id,
+	  	running_status : false,
+	  	interval : 60,
+	  	name : "Temp",
+	  }
+	  workEmmiter(service,'service_updates');
     var service_data_collection = 'service_data_' + req.params.id;
 
     mongoose.connection.db.dropCollection(service_data_collection, function(err, result) {
 
       if(!err) {
         req.flash('success_messages', 'Service deleted.');
-        res.redirect('/services/index');
+        res.redirect('/services');
       }
       
     });
@@ -250,10 +257,10 @@ router.post('/add', function(req, res){
     workEmmiter(newService,'service_updates');
     newService.save(function(err) {
        if(err) {
-       	logger.debug('There was an error saving the service', err);
+       	logger.debug('There was an error saving the service tek service', err);
        } else {
         req.flash('success_messages', 'Service added.');
-        res.redirect('/services/index');
+        res.redirect('/services');
        }
     });
     

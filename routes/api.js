@@ -31,23 +31,37 @@ router.post('/service-data/add', function(req, res){
 			var last_data_servers = []; 
 			var new_data_servers = []; 
 			last_data.message.listed.forEach(function (element) {
-					//console.log(element.server);
+					console.log("last data");
+					console.dir(element.server);
 					last_data_servers.push(element.server);
 			});
 			data.message.listed.forEach(function (element) {
-					//console.log(element.server);
+					console.log("new data");
+					console.dir(element.server);
 					new_data_servers.push(element.server);
 			});
 
-			var added = _.difference(last_data_servers,new_data_servers);
-			var removed = _.difference(new_data_servers,last_data_servers);
+			var removed = _.difference(last_data_servers,new_data_servers);
+			var added = _.difference(new_data_servers,last_data_servers);
 
 			if(removed.length == 0 && added.length == 0) {
+					Service.findById(data.service_id, function(err, service){
+						
+						service.last_checked = new Date();
+						console.log('Saving the service last checked');
+						service.save(function(err) {
+							if(err) {
+								logger.debug('There was an error saving the service tek api', err);
+							} else {
+								logger.debug('The new service was saved!');
+							}
 
-		  				console.log('no diff');
-							res.setHeader('Content-Type', 'application/json');
-							res.end(JSON.stringify({'success': 1}));
-				return;
+			  				console.log('no diff');
+								res.setHeader('Content-Type', 'application/json');
+								res.end(JSON.stringify({'success': 1}));
+							});
+					});
+				//return;
 			}
 
 			var diff = [];
@@ -78,11 +92,8 @@ router.post('/service-data/add', function(req, res){
 			});
 			sData.save(function(err) {
 		      if(!err) {
-	  				console.log('Closing the connection');
-						res.setHeader('Content-Type', 'application/json');
-						res.end(JSON.stringify({'success': 1}));
 
-					Service.findOne({_id:data.service_id}, function(err, service){
+					Service.findById(data.service_id, function(err, service){
 						
 						data['service_name'] = service.name;
 						data['mute_status'] = service.notification_status.mute;
@@ -93,7 +104,7 @@ router.post('/service-data/add', function(req, res){
 							else{
 								console.log(res);
 							}
-						});					
+						});
 						service.status = data.status;
 						console.log('Saving the service status');
 						service.save(function(err) {
@@ -104,6 +115,9 @@ router.post('/service-data/add', function(req, res){
 							// // 	      // req.flash('success_messages', 'Service updated.');
 						// 	      // res.redirect('/services/index');
 								}
+		  				console.log('Closing the connection');
+							res.setHeader('Content-Type', 'application/json');
+							res.end(JSON.stringify({'success': 1}));
 							});
 					});
 				} else {
