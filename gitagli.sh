@@ -19,4 +19,5 @@ git fetch
 git merge agli
 git push
 git checkout agli
+git pull -u origin master
 git status

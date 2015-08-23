@@ -17,4 +17,5 @@ git fetch
 git merge turi
 git push
 git checkout turi
+git pull -u origin master
 git status
