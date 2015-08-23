@@ -28,6 +28,7 @@ router.post('/service-data/add', function(req, res){
 		}
 
 		if(last_data){
+
 			var last_data_servers = []; 
 			var new_data_servers = []; 
 			last_data.message.listed.forEach(function (element) {
@@ -48,7 +49,7 @@ router.post('/service-data/add', function(req, res){
 					Service.findById(data.service_id, function(err, service){
 						
 						service.last_checked = new Date();
-						console.log('Saving the service last checked');
+
 						service.save(function(err) {
 							if(err) {
 								logger.debug('There was an error saving the service tek api', err);
@@ -56,25 +57,21 @@ router.post('/service-data/add', function(req, res){
 								logger.debug('The new service was saved!');
 							}
 
-			  				console.log('no diff');
 								res.setHeader('Content-Type', 'application/json');
-								res.end(JSON.stringify({'success': 1}));
+								return res.end(JSON.stringify({'success': 1}));
 							});
 					});
-				//return;
 			}
 
 			var diff = [];
 			if(removed.length > 0){
 				removed.forEach(function (server) {
-						//console.log(element.server);
 						diff.push({server: server, action: 'removed'});
 				});
 			}
 
 			if(added.length > 0){
 				added.forEach(function (server) {
-						//console.log(element.server);
 						diff.push({server: server, action: 'added'});
 				});
 			}

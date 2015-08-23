@@ -44,7 +44,7 @@ router.get('/:id/events/:event_id', function(req, res){
   }
 
 	var serviceData = ServiceData(req.params.id);
-	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
+	serviceData.findById(req.params.event_id, function(err, data) {
 			if(!err) {
 				res.render('services/event', {event_data: data, page_title: 'Event Detail'});
 			} else {
@@ -82,7 +82,7 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
     return res.redirect('/services/' + req.params.id + '');
   } 
 
-	Service.findOne({_id: req.params.id}, function (err, service) {
+	Service.findById(req.params.id, function (err, service) {
 			if(err){
         //TODO throw 404
 				res.end('No service found');
@@ -108,7 +108,7 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
     return res.redirect('/services/' + req.params.id + '/edit');
   }
 
-	Service.findOne({_id:req.params.id}, function(err, service){
+	Service.findById(req.params.id, function(err, service){
 
   	service.name = req.body.name;
   	service.host = req.body.host;
@@ -179,7 +179,7 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 
 	var action = req.params.action;
 
-	Service.findOne({_id:req.params.id}, function(err, service){
+	Service.findById(req.params.id, function(err, service){
 
 	  if(!err){
 
@@ -319,7 +319,7 @@ router.post('/add', function(req, res){
 
 router.post('/mx', function(req, res){
 
-	var domain = req.body.domain;
+  	var domain = req.body.domain;
 	dns.resolveMx(domain, function(error, addr) {
 
 		if(error) {

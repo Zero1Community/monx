@@ -42,7 +42,11 @@
                     <td>{{record.createdAt.toUTCString()}}</td>
                     <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} CLEAN {% endif %} </td>
                     <td>
-                        Comming Soon
+                        {% if record.message.diff %}
+                          {% for changes in record.message.diff  %}
+                            {{ changes.server }} - {{changes.action}}
+                          {% endfor %}
+                        {% endif %}
                     </td>
                     <td>{{service.type}}</td>
                     <td class="text-right">
