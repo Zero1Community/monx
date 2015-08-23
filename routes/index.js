@@ -20,7 +20,12 @@ router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
 							  services_number += 1;
 							  data_input += 60/services[i].interval;
 							}
-				  		res.render('dashboard', {services_number : services_number,data_input : data_input,notifications_sent : notifics.length});
+				  		res.render('dashboard', {
+				  				services_number: services_number,
+				  				data_input: data_input,
+				  				notifications_sent: notifics.length,
+				  				page_title: 'Dashboard'
+				  			});
 				    }
 				});
 			} else {

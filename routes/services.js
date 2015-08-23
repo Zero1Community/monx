@@ -18,14 +18,17 @@ router.get('/', function(req, res){
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
   Service.find({ user: user._id }, function(err, services) {
     if(!err) {
-      res.render('services/index', { services: services });
+      res.render('services/index', { 
+        services: services,
+        page_title: 'Services'
+      });
     }
 
   });
 });
 
 router.get('/add', function(req, res){
-	res.render('services/add');
+	res.render('services/add', {page_title: 'Add new service'});
 });
 
 router.get('/:id/events/:event_id', function(req, res){
@@ -34,7 +37,7 @@ router.get('/:id/events/:event_id', function(req, res){
 	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
 			if(!err) {
 
-				res.render('services/event', {event_data : data});
+				res.render('services/event', {event_data: data, page_title: 'Event Detail'});
 			} else {
 				logger.debug(err);
 				  res.flash('error_messages', 'No data for this service');
@@ -48,7 +51,7 @@ router.get('/notifications', function(req, res) {
 	var service_id = req.params.id;
 	Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
-				res.render('services/notifics', {notifications : notifics});
+				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
 			} else {
 				logger.debug(err);
 				res.flash('error_messages', 'No notifications for this service');
@@ -64,7 +67,7 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 			if(err){
 				res.end('No service found');
 			}
-		res.render('services/edit', {service : service});
+		res.render('services/edit', {service: service, page_title: 'Edit Service'});
 	});	
 });
 
@@ -196,7 +199,8 @@ router.get('/:id/data', function service_data(req, res) {
           service_id : service_id,
           pageCount: pageCount,
           itemCount: itemCount,
-          currentPage: req.query.page
+          currentPage: req.query.page,
+          page_title: 'Data for service'
         });
 			} else {
 				logger.debug(err);
@@ -215,12 +219,7 @@ router.get('/:id', function(req, res) {
 		if(err) {
 			logger.debug('There was an error saving the service', err);
 		} else {
-			res.render('services/view', {service : service});
-	  	// service.name 
-	  	// service.host ;
-	  	// service.type ;
-	  	// service.interval 
-	  	// service.status 
+			res.render('services/view', {service: service, page_title: 'Service details'});
 		}	
 	});
 });

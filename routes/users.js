@@ -12,7 +12,7 @@ var bCrypt = require('bcrypt-nodejs');
 module.exports = function(passport){
 	/* GET login page. */
 	router.get('/login', function(req, res, next) {
-		res.render('auth/login');
+		res.render('auth/login', {page_title: 'Login'});
 	});
 
 	/* Handle Login POST */
@@ -44,7 +44,7 @@ module.exports = function(passport){
 
 	/* GET Registration Page */
 	router.get('/signup', function(req, res){
-		res.render('auth/signup');
+		res.render('auth/signup', {page_title: 'Register'});
 	});
 
 	/* Handle Registration POST */
@@ -74,7 +74,7 @@ module.exports = function(passport){
 
 	/* Handle Forgot Password Form */
 	router.get('/forgot-password', function(req, res){
-		res.render('auth/forgotpassword');
+		res.render('auth/forgotpassword', {page_title: 'Forgot password'});
 	});
 
 	router.post('/forgot-password', function(req, res, next){
@@ -143,7 +143,8 @@ module.exports = function(passport){
 	    }
 	    res.render('auth/reset', {
 	      user: user,
-	      token: req.params.token
+	      token: req.params.token,
+        page_title: 'Reset password'
 	    });
 	  });
 	});
@@ -204,11 +205,11 @@ module.exports = function(passport){
 	});
 
 	router.get('/settings', middlewares.isAuthenticated, function(req, res){
-		res.render('users/view', { user:req.user });
+		res.render('users/view', { user: req.user, page_title: 'User Settings' });
 	});
 
 	router.get('/settings/edit', middlewares.isAuthenticated, function(req, res){
-		res.render('users/edit', { user:req.user });
+		res.render('users/edit', { user:req.user, page_title: 'Edit User Settings' });
 	});
 
 	router.post('/update', middlewares.isAuthenticated, function(req, res){
