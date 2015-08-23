@@ -44,7 +44,7 @@
                     <td>
                         {% if record.message.diff %}
                           {% for changes in record.message.diff  %}
-                            {{ changes.server }} - {{changes.action}}
+                            {{ changes.server }} - {{changes.action}} <br>
                           {% endfor %}
                         {% endif %}
                     </td>

@@ -10,7 +10,8 @@ var ServiceData = require('../models/service_data.js');
 
 
 router.post('/service-data/add', function(req, res){
-
+	//TODO: duhen pare returnet e DNS-ve qe te jene vetem 127-ta , jo IP te cuditshme
+	//TODO: paneli i adminit duhet te kete statusin e QUEVE dhe 1 buton qe fshin cachene e redisit
 	//to be validated
 	// TODO: duhet bo extend ky dhe duhet kaluar me poshte 
 	// mbasi eshte gjetur objekti ne menyre qe te fusim edhe EMRIN e sherbimit te subjekti
