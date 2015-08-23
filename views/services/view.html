@@ -26,42 +26,13 @@
         <div class="panel-body p5">
           <div class="table-responsive">
             <div class="bs-component">
-              <table class="table mbn table-striped admin-form theme-info">
-                <thead>
-                  <tr>
-                    <th>Event Time</th>
-                    <th>Status</th>
-                    <th>Message</th>
-                  </tr>
-                </thead>
-                <tbody>
+              {{service.name}}<br>
+              {{service.host}}<br>
+              {{service.status}}<br>
+              {{service.interval}}<br>
+              {{service.running_status}}<br>
+              {{service.notification_status}}<br>
 
-                {% for record in data -%}
-
-                <tr>
-                    <td>{{record.createdAt.toUTCString()}}</td>
-                    <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} OK {% endif %} </td>
-                    <td>
-                      {% set bl_total = 0 %}
-                      {% set timeout_total = 0 %}
-                      {% for bl in record.message.listed -%}
-                        {% if bl.status == '1' %} {%set bl_total += 1%} {% endif %}
-                        {% if bl.status == '2' %} {%set timeout_total += 1%} {% endif %}
-                      {%- endfor %}
-                      {{bl_total}} blacklists / {{timeout_total}} timeout
-                    </td>
-                    <td>{{service.type}}</td>
-                    <td class="text-right">
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-primary pull-right">View Event</button>
-                      </div>
-                    </td>
-                  </tr>
-                  
-                  {%- endfor %}
-
-                </tbody>
-              </table>
             <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
           </div>
         </div>
@@ -69,3 +40,4 @@
 </div>
 </div>
 </div>
+{% endblock %}

@@ -12,7 +12,7 @@ var logger      = require('../modules/logger.js');
 var mongoose = require('mongoose');
 var workEmmiter = require('../modules/emmiter.js');
 
-router.get('/index', function(req, res){
+router.get('/', function(req, res){
   var user = req.user;
   // TODO: LIMIT / PAGINATION ?
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
@@ -203,7 +203,8 @@ router.get('/:id/data', function service_data(req, res) {
 
 router.get('/:id', function(req, res) {
 // ktu duhet marre thjesht configurimi total i atij sherbimi 
-	Service.findOne({_id:req.params.id}, function(err, service){
+	//TODO: validation
+	Service.findById(req.params.id, function(err, service){
 		if(err) {
 			logger.debug('There was an error saving the service', err);
 		} else {
