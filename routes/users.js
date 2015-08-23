@@ -219,7 +219,6 @@ module.exports = function(passport){
 
     if(req.body.password != '') {
     	//TODO min pass length
-	    //req.check('password', 'The password is required').notEmpty();
 	    req.check('password_confirmation', 'The password confirmation is required').notEmpty();
 	    req.check('password_confirmation', 'The password confirmation is not the same as password').equals(req.body.password);
 	    
@@ -227,27 +226,23 @@ module.exports = function(passport){
 
     var errors = req.validationErrors();
 
-    if(errors){   //No errors were found.  Passed Validation!
+
+    var updated_user = { name: req.body.name, email: req.body.email };
+     
+    if(errors){  
     	req.flash('error_messages', errors);
     	return res.redirect('/users/settings/edit'); 
     } 
-
-		var updated_user = { name: req.body.name, email: req.body.email };
-     
    	if(req.body.password != '') {
 			var temp_pass = createHash(req.body.password); 
 			updated_user['password'] = temp_pass;
    	}
 
-		//TODO validation
 		User.update({_id:req.user.id}, updated_user, { multi: false }, function(err, numa){
 			
 			var user = req.user;
 			user.name = req.body.name;
 			user.email = req.body.email;
-
-			//console.log(err);
-			//console.log(numa);
 
 			req.logIn(user, function(error) {
             if (!error) {	

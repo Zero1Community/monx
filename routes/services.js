@@ -14,16 +14,16 @@ var workEmmiter = require('../modules/emmiter.js');
 
 router.get('/', function(req, res){
   var user = req.user;
-  // TODO: LIMIT / PAGINATION ?
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
-  Service.find({ user: user._id }, function(err, services) {
+  //Service.find({ user: user._id }, function(err, services) {
+
+  Service.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, services, pageCount, itemCount) {
     if(!err) {
       res.render('services/index', { 
         services: services,
         page_title: 'Services'
       });
     }
-
   });
 });
 
@@ -32,24 +32,33 @@ router.get('/add', function(req, res){
 });
 
 router.get('/:id/events/:event_id', function(req, res){
-	// TODO : validation
-	var serviceData = require('../models/service_data.js')(req.params.id);
+
+  req.check('id', 'ID Required').notEmpty();
+  req.check('event_id', 'Event ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    req.flash('error_messages', errors);
+    return res.redirect('/services/' + req.params.id + '');
+  }
+
+	var serviceData = ServiceData(req.params.id);
 	serviceData.findOne({_id: req.params.event_id}, function(err, data) {
 			if(!err) {
-
 				res.render('services/event', {event_data: data, page_title: 'Event Detail'});
 			} else {
 				logger.debug(err);
 				  res.flash('error_messages', 'No data for this service');
-		      res.redirect('/services/index');
+		      res.redirect('/services');
 			}
 
 		});
 });
 
 router.get('/notifications', function(req, res) {
-	var service_id = req.params.id;
-	Notification.find({user: req.user} ,function(err, notifics) {
+	
+  Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
 				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
 			} else {
@@ -58,13 +67,24 @@ router.get('/notifications', function(req, res) {
 		    return res.redirect('/services/index');
 			}
 		});
+
 });
 
 
 router.get('/:id/edit', m.hasServiceAccess, function(req, res){
-	//verifikim per fiksim ID
+	 
+  req.check('id', 'ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    req.flash('error_messages', errors);
+    return res.redirect('/services/' + req.params.id + '');
+  } 
+
 	Service.findOne({_id: req.params.id}, function (err, service) {
 			if(err){
+        //TODO throw 404
 				res.end('No service found');
 			}
 		res.render('services/edit', {service: service, page_title: 'Edit Service'});
@@ -75,8 +95,6 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 
 router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
-  //TODO fix messages
-  //TODO validation
   req.check('id', 'Service ID is required').notEmpty();
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
@@ -85,10 +103,11 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
 	var errors = req.validationErrors();
 
-	  if(errors){   //No errors were found.  Passed Validation!
-	    req.flash('error_messages', errors);
-	    return res.redirect('/services/' + req.params.id + '/edit');
-	  }
+  if(errors){ 
+    req.flash('error_messages', errors);
+    return res.redirect('/services/' + req.params.id + '/edit');
+  }
+
 	Service.findOne({_id:req.params.id}, function(err, service){
 
   	service.name = req.body.name;
@@ -112,16 +131,25 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 });
 
 router.get('/:id/delete', m.hasServiceAccess, function(req, res){
-  //TODO: validations
-  //TODO: STOP SERVICE workEmmiter(service,'service_updates');
+
+  req.check('id', 'ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    req.flash('error_messages', errors);
+    return res.redirect('/services/' + req.params.id + '');
+  } 
+
   Service.findById(req.params.id).remove(function(){
 
-	var service = {
-	  	_id: req.params.id,
-	  	running_status : false,
-	  	interval : 60,
-	  	name : "Temp",
-	  }
+  	var service = {
+  	  	_id: req.params.id,
+  	  	running_status : false,
+  	  	interval : 60,
+  	  	name : "Temp",
+  	  }
+
 	  workEmmiter(service,'service_updates');
     var service_data_collection = 'service_data_' + req.params.id;
 
@@ -139,13 +167,24 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
 });
 
 router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
-	// TODO validation 
+	
+  req.check('id', 'ID Required').notEmpty();
+  req.check('action', 'Action Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    return res.json({success:0, error: errors});
+  } 
+
 	var action = req.params.action;
 
 	Service.findOne({_id:req.params.id}, function(err, service){
+
 	  if(!err){
 
 	  	switch(action) {
+
 	  		case 'start_stop':
 
 	  			var new_status = service.running_status ? false : true;
@@ -187,8 +226,16 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 });
 
 router.get('/:id/data', function service_data(req, res) {
-	var service_id = req.params.id;
-	
+
+  req.check('id', 'ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    return res.json({success:0, error: errors});
+  } 
+
+	var service_id = req.params.id;	
 	var serviceData = ServiceData(service_id);
 
   serviceData.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, data, pageCount, itemCount) {
@@ -213,8 +260,16 @@ router.get('/:id/data', function service_data(req, res) {
 });
 
 router.get('/:id', function(req, res) {
-// ktu duhet marre thjesht configurimi total i atij sherbimi 
-	//TODO: validation
+
+  req.check('id', 'ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    req.flash('error_messages', errors);
+    return res.redirect('/services');
+  } 
+
 	Service.findById(req.params.id, function(err, service){
 		if(err) {
 			logger.debug('There was an error saving the service', err);
@@ -228,45 +283,42 @@ router.get('/:id', function(req, res) {
 
 router.post('/add', function(req, res){
   
-  //TODO fix messages
-  // TODO : create collection on service add
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'An interval is required').notEmpty();
   req.check('running_status', 'The status is required').notEmpty();
-//  req.check('notification_status', 'The password confirmation is required').notEmpty();
 
   var errors = req.validationErrors();
 
-  if(errors){   //No errors were found.  Passed Validation!
+  if(errors){  
     req.flash('error_messages', errors);
     return res.redirect('/services/add');
   }   
 
 	var newService = new Service();
 
-    newService.name = req.body.name;
-    newService.host = req.body.host;
-    newService.type = req.body.type;
-    newService.interval = req.body.interval;
-    newService.running_status = req.body.running_status;
+  newService.name = req.body.name;
+  newService.host = req.body.host;
+  newService.type = req.body.type;
+  newService.interval = req.body.interval;
+  newService.running_status = req.body.running_status;
 
-    newService.user = req.user;
-    workEmmiter(newService,'service_updates');
-    newService.save(function(err) {
-       if(err) {
-       	logger.debug('There was an error saving the service tek service', err);
-       } else {
-        req.flash('success_messages', 'Service added.');
-        res.redirect('/services');
-       }
-    });
+  newService.user = req.user;
+  workEmmiter(newService,'service_updates');
+  newService.save(function(err) {
+     if(err) {
+     	logger.debug('There was an error saving the service tek service', err);
+     } else {
+      req.flash('success_messages', 'Service added.');
+      res.redirect('/services');
+     }
+  });
     
 });
 
 router.post('/mx', function(req, res){
-	"use strict";
+
 	var domain = req.body.domain;
 	dns.resolveMx(domain, function(error, addr) {
 
