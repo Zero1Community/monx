@@ -11,7 +11,9 @@ var serviceSchema = new mongoose.Schema({
       last_checked: Date,
       running_status: Boolean,
       notification_status: {
-        mute: { type: Boolean, default: false }
+        mute: { type: Boolean, default: false },
+        twitter: { type: Boolean, default: false },
+        sms: { type: Boolean, default: false }
       },
       interval: Number,
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }

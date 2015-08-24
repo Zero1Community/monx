@@ -101,9 +101,9 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'The interval is required').notEmpty();
   req.check('running_status', 'The running status is required').notEmpty();
-  req.check('mute_status', 'The mute_status is required').notEmpty();
-  req.check('twitter_status', 'The twitter status is required').notEmpty();
-  req.check('sms_status', 'The sms status is required').notEmpty();
+  // req.check('mute_status', 'The mute_status is required').notEmpty();
+  // req.check('twitter_status', 'The twitter status is required').notEmpty();
+  // req.check('sms_status', 'The sms status is required').notEmpty();
 
 	var errors = req.validationErrors();
 
@@ -113,25 +113,25 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   }
 
 	Service.findById(req.params.id, function(err, service){
-
+    console.log(req.body);
   	service.name = req.body.name;
   	service.host = req.body.host;
   	service.type = req.body.type;
   	service.interval = req.body.interval;
     service.running_status = req.body.running_status != '' ? true : false;
-    service.twitter_status = req.body.twitter_status != '' ? true : false;
-    service.sms_status = req.body.sms_status != '' ? true : false;
-  	service.mute_status = req.body.mute_status != '' ? true : false;
+  	service.notification_status.mute_status = req.body.mute_status != '' ? true : false;
+    service.notification_status.twitter_status = req.body.twitter_status != '' ? true : false;
+    service.notification_status.sms_status = req.body.sms_status != '' ? true : false;
   	workEmmiter(service,'service_updates');
 		  service.save(function(err) {
 		     if(err) {
 		     	logger.debug('There was an error saving the service', err);
 		      req.flash('error_messages', 'There was an error saving the service');
-		      res.redirect('/services/index');
+		      res.redirect('/services');
 		     } else {
 		     	logger.debug('Service updated!');
 		      req.flash('success_messages', 'Service updated.');
-		      res.redirect('/services/index');
+		      res.redirect('/services');
 		     }
 		  });
 	});
@@ -313,9 +313,9 @@ router.post('/add', function(req, res){
   newService.interval = req.body.interval;
   newService.running_status = req.body.running_status;
   newService.running_status = req.body.running_status != '' ? true : false;
-  newService.twitter_status = req.body.twitter_status != '' ? true : false;
-  newService.sms_status = req.body.sms_status != '' ? true : false;
-  //newService.mute_status = req.body.mute_status != '' ? true : false;
+  newService.notification_status.twitter_status = req.body.twitter_status != '' ? true : false;
+  newService.notification_status.sms_status = req.body.sms_status != '' ? true : false;
+  newService.notification_status.mute_status = req.body.mute_status != '' ? true : false;
 
   newService.user = req.user;
   workEmmiter(newService,'service_updates');

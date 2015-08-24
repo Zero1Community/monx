@@ -11,33 +11,92 @@
       <div class="mt30 mb25">
         {% include "../includes/notifications.html" %}
       </div>
+            <!-- Input Fields -->
+            <div class="panel">
+              <div class="panel-heading">
+                <span class="panel-title">Service Overview</span>
+               <div class="widget-menu pull-right mr10">
+                    <div class="btn-group">
+                      <a href="/services/{{service.id}}/edit" class="btn btn-xs btn-default dropdown-toggle">
+                          <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Edit Service</button>
+                      </a>
+                    </div>
+                  </div>                
+              </div>
+              <div class="panel-body">
 
-<div class="panel" id="spy9">
-        <div class="panel-heading">
-         <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Service Overview
-           <div class="widget-menu pull-right mr10">
-                <div class="btn-group">
-<!--                       <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
-                      <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
-                  </a> -->
+        <form class="form-horizontal" role="form" >
+                  <div class="col-md-6">
+              <div class="form-group">
+                <label class="col-md-6 control-label">Service name</label>
+                <div class="col-md-6">
+                <p class="form-control-static text-muted">{{service.name}}</p>
                 </div>
               </div>
-        </div>
-        <div class="panel-body p5">
-          <div class="table-responsive">
-            <div class="bs-component">
-              Service Name   {{service.name}}<br>
-              Service Host  {{service.host}}<br>
-              Current Status {{service.status}}<br>
-              Service interval   {{service.interval}}<br>
-              Running Status {{service.running_status}}<br>
-              Notification Mute Status: {{service.notification_status.mute}}<br>
+              <div class="form-group">
+                <label class="col-md-6 control-label">Host</label>
+                <div class="col-md-6">
+                  <div class="bs-component">
+                <p class="form-control-static text-muted">{{service.host}}</p>
+                  </div>
+                </div>
+              </div>
 
-            <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
+
+              <div class="form-group">
+              <label for="spinner1" class="col-lg-6 control-label">Check Interval</label>
+                <div class="col-lg-6">
+                  <div class="bs-component">
+                <p class="form-control-static text-muted">{{service.interval}}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-6 control-label">Type </label>
+                <div class="col-md-6">
+                  <div class="bs-component">
+                    <p class="form-control-static text-muted">{{service.type}}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-lg-6 control-label">Current Status </label>
+                <div class="col-lg-6">
+                    <p class="form-control-static text-muted">
+                    {% if service.status == 'ERROR' and service.type == 'blacklist' %} 
+                      BLACKLISTED 
+                    {% else %}
+                      ERROR
+                    {% endif %}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-6 control-label">Service Muted </label>
+                <div class="col-lg-6">
+                    <p class="form-control-static text-muted">{{service.notification_status.mute}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-6 control-label">Notifications via Twitter </label>
+                <div class="col-lg-6">
+                    <p class="form-control-static text-muted">{{service.notification_status.twitter}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-6 control-label">Notifications via SMS </label>
+                <div class="col-lg-6">
+                    <p class="form-control-static text-muted">{{service.notification_status.sms}}</p>
+                </div>
+              </div>              
+            </div>
+        </form>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
-</div>
-</div>
-</div>
-{% endblock %}
+
+{% endblock %}  
