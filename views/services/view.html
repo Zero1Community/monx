@@ -26,12 +26,12 @@
         <div class="panel-body p5">
           <div class="table-responsive">
             <div class="bs-component">
-              {{service.name}}<br>
-              {{service.host}}<br>
-              {{service.status}}<br>
-              {{service.interval}}<br>
-              {{service.running_status}}<br>
-              {{service.notification_status}}<br>
+              Service Name   {{service.name}}<br>
+              Service Host  {{service.host}}<br>
+              Current Status {{service.status}}<br>
+              Service interval   {{service.interval}}<br>
+              Running Status {{service.running_status}}<br>
+              Notification Mute Status: {{service.notification_status.mute}}<br>
 
             <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
           </div>

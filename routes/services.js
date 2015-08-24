@@ -15,9 +15,9 @@ var workEmmiter = require('../modules/emmiter.js');
 router.get('/', function(req, res){
   var user = req.user;
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
-  Service.find({ user: user._id }, function(err, services) {
+  Service.find({ user: user._id }).sort('-createdAt').exec( function(err, services) {
 
-  //Service.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, services, pageCount, itemCount) {
+  //Service.paginate({}, { page: req.query.page, limit: req.query.limit, sortBy: {createdAt : -1} }, function(err, services, pageCount, itemCount) {
     if(!err) {
       res.render('services/index', { 
         services: services,
@@ -46,7 +46,7 @@ router.get('/:id/events/:event_id', function(req, res){
 	var serviceData = ServiceData(req.params.id);
 	serviceData.findById(req.params.event_id, function(err, data) {
 			if(!err) {
-				res.render('services/event', {event_data: data, page_title: 'Event Detail'});
+				res.render('services/event', {event_data: data, page_title: 'Event Details'});
 			} else {
 				logger.debug(err);
 				  res.flash('error_messages', 'No data for this service');
@@ -58,7 +58,7 @@ router.get('/:id/events/:event_id', function(req, res){
 
 router.get('/notifications', function(req, res) {
 	
-  Notification.find({user: req.user} ,function(err, notifics) {
+  Notification.find({user: req.user}).sort('-createdAt').exec(function(err, notifics) {
 			if(!err && notifics) {
 				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
 			} else {
@@ -94,12 +94,16 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 
 
 router.post('/:id/edit', m.hasServiceAccess, function(req, res){
-
+  //TODO: validation
   req.check('id', 'Service ID is required').notEmpty();
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'The interval is required').notEmpty();
+  req.check('running_status', 'The running status is required').notEmpty();
+  req.check('mute_status', 'The mute_status is required').notEmpty();
+  req.check('twitter_status', 'The twitter status is required').notEmpty();
+  req.check('sms_status', 'The sms status is required').notEmpty();
 
 	var errors = req.validationErrors();
 
@@ -114,7 +118,10 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   	service.host = req.body.host;
   	service.type = req.body.type;
   	service.interval = req.body.interval;
-  	service.running_status = req.body.running_status != '' ? true : false;
+    service.running_status = req.body.running_status != '' ? true : false;
+    service.twitter_status = req.body.twitter_status != '' ? true : false;
+    service.sms_status = req.body.sms_status != '' ? true : false;
+  	service.mute_status = req.body.mute_status != '' ? true : false;
   	workEmmiter(service,'service_updates');
 		  service.save(function(err) {
 		     if(err) {
@@ -238,7 +245,7 @@ router.get('/:id/data', function service_data(req, res) {
 	var service_id = req.params.id;	
 	var serviceData = ServiceData(service_id);
 
-  serviceData.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, data, pageCount, itemCount) {
+  serviceData.paginate({}, { page: req.query.page, limit: req.query.limit , sortBy: {createdAt : -1} }, function(err, data, pageCount, itemCount) {
 			
       if(!err && data) {
 				res.render('services/data', {
@@ -288,6 +295,8 @@ router.post('/add', function(req, res){
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'An interval is required').notEmpty();
   req.check('running_status', 'The status is required').notEmpty();
+  req.check('twitter_status', 'The twitter status is required').notEmpty();
+  req.check('sms_status', 'The sms status is required').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -303,6 +312,10 @@ router.post('/add', function(req, res){
   newService.type = req.body.type;
   newService.interval = req.body.interval;
   newService.running_status = req.body.running_status;
+  newService.running_status = req.body.running_status != '' ? true : false;
+  newService.twitter_status = req.body.twitter_status != '' ? true : false;
+  newService.sms_status = req.body.sms_status != '' ? true : false;
+  //newService.mute_status = req.body.mute_status != '' ? true : false;
 
   newService.user = req.user;
   workEmmiter(newService,'service_updates');

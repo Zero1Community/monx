@@ -214,7 +214,7 @@ module.exports = function(passport){
 
 	router.post('/update', middlewares.isAuthenticated, function(req, res){
 	
-		req.check('name', 'Your name is required').notEmpty();
+	req.check('name', 'Your name is required').notEmpty();
     req.check('email', 'A valid email is required').isEmail();
 
     if(req.body.password != '') {
@@ -227,7 +227,7 @@ module.exports = function(passport){
     var errors = req.validationErrors();
 
 
-    var updated_user = { name: req.body.name, email: req.body.email };
+    var updated_user = { name: req.body.name, email: req.body.email, twitter: req.body.twitter, phone : req.body.phone };
      
     if(errors){  
     	req.flash('error_messages', errors);
@@ -243,6 +243,8 @@ module.exports = function(passport){
 			var user = req.user;
 			user.name = req.body.name;
 			user.email = req.body.email;
+			user.twitter = req.body.twitter;
+			user.phone = req.body.phone;
 
 			req.logIn(user, function(error) {
             if (!error) {	

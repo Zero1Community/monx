@@ -6,6 +6,8 @@ var usersSchema = new mongoose.Schema({
     name: String,
     password: String,
     email: String,
+    twitter: String,
+    phone: String,
     address: String,
     resetPasswordToken: String,
     resetPasswordExpires: Number,

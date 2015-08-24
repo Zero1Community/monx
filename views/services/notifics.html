@@ -33,7 +33,6 @@
                     <th>Message</th>
                     <th>Status</th>
                     <th>Service ID</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -45,13 +44,7 @@
                     <td>{{record.message}}</td>
                     <td>{{record.status}}</td>
                     <td>{{record.service.toString()}}</td>
-                    <td class="text-right">
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-primary pull-right">View Event</button>
-                      </div>
-                    </td>
-                  </tr>
-                  
+                  </tr>                  
                   {% endfor %}
 
                 </tbody>
