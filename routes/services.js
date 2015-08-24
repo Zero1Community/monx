@@ -15,16 +15,16 @@ var workEmmiter = require('../modules/emmiter.js');
 router.get('/', function(req, res){
   var user = req.user;
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
-  //Service.find({ user: user._id }, function(err, services) {
+  Service.find({ user: user._id }, function(err, services) {
 
-//  Service.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, services, pageCount, itemCount) {
-//    if(!err) {
+  //Service.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, services, pageCount, itemCount) {
+    if(!err) {
       res.render('services/index', { 
         services: services,
         page_title: 'Services'
       });
-    //}
-  //});
+    }
+  });
 });
 
 router.get('/add', function(req, res){
