@@ -19,9 +19,6 @@
                 <span class="panel-title">Event Details</span>
                 <div class="widget-menu mr10">
                     <div class="btn-group">
-                      <a href="/users/settings/edit" class="btn btn-xs btn-default dropdown-toggle">
-                          <span class="glyphicon glyphicon-edit fs11 mr5"></span>Edit</button>
-                      </a>
                     </div>
                   </div>
               </div>
@@ -30,18 +27,18 @@
                 <div class="col-md-6">
                   <form class="form-horizontal" role="form">
                     <div class="form-group">
-                      <label class="col-lg-6 control-label">Event ID</label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">{{event_data._id}}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
                       <label class="col-lg-6 control-label">Event Status</label>
                       <div class="col-lg-6">
                         <div class="bs-component">
                           <p class="form-control-static text-muted">{{event_data.status}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-lg-6 control-label">Event ID</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">{{event_data._id}}</p>
                         </div>
                       </div>
                     </div>
@@ -75,17 +72,31 @@
                           <p class="form-control-static text-muted">
 
                           {% for item in event_data.message.listed %}
-                          
-                          {{ item.server }}
-                          {{ item.status }}<br>
-
+                            {{ item.server }} with status 
+                            {{ item.status }}<br>
                           {% endfor %}
-
 
                           </p>
                         </div>
                       </div>
                     </div>
+                      <label class="col-lg-6 control-label">Event Action</label>
+                      <div class="col-lg-6">
+                        <div class="bs-component">
+                          <p class="form-control-static text-muted">
+
+                          {% for item in event_data.message.diff %}
+                            {% if item.action == 'added' %}
+                              {{item.action}} to {{ item.server }}<br>
+                            {% endif %}
+                            {% if item.action == 'removed' %}
+                              {{item.action}} from {{ item.server }}<br>
+                            {% endif %}
+                          {% endfor %}
+                          </p>
+                        </div>
+                      </div>
+                    </div>                    
 <!--                     <div class="form-group">
                       <label class="col-lg-6 control-label">Server</label>
                       <div class="col-lg-6">

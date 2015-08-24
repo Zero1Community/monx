@@ -43,8 +43,13 @@
                     <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} CLEAN {% endif %} </td>
                     <td>
                         {% if record.message.diff %}
-                          {% for changes in record.message.diff  %}
-                            {{ changes.server }} - {{changes.action}} <br>
+                          {% for changes in record.message.diff  %} 
+                            {% if changes.action == 'added' %}
+                              {{changes.action}} to {{ changes.server }}<br>
+                            {% endif %}
+                            {% if changes.action == 'removed' %}
+                              {{changes.action}} from {{ changes.server }}<br>
+                            {% endif %}
                           {% endfor %}
                         {% endif %}
                     </td>
