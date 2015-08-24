@@ -109,6 +109,7 @@ function checker(new_data){
 				status : 'OK'
 			}
 		}else{
+			//TODO: fix this qe sdel heren e pare
 			new_data['notification_id'] = last_data.id;
 			last_data.message.listed.forEach(function (element) {
 					console.log("Listing last data");

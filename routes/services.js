@@ -19,7 +19,7 @@ router.get('/', function(req, res){
 
   Service.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, services, pageCount, itemCount) {
     if(!err) {
-      res.render('services/index', { 
+      res.render('services', { 
         services: services,
         page_title: 'Services'
       });
