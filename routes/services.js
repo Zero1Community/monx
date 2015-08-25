@@ -100,7 +100,7 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   req.check('host', 'Your name is required').notEmpty();
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'The interval is required').notEmpty();
-  req.check('running_status', 'The running status is required').notEmpty();
+  // req.check('running_status', 'The running status is required').notEmpty();
   // req.check('mute_status', 'The mute_status is required').notEmpty();
   // req.check('twitter_status', 'The twitter status is required').notEmpty();
   // req.check('sms_status', 'The sms status is required').notEmpty();
@@ -118,11 +118,20 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   	service.host = req.body.host;
   	service.type = req.body.type;
   	service.interval = req.body.interval;
-    service.running_status = req.body.running_status != '' ? true : false;
-  	service.notification_status.mute_status = req.body.mute_status != '' ? true : false;
-    service.notification_status.twitter_status = req.body.twitter_status != '' ? true : false;
-    service.notification_status.sms_status = req.body.sms_status != '' ? true : false;
-  	workEmmiter(service,'service_updates');
+    if (req.body.running_status ) {
+      service.running_status = true;
+    }
+    else{
+      service.running_status = false;
+    }
+  	service.notification_status.mute = req.body.mute_status ? true : false;
+    service.notification_status.twitter = req.body.twitter_status ? true : false;
+    service.notification_status.sms = req.body.sms_status ? true : false;
+   //  console.log('Setting notification statuses');
+   //  console.log(service.notification_status.mute);
+   //  console.log(service.notification_status.twitter);
+  	// console.log(service.notification_status.sms);
+    workEmmiter(service,'service_updates');
 		  service.save(function(err) {
 		     if(err) {
 		     	logger.debug('There was an error saving the service', err);
@@ -294,9 +303,9 @@ router.post('/add', function(req, res){
   req.check('host', 'Your name is required').notEmpty();
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'An interval is required').notEmpty();
-  req.check('running_status', 'The status is required').notEmpty();
-  req.check('twitter_status', 'The twitter status is required').notEmpty();
-  req.check('sms_status', 'The sms status is required').notEmpty();
+  // req.check('running_status', 'The status is required').notEmpty();
+  // req.check('twitter_status', 'The twitter status is required').notEmpty();
+  // req.check('sms_status', 'The sms status is required').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -311,11 +320,11 @@ router.post('/add', function(req, res){
   newService.host = req.body.host;
   newService.type = req.body.type;
   newService.interval = req.body.interval;
-  newService.running_status = req.body.running_status;
-  newService.running_status = req.body.running_status != '' ? true : false;
-  newService.notification_status.twitter_status = req.body.twitter_status != '' ? true : false;
-  newService.notification_status.sms_status = req.body.sms_status != '' ? true : false;
-  newService.notification_status.mute_status = req.body.mute_status != '' ? true : false;
+  //newService.running_status = req.body.running_status;
+  newService.running_status = req.body.running_status ? true : false;
+  newService.notification_status.twitter = req.body.twitter_status ? true : false;
+  newService.notification_status.sms = req.body.sms_status ? true : false;
+  newService.notification_status.mute = req.body.mute_status ? true : false;
 
   newService.user = req.user;
   workEmmiter(newService,'service_updates');

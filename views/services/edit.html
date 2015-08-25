@@ -71,7 +71,7 @@
                 <label class="col-lg-6 control-label">Mute </label>
                 <div class="col-lg-6">
                   <label class="checkbox-inline mr10">
-                    <input id="inlineCheckbox1" value="muted" type="checkbox" name="mute_status" >Enabled
+                    <input id="inlineCheckbox1" value="muted" type="checkbox" name="mute_status" {%if service.notification_status.mute %} checked {% endif %}>Enabled
                   </label>
                 </div>
               </div>
@@ -79,7 +79,7 @@
                 <label class="col-lg-6 control-label">Twitter </label>
                 <div class="col-lg-6">
                   <label class="checkbox-inline mr10">
-                    <input id="inlineCheckbox1" value="enabled" type="checkbox" name="twitter_status" >Enabled
+                    <input id="inlineCheckbox2" value="enabled" type="checkbox" name="twitter_status" {%if service.notification_status.twitter  %} checked {% endif %}>Enabled 
                   </label>
                 </div>
               </div>
@@ -87,7 +87,7 @@
                 <label class="col-lg-6 control-label">SMS </label>
                 <div class="col-lg-6">
                   <label class="checkbox-inline mr10">
-                    <input id="inlineCheckbox1" value="enabled" type="checkbox" name="sms_status" >Enabled
+                    <input id="inlineCheckbox3" value="enabled" type="checkbox" name="sms_status" {%if service.notification_status.sms %} checked {% endif %}>Enabled 
                   </label>
                 </div>
               </div>              
