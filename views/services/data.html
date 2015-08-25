@@ -2,26 +2,63 @@
 {% block content %}
 
 <div id="content" class="">
-
-
         <div class="row">
-
           <div class="col-md-8 col-md-offset-2">
 
       <div class="mt30 mb25">
         {% include "../includes/notifications.html" %}
       </div>
-
+<div id="highchart-line" style="width: 100%; height: 250px; margin: 0 auto"></div>
+                <script type="text/javascript">
+                        $(function(){
+                               
+                                // Line Chart
+                                var HighChartLine = $('#highchart-line');
+                                if (HighChartLine.length) {
+                               
+                                    HighChartLine.highcharts({
+                                        credits: false,
+                                        colors: ['#f6bb42', '#4a89dc', '#3bafda'],
+                                        chart: {
+                                            type: 'line',
+                                            backgroundColor: 'transparent',
+                                        },
+                                        title: {
+                                            text: null
+                                        },
+                                        xAxis: {
+                                            gridLineColor: '#EEE',
+                                            lineColor: '#EEE',
+                                            tickColor: '#EEE',
+                                        },
+                                        yAxis: {
+                                            gridLineColor: '#EEE',
+                                            title: {
+                                                text: null,
+                                            }
+                                        },
+                                        legend: {
+                                            enabled: false,
+                                        },
+                                        series: [{
+                                            name: 'Yahoo',
+                                            data: [7.0, 6, 9, 14, 18, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                                        }, {
+                                            name: 'CNN',
+                                            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+                                        }]
+                                    });
+                                }
+ 
+                        });
+</script>
 <div class="panel" id="spy9">
         <div class="panel-heading">
          <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Service Logs
            <div class="widget-menu pull-right mr10">
-                <div class="btn-group">
-<!--                       <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
-                      <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
-                  </a> -->
-                </div>
+              <div class="btn-group">
               </div>
+            </div>
         </div>
         <div class="panel-body p5">
           <div class="table-responsive">

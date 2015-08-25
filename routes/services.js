@@ -241,6 +241,47 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	});
 });
 
+// route temporal per nja 2 teste
+router.get('/:id/charts', function(req, res) {
+
+  req.check('id', 'ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    return res.json({success:0, error: errors});
+  } 
+
+  var service_id = req.params.id; 
+  var serviceData = ServiceData(service_id);
+  
+  serviceData.find({} , function(err, serviceD) {
+      var chart_data = [];
+      if(!err && serviceD) {
+        for (var i = serviceD.length - 1; i >= 0; i--) {
+          //console.log(serviceD[i].createdAt + ' ' + serviceD[i].message.listed.length + ' ' + serviceD[i].message.diff.length);
+          chart_data.push([
+            serviceD[i].createdAt, 
+            serviceD[i].message.listed.length 
+        ]);
+        };
+
+        var kot = [['2015-08-25T16:11:12.708Z', 3], ['2015-09-25T16:11:12.708Z', 2]];
+
+        console.log(chart_data);
+        
+        //Zreturn res.json({success:1, data:chart_data});
+        return res.render('services/chart', {data: kot});
+      } else {
+        logger.debug(err);
+        res.flash('error_messages', 'No data for this service');
+        return res.redirect('/services/index');
+      }
+    });
+
+});
+
+
 router.get('/:id/data', function service_data(req, res) {
 
   req.check('id', 'ID Required').notEmpty();
@@ -255,7 +296,7 @@ router.get('/:id/data', function service_data(req, res) {
 	var serviceData = ServiceData(service_id);
 
   serviceData.paginate({}, { page: req.query.page, limit: req.query.limit , sortBy: {createdAt : -1} }, function(err, data, pageCount, itemCount) {
-			
+      			
       if(!err && data) {
 				res.render('services/data', {
           data: data, 
