@@ -38,7 +38,7 @@ function updateAndNotify(notific,status_subject){
 				event_body : JSON.stringify(notific.message)
 			}
 
-			Mailer.sendOne("newsletter",tick,function(err,res){
+			Mailer.sendOne("notifications/new",tick,function(err,res){
 					if(err){
 						if(configs.debug) console.log(err);
 					}else{

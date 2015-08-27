@@ -118,7 +118,13 @@ module.exports = function(passport){
 
 			},
 			function(token, user, done) {
-			  Mailer.sendOne("newsletter",user,function(err,res){
+        var email_data = {
+            email: user.email,
+            token: token,
+            name: user.name
+          };
+
+			  Mailer.sendOne("users/forgot_password", email_data,function(err,res){
 					if(err){
 						if(configs.debug) console.log(err);
 					}else{
@@ -183,8 +189,13 @@ module.exports = function(passport){
 	      });
 	    },
 	    function(user, done) {
+
+        var mail_data = {
+          email: user.email,
+          name: user.name
+        };
 	     	
-	     	Mailer.sendOne("newsletter",user,function(err,res){
+	     	Mailer.sendOne("users/password_reset_success", mail_data, function(err,res){
 				if(err){
 					if(configs.debug) console.log(err);
 				}else{

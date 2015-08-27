@@ -24,7 +24,7 @@ var Mailer = {
           }
         });
 
-        template(template_name, data, function(err, html, text) {
+        template(template_name, data, function(err, html) {
           if (err) {
             if(configs.debug) logger.debug(err);
             return callback(err);
@@ -33,12 +33,8 @@ var Mailer = {
               from: configs.email.from,
               to: data.email,
               subject: data.subject,
-              html: html,
-              event_body : data.event_body,
-              event_id :data.notification_id,
-              service_id :data.service_id,
+              html: html
               // generateTextFromHTML: true,
-              text: text
             }, function(err, responseStatus) {
               if (err) {
                 if(configs.debug) logger.debug(err);
