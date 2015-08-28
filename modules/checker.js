@@ -198,9 +198,10 @@ function checker(new_data){
 
 			if(last_status === 'ERROR' && new_status === 'ERROR') {
 				// DIFF HERE
+				//TODO kjo sma mbush mendjen..
 				console.log(new_data.message);
 				if(notification_status === 'ERROR' && !new_data.message.diff) return;
-				 updateAndNotify(new_data,"** New Service Error", function(){
+				 updateAndNotify(new_data,"** Service Status Update", function(){
 							console.log("Mail sent");
 					}); 
 			}

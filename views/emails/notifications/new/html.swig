@@ -12,6 +12,6 @@
 <br>
 To find more:
 <br>
- http://localhost:3000/services/{{service_id}}/events/{{event_id}}/
+ http://monx.zero1.al/services/{{service_id}}/events/{{event_id}}/
 </body>
 </html>
