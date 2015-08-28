@@ -83,8 +83,8 @@ var services_routers = require('./routes/services');
 var api_routes = require('./routes/api');
 var index_routes = require('./routes/index');
 
-app.use(paginate.middleware(3, 6));
 
+app.use(paginate.middleware(5, 5));
 app.use('/', index_routes);
 app.use('/users', users_routes);
 app.use('/services', m.isAuthenticated, services_routers);

@@ -18,14 +18,16 @@ function scheduler(taskList){
   console.log('Hyme ne scheduler');
   taskList.forEach(function(task){
   console.log('Creating interval with ID ' + task._id);
+  //TODO: kjo duhet me .then qe te mos ta bukosim queuen OSE
+  // me limit OSE 
+  // me IP rotation 
+  workEmmiter(task,'all_checks');
   intervals[task._id] = setInterval(function(task) {
           console.log('Po monitorojme '+ task.name);
           console.log('Me interval '+ task.interval);
           workEmmiter(task,'all_checks');
     }, task.interval*1000, task);
-//  console.log('mbaroi foreach');
   });
-//  console.log('mbaroi funksioni');
 }
 
 function DbUpdateServices () {

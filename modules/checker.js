@@ -197,11 +197,8 @@ function checker(new_data){
 			}
 
 			if(last_status === 'ERROR' && new_status === 'ERROR') {
-				//we need to implement error checking here 
-				// IF ( new error != old error ) { email about status update of error }
-				// basically we need to check the message
-				// diff te eventeve
-				if(notification_status === 'ERROR') return;
+				// DIFF HERE
+				if(notification_status === 'ERROR' && new_data.message.diff.length == 0) return;
 				 updateAndNotify(new_data,"** New Service Error", function(){
 							console.log("Mail sent");
 					}); 

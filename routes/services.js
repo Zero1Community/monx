@@ -274,6 +274,42 @@ router.get('/:id/data', function service_data(req, res) {
 		});
 		
 });
+router.get('/:id/history', function service_data(req, res) {
+
+  req.check('id', 'ID Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    return res.json({success:0, error: errors});
+  } 
+
+  var service_id = req.params.id; 
+  var serviceData = ServiceData(service_id);
+
+  serviceData.paginate({}, { page: req.query.page, limit: req.query.limit , sortBy: {createdAt : -1} }, function(err, data, pageCount, itemCount) {
+      
+      if(!err && data) {
+        res.render('services/history', {
+          data: data, 
+          service_id : service_id,
+          pageCount: pageCount,
+          itemCount: itemCount,
+          currentPage: req.query.page,
+          page_title: 'Data for service'
+        });
+      } else {
+        logger.debug(err);
+        res.flash('error_messages', 'No data for this service');
+        return res.redirect('/services/index');
+      }
+
+    });
+    
+});
+
+
+
 
 router.get('/:id', function(req, res) {
 
