@@ -198,7 +198,8 @@ function checker(new_data){
 
 			if(last_status === 'ERROR' && new_status === 'ERROR') {
 				// DIFF HERE
-				if(notification_status === 'ERROR' && new_data.message.diff.length == 0) return;
+				console.log(new_data.message);
+				if(notification_status === 'ERROR' && new_data.message.diff == 0) return;
 				 updateAndNotify(new_data,"** New Service Error", function(){
 							console.log("Mail sent");
 					}); 
