@@ -68,7 +68,7 @@
             <div class="col-sm-4 col-xl-3">
               <div class="panel panel-tile text-center br-a br-grey">
                 <div class="panel-body">
-                  <h1 class="fs30 mt5 mbn">{{data_input.toFixed(2)}} </h1>
+                  <h1 class="fs30 mt5 mbn">{% if data_input %} {{data_input.toFixed(2)}} {% else %} 0 {% endif %} </h1>
                   <h6 class="text-success">Events per minute //TODO: validation</h6>
                 </div>
                 <div class="panel-footer br-t p12">

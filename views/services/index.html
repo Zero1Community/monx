@@ -36,8 +36,9 @@
                         <th>Service Name</th>
                         <th>Type</th>
                         <th>Health Status</th>
+                        <th>Actions </th>
                         <th> </th>
-                        <th>Actions</th>
+                        <th>Last Check</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -75,10 +76,10 @@
                           <a href="/services/{{ service.id }}/data"> View Data</a>
                         </td>
                         <td class="text-right">
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-info btn-sm fs12 fw500 dropdown-toggle ph10" data-toggle="dropdown" aria-expanded="false">
-                              Actions
-                              <span class="caret"></span>
+<!--                           <div class="btn-group"> -->
+ <!--                            <button type="button" class="btn btn-info btn-sm fs12 fw500 dropdown-toggle ph10" data-toggle="dropdown" aria-expanded="false"> -->
+                              {{service.last_checked}}
+<!--                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">
                               <li>
@@ -99,7 +100,7 @@
                               </li>
                               <li>
                                 <a href="#">Duplicate Service</a>
-                              </li>
+                              </li> -->
 
                             </ul>
                           </div>
