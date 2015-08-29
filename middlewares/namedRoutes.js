@@ -6,4 +6,4 @@ var named_routes = {
     }
   }
 }
-module.exports = named_routes
+module.exports = named_routes;
