@@ -7,12 +7,13 @@ var ServiceData = require('../models/service_data.js');
 var Notification = require('../models/notification.js');
 var configs = require('../config/configs.js');
 var m  = require('../middlewares/middlewares.js');
+var routeName  = require('../middlewares/namedRoutes.js');
 var util        = require('util');
 var logger      = require('../modules/logger.js');
 var mongoose = require('mongoose');
 var workEmmiter = require('../modules/emmiter.js');
 
-router.get('/', function(req, res){
+router.get('/', routeName.add('services.index'), function(req, res){
   var user = req.user;
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
   Service.find({ user: user._id }).sort('-createdAt').exec( function(err, services) {
@@ -27,11 +28,11 @@ router.get('/', function(req, res){
   });
 });
 
-router.get('/add', function(req, res){
+router.get('/add', routeName.add('services.add'), function(req, res){
 	res.render('services/add', {page_title: 'Add new service'});
 });
 
-router.get('/:id/events/:event_id', function(req, res){
+router.get('/:id/events/:event_id', routeName.add('services.events'), function(req, res){
 
   req.check('id', 'ID Required').notEmpty();
   req.check('event_id', 'Event ID Required').notEmpty();
@@ -56,7 +57,7 @@ router.get('/:id/events/:event_id', function(req, res){
 		});
 });
 
-router.get('/notifications', function(req, res) {
+router.get('/notifications', routeName.add('services.notifications'), function(req, res) {
 	
   Notification.find({user: req.user}).sort('-createdAt').exec(function(err, notifics) {
 			if(!err && notifics) {
@@ -71,7 +72,7 @@ router.get('/notifications', function(req, res) {
 });
 
 
-router.get('/:id/edit', m.hasServiceAccess, function(req, res){
+router.get('/:id/edit', routeName.add('services.edit'), m.hasServiceAccess, function(req, res){
 	 
   req.check('id', 'ID Required').notEmpty();
 
@@ -311,7 +312,7 @@ router.get('/:id/history', function service_data(req, res) {
 
 
 
-router.get('/:id', function(req, res) {
+router.get('/:id', routeName.add('services.view'), function(req, res) {
 
   req.check('id', 'ID Required').notEmpty();
 

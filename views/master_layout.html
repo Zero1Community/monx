@@ -563,19 +563,19 @@
         <!-- Start: Sidebar Menu -->
         <ul class="nav sidebar-menu">
 
-          <li class="active">
+          <li class="{% if current_route == 'dashboard' %} active {% endif %}">
             <a href="/dashboard">
               <span class="glyphicon glyphicon-home"></span>
               <span class="sidebar-title">Dashboard</span>
             </a>
           </li>
-          <li>
+          <li class="{% if current_route == 'services.index' %} active {% endif %}">
             <a href="/services">
               <span class="glyphicon glyphicon-book"></span>
               <span class="sidebar-title">Services</span>
             </a>
           </li>
-          <li>
+          <li class="{% if current_route == 'services.notifications' %} active {% endif %}">
             <a href="/services/notifications">
               <span class="glyphicon glyphicon-fire"></span>
               <span class="sidebar-title">Notifications</span>
@@ -583,7 +583,7 @@
           </li>
 
           <li>
-            <a class="accordion-toggle menu-open" href="#">
+            <a class="accordion-toggle" href="#">
               <span class="fa fa-columns"></span>
               <span class="sidebar-title">Service Tools</span>
             </a>

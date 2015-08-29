@@ -4,8 +4,9 @@ var Notification = require('../models/notification.js');
 var router       = express.Router();
 var m            = require('../middlewares/middlewares.js');
 var logger       = require('../modules/logger.js');
+var routeName  = require('../middlewares/namedRoutes.js');
 
-router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
+router.get('/dashboard', routeName.add('dashboard'), m.isAuthenticated, function(req, res, next) {
 	Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
 
