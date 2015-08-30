@@ -24,7 +24,7 @@ function updateAndNotify(notific,status_subject){
 	   		return;
 	   	}
 
-		var collected_message = status_subject + " for "+ notific.status + " " + notific.service_name + " \n ";
+		var collected_message = status_subject + " for " + notific.service_name + " \n ";
 			
 		if(!notific.mute_status){
 

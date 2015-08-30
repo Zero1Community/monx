@@ -324,9 +324,18 @@ router.get('/:id', function(req, res) {
 
 	Service.findById(req.params.id, function(err, service){
 		if(err) {
-			logger.debug('There was an error saving the service', err);
-		} else {
-			res.render('services/view', {service: service, page_title: 'Service details'});
+      logger.debug('There was an error finding the service', err);
+    } else {
+        var service_id = req.params.id; 
+        var serviceData = ServiceData(service_id);
+              serviceData.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, service_data) {
+                if (err) {
+			               logger.debug('There was an error finding the last event', err);
+                } else if(service_data){
+                  res.render('services/view', {service: service, service_data: service_data,page_title: 'Service details'});
+                };
+                res.render('services/view', {service: service, page_title: 'Service details'});
+              })
 		}	
 	});
 });
