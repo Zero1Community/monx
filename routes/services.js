@@ -14,25 +14,6 @@ var mongoose = require('mongoose');
 var workEmmiter = require('../modules/emmiter.js');
 
 
-router.get('test', '/hello/:x', function(req, res, next) {
-  res.end('hello ' + req.params.x);
-});
-
-router.get('/', routeName.add('services.index'), function(req, res){
-  var user = req.user;
-  // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
-  Service.find({ user: user._id }).sort('-createdAt').exec( function(err, services) {
-
-  //Service.paginate({}, { page: req.query.page, limit: req.query.limit, sortBy: {createdAt : -1} }, function(err, services, pageCount, itemCount) {
-    if(!err) {
-      res.render('services/index', { 
-        services: services,
-        page_title: 'Services'
-      });
-    }
-  });
-});
-
 router.get('/add', routeName.add('services.add'), function(req, res){
 	res.render('services/add', {page_title: 'Add new service'});
 });
