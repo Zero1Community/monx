@@ -8,6 +8,8 @@
 <br>
 There is a new event update for service service.name
 <br>
+
+{%if event_body %}
 Current status:
 {% for item in event_body.message.listed %}
 	{{ item.server }} with status 
@@ -23,6 +25,9 @@ Event details:
 	  {{item.action}} from {{ item.server }}<br>
 	{% endif %}
 {% endfor %}
+{% else %}
+	Service status OK
+{% endif %}
 <br>
 <br>
 <br>
