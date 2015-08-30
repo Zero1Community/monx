@@ -71,6 +71,7 @@ amqp.connect('amqp://localhost').then(function(conn) {
         var toCheck = JSON.parse(msg.content.toString());
         //if(configs.debug) console.log(toCheck);
         startInterval(toCheck);
+        workEmmiter(task,'all_checks');
         //if(configs.debug) console.log(msg);
       }, {noAck: true});
     });

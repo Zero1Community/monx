@@ -13,6 +13,11 @@ var logger      = require('../modules/logger.js');
 var mongoose = require('mongoose');
 var workEmmiter = require('../modules/emmiter.js');
 
+
+router.get('test', '/hello/:x', function(req, res, next) {
+  res.end('hello ' + req.params.x);
+});
+
 router.get('/', routeName.add('services.index'), function(req, res){
   var user = req.user;
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)

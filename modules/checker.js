@@ -207,6 +207,7 @@ function checker(new_data){
 			}
 
 			if(last_status === 'OK' && new_status === 'ERROR') {
+				//TODO: check statuset e fundit me modifiku titullin ne "Service flapping"
 				if(notification_status === 'ERROR') return;
 					updateAndNotify(new_data,"** Service Error", function(){
 							console.log("Mail sent");

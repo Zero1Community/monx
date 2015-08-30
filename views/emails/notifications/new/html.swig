@@ -6,7 +6,23 @@
 <body>
 {{subject}}
 <br>
-{{event_body}}
+There is a new event update for service service.name
+<br>
+Current status:
+{% for item in event_body.message.listed %}
+	{{ item.server }} with status 
+	{{ item.status }}<br>
+{% endfor %}
+<br>
+Event details:
+{% for item in event_body.message.diff %}
+	{% if item.action == 'added' %}
+	  {{item.action}} to {{ item.server }}<br>
+	{% endif %}
+	{% if item.action == 'removed' %}
+	  {{item.action}} from {{ item.server }}<br>
+	{% endif %}
+{% endfor %}
 <br>
 <br>
 <br>
