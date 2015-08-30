@@ -19,7 +19,7 @@ router.get('/dashboard', routeName.add('dashboard'), m.isAuthenticated, function
 
 							for (var i = 0, len = services.length; i < len; i++) {
 							  services_number += 1;
-							  data_input += 60/services[i].interval;
+							  data_input += 3600/services[i].interval;
 							}
 				  		res.render('dashboard', {
 				  				services_number: services_number,

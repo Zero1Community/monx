@@ -59,7 +59,26 @@ router.get('/:id/events/:event_id', routeName.add('services.events'), function(r
 });
 
 router.get('/notifications', routeName.add('services.notifications'), function(req, res) {
-	
+
+	  // Notification.paginate({}, { page: req.query.page, limit: req.query.limit , sortBy: {createdAt : -1} }, function(err, notifics, pageCount, itemCount) {
+      
+   //    if(!err && notifics) {
+   //      res.render('services/notifics', {
+   //        notifications: notifics, 
+   //        pageCount: pageCount,
+   //        itemCount: itemCount,
+   //        currentPage: req.query.page,
+   //        page_title: 'Notifications'
+   //      });
+   //    } else {
+   //      logger.debug(err);
+   //      res.flash('error_messages', 'No notifications for this service');
+   //      return res.redirect('/services/index');
+   //    }
+
+   //  });
+
+
   Notification.find({user: req.user}).sort('-createdAt').exec(function(err, notifics) {
 			if(!err && notifics) {
 				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
