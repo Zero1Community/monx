@@ -9,26 +9,28 @@
 There is a new event update for service service.name
 <br>
 
-{%if event_body %}
-Current status:
-{% for item in event_body.message.listed %}
-	{{ item.server }} with status 
-	{{ item.status }}<br>
-{% endfor %}
-<br>
-Event details:
-{% for item in event_body.message.diff %}
-	{% if item.action == 'added' %}
-	  {{item.action}} to {{ item.server }}<br>
-	{% endif %}
-	{% if item.action == 'removed' %}
-	  {{item.action}} from {{ item.server }}<br>
-	{% endif %}
-{% endfor %}
+<!-- {%if event_body %}
+	Current status:
+	{{event_body.message.listed}}
+	{% for item in event_body.message.listed %}
+		{{ item.server }} with status 
+		{{ item.status }}<br>
+	{% endfor %}
+	<br>
+	Event details:
+	{{event_body.message.diff}}
+	{% for item in event_body.message.diff %}
+		{% if item.action == 'added' %}
+		  {{item.action}} to {{ item.server }}<br>
+		{% endif %}
+		{% if item.action == 'removed' %}
+		  {{item.action}} from {{ item.server }}<br>
+		{% endif %}
+	{% endfor %}
 {% else %}
 	Service status OK
 {% endif %}
-<br>
+ --><br>
 <br>
 <br>
 To find more:

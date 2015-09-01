@@ -26,6 +26,7 @@ function checkDNS(rbl_server, ip, callback, timeout){
   });
 
   req.on('message', function (err, answer) {
+        //console.log(answer);
     if(answer.answer.length < 1){
         var delta = (Date.now()) - start;
         result = {server: rbl_server, status : 0, res_time : delta};

@@ -80,21 +80,28 @@ function postToAPI (data) {
 function monxBlacklist(blacklistObject){
 	var checkRBL = require('../modules/checkBlacklist.js');
 
-	checkRBL(blacklistObject.host, 8000, function(totalResults){
+	checkRBL(blacklistObject.host, 80000, function(totalResults){
 		if(configs.debug) console.log('Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
+		var blackStatus = [];
+		var timeoutStatus = [];
 		var cleanStatus = [];
 		var stat = 'OK';
 		//The logic for the status to be handled
 		for (var i = totalResults.length - 1; i >= 0; i--) {
 			if(totalResults[i]['status'] > 0){
 				if(totalResults[i]['status'] == 1){
-				stat = 'ERROR';
-				cleanStatus.push(totalResults[i]);
+					stat = 'ERROR';
+					blackStatus.push(totalResults[i]);
 				}
-				//cleanStatus.push(totalResults[i]);
-				console.log(totalResults[i]);
+				if(totalResults[i]['status'] == 2){
+					timeoutStatus.push(totalResults[i]);
+				}
 			}
+			else{
+				cleanStatus.push(totalResults[i]);
+			}
+			console.log(totalResults[i]);
 		};
 
 // TODO: FIX THIS
@@ -113,8 +120,9 @@ function monxBlacklist(blacklistObject){
 
 		var data = {
 			message: {
-				listed : cleanStatus 
-				//clean: totalResults
+				listed : blackStatus,
+				timeout: timeoutStatus,
+				clean: cleanStatus
 			},
 			status: stat,
 			service_id: blacklistObject._id,

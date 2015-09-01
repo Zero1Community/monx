@@ -37,7 +37,9 @@ function updateAndNotify(notific,status_subject){
 				service_id : notific.service_id,
 				event_body : JSON.stringify(notific.message)
 			}
-
+			// TODO: fix this
+			// www-0 debug:  Error: Connection timeout
+			//     at SMTPConnection._formatError
 			Mailer.sendOne("notifications/new",tick,function(err,res){
 					if(err){
 						if(configs.debug) console.log(err);
