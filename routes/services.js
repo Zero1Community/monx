@@ -1,5 +1,6 @@
 var express     = require('express');
-var router      = express.Router();
+//var router      = express.Router();
+var router  = require('../tests/extroute.js')();
 var dns         = require('dns');
 var checkRBL    = require('../modules/checkBlacklist.js');
 var Service     = require('../models/service.js');
