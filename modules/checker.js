@@ -4,6 +4,7 @@ var Notification = require('../models/notification.js');
 var Service     = require('../models/service.js');
 var configs = require('../config/configs.js');
 var ServiceData = require('../models/service_data.js');
+var logger      = require('../modules/logger.js');
 var _ = require('underscore');
 
 function updateAndNotify(notific,status_subject){
