@@ -88,10 +88,10 @@ function checker(new_data){
 		console.log('Saving the service status and last checked');
 		service.save(function(err) {
 			 if(err) {
-				logger.debug('There was an error saving the service', err);
+				logger.debug('There was an error saving the service status', err);
 				//TODO: hmm nej return ktu ?
 			 } else {
-			  	logger.debug('The new service was saved!');
+			  	logger.debug('The new service status was saved!');
 				}
 			});
 	});
