@@ -1,0 +1,11 @@
+/root/.pm2/logs/*.log {
+ daily
+ rotate 5
+ missingok
+ notifempty
+ sharedscripts
+ copytruncate
+ dateext
+}
+
+
