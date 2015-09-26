@@ -21,7 +21,7 @@ function scheduler(taskList){
   //TODO: kjo duhet me .then qe te mos ta bukosim queuen OSE
   // me limit OSE 
   // me IP rotation 
-  workEmmiter(task,'all_checks');
+  //workEmmiter(task,'all_checks');
   intervals[task._id] = setInterval(function(task) {
           console.log('Po monitorojme '+ task.name);
           console.log('Me interval '+ task.interval);
