@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var User = require('../models/user.js');
 var dbConfig = require('../config/db.js');
 var Service = require('../models/service.js');
+var _ = require('underscore');
 
 var intervals = [];
 var total_services = [];
@@ -26,7 +27,7 @@ function scheduler(taskList){
           console.log('Po monitorojme '+ task.name);
           console.log('Me interval '+ task.interval);
           workEmmiter(task,'all_checks');
-    }, task.interval*1000, task);
+    }, task.interval*1000+_.random(5, 30), task);
   });
 }
 
@@ -51,7 +52,7 @@ function startInterval (rabbit_task) {
                       console.log('Me interval '+ rabbit_task.interval);
                       workEmmiter(rabbit_task,'all_checks');
                       //if(configs.debug) console.log(task);
-                }, rabbit_task.interval*1000, rabbit_task);          
+                }, rabbit_task.interval*1000+_.random(5, 30), rabbit_task);          
           }
 }
 
