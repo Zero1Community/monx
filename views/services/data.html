@@ -1,91 +1,61 @@
-{% extends '../master_layout.html' %}
-{% block content %}
-
+{% extends '../master_layout.html' %} {% block content %}
 <div id="content" class="">
-
-
-        <div class="row">
-
-          <div class="col-md-8 col-md-offset-2">
-
-      <div class="mt30 mb25">
-        {% include "../includes/notifications.html" %}
-      </div>
-
-<div class="panel" id="spy9">
-        <div class="panel-heading">
-         <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Service Logs
-           <div class="widget-menu pull-right mr10">
-                <div class="btn-group">
-<!--                       <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
-                      <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
-                  </a> -->
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="mt30 mb25">
+                {% include "../includes/notifications.html" %}
+            </div>
+            <div class="panel" id="spy9">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Service Logs
                 </div>
-              </div>
-        </div>
-        <div class="panel-body p5">
-          <div class="table-responsive">
-            <div class="bs-component">
-              <table class="table mbn table-striped admin-form theme-info">
-                <thead>
-                  <tr>
-                    <th>Event Time</th>
-                    <th>Status</th>
-                    <th>Message</th>
-                  </tr>
-                </thead>
-                <tbody>
-
-                {% for record in data %}
-
-                <tr>
-                    <td>{{record.createdAt.toUTCString()}}</td>
-                    <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} CLEAN {% endif %} </td>
-                    <td>
-                        {% if record.message.diff %}
-                          {% for changes in record.message.diff  %} 
-                            {% if changes.action == 'added' %}
-                              {{changes.action}} to {{ changes.server }}<br>
-                            {% endif %}
-                            {% if changes.action == 'removed' %}
-                              {{changes.action}} from {{ changes.server }}<br>
-                            {% endif %}
-                          {% endfor %}
-                        {% endif %}
-                    </td>
-                    <td>{{service.type}}</td>
-                    <td class="text-right">
-                      <div class="btn-group">
-                        <a href="/services/{{service_id}}/events/{{record.id}}" type="button" class="btn btn-primary pull-right">
+                <div class="panel-body p5">
+                    <div class="table-responsive">
+                        <div class="bs-component">
+                            <table class="table mbn table-striped admin-form theme-info">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Message</th>
+                                        <th>Event Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for record in data %}
+                                    <tr>
+                                        <td>{% if record.status == 'ERROR' %} BLACKLISTED {% else %} CLEAN {% endif %} </td>
+                                        <td>
+                                            {% if record.message.diff %} {% for changes in record.message.diff %} {% if changes.action == 'added' %} {{changes.action}} to {{ changes.server }}
+                                            <br> {% endif %} {% if changes.action == 'removed' %} {{changes.action}} from {{ changes.server }}
+                                            <br> {% endif %} {% endfor %} {% endif %}
+                                        </td>
+                                        <td>{{record.createdAt|date}}</td>
+                                        <td class="text-right">
+                                            <div class="btn-group">
+                                                <a href="/services/{{service_id}}/events/{{record.id}}" type="button" class="btn btn-primary pull-right">
                         View Event
                         </a>
-                      </div>
-                    </td>
-                  </tr>
-                  
-                  {% endfor %}
-
-                </tbody>
-              </table>
-              {% if paginate.hasPreviousPages or paginate.hasNextPages(pageCount) %}
-
-              Page {{currentPage}} of {{pageCount}}
-
-              <ul class="pagination">
-                {% if paginate.hasPreviousPages %}
-                  <li class="paginate_button active" aria-controls="datatable2" tabindex="0"><a href="{{ paginate.href(true) }}">Prev</a></li>
-                {% endif %}
-                {% if paginate.hasNextPages(pageCount) %}
-                  <li class="paginate_button " aria-controls="datatable2" tabindex="0"><a href="{{paginate.href()}}">Next</a></li>
-                {% endif %}
-              </ul>
-              {% endif %}
-
-            <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
-          </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if paginate.hasPreviousPages or paginate.hasNextPages(pageCount) %} Page {{currentPage}} of {{pageCount}}
+                            <ul class="pagination">
+                                {% if paginate.hasPreviousPages %}
+                                <li class="paginate_button active" aria-controls="datatable2" tabindex="0"><a href="{{ paginate.href(true) }}">Prev</a></li>
+                                {% endif %} {% if paginate.hasNextPages(pageCount) %}
+                                <li class="paginate_button " aria-controls="datatable2" tabindex="0"><a href="{{paginate.href()}}">Next</a></li>
+                                {% endif %}
+                            </ul>
+                            {% endif %}
+                            <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-</div>
-</div>
+    </div>
 </div>
 {% endblock %}

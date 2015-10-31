@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var logger = require('./modules/logger.js');
 var m  = require('./middlewares/middlewares.js');
 var paginate = require('express-paginate');
+var moment = require('moment');
 
 //Connect to MongoDB
 dbConfig = require('./config/db.js');
@@ -17,10 +18,19 @@ mongoose.connect(dbConfig.url);
 
 var app = express();
 
+
 //Templating Engine Config
-nunjucks.configure('views', {
+var env = nunjucks.configure('views', {
     autoescape: true,
     express: app
+});
+
+env.addFilter('date', function(date, format) {
+    if(arguments.length === 1) {
+      //default date format
+      return moment(date).format('HH:mm DD/MM/YYYY');
+    }
+    return moment(date).format(format);
 });
 
 //View engine setup

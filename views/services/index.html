@@ -1,182 +1,140 @@
-{% extends "../master_layout.html" %}
-{% block header_scripts %}
+{% extends "../master_layout.html" %} {% block header_scripts %}
 <!-- Glyphicons Pro CSS(font) -->
-<link rel="stylesheet" type="text/css" href="/assets/fonts/glyphicons-pro/glyphicons-pro.css">
-{% endblock %}
-{% block content %}
-
+<link rel="stylesheet" type="text/css" href="/assets/fonts/glyphicons-pro/glyphicons-pro.css"> {% endblock %} {% block content %}
 <div id="content" class="">
-
-
-        <div class="row">
-
-          <div class="col-md-8 col-md-offset-2">
-
-      <div class="mt30 mb25">
-        {% include "../includes/notifications.html" %}
-      </div>
-
-<div class="panel" id="spy9">
-            <div class="panel-heading">
-             <span class="glyphicon glyphicon-th-list fs11 mr5"></span> All Services
-               <div class="widget-menu pull-right mr10">
-                    <div class="btn-group">
-                      <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
-                          <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
-                      </a>
-                    </div>
-                  </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="mt30 mb25">
+                {% include "../includes/notifications.html" %}
             </div>
-            <div class="panel-body p5">
-              <div class="table-responsive">
-                <div class="bs-component">
-                  <table class="table mbn table-striped admin-form theme-info">
-                    <thead>
-                      <tr>
-                        <th>Service Name</th>
-                        <th>Type</th>
-                        <th>Health Status</th>
-                        <th>Actions </th>
-                        <th>Last Check</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                    {% for service in services %}
-
-                    <tr>
-                        <td><a href="/services/{{ service.id }}">{{service.name}}</td>
+            <div class="panel" id="spy9">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-th-list fs11 mr5"></span> Services
+                    <div class="widget-menu pull-right mr10">
+                        <div class="btn-group">
+                            <a href="/services/add" class="btn btn-xs btn-default dropdown-toggle">
+                                <span class="glyphicon glyphicon glyphicon-plus-sign fs11 mr5"></span>Add new</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body p5">
+                    <div class="table-responsive">
+                        <div class="bs-component">
+                            <table class="table mbn table-striped admin-form theme-info">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Health Status</th>
+                                        <th>Actions </th>
+                                        <th>Last Check</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for service in services %}
+                                    <tr>
+                                        <td><a href="/services/{{ service.id }}">{{service.name}}</td>
                         <td>{{service.type}}</td>
                         <td><a href="/services/{{ service.id }}/history">{% if service.status == 'ERROR' %} blacklisted {% else %} clean {% endif %}</a></td>
-                        <td>
-                            <a href="#" class="{% if service.running_status != true %} hide  {% endif %} btn btn-xs btn-secondary stop-button" data-serviceid="{{service.id}}">
-                                <span class="glyphicons glyphicons-stop"></span>
-                            </a>
-                            <a href="#" class="{% if service.running_status %} hide {% endif %} btn btn-xs btn-secondary start-button" data-serviceid="{{service.id}}">
-                                <span class="glyphicons glyphicons-play"></span>
-                            </a>
-                            <a href="#" class="{% if service.notification_status.mute != true %} hide  {% endif %} btn btn-xs btn-secondary mute-button" data-serviceid="{{service.id}}">
-                                <span class="glyphicons glyphicons-mute"></span>
-                            </a>
-                            <a href="#" class="{% if service.notification_status.mute %} hide {% endif %} btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">
-                                <span class="glyphicons glyphicons-bell"></span>
-                            </a>
-                            <a href="/services/{{service.id}}/edit" class="btn btn-xs btn-secondary">
-                                <span class="glyphicon glyphicon-edit"></span>
-                            </a>
-                            <a href="/services/{{service.id}}/delete" class="btn btn-xs btn-secondary">
-                                <span class="glyphicon glyphicon-remove-circle"></span>
-                            </a>
-                          <a href="/services/{{ service.id }}/data" class="btn btn-xs btn-secondary">View Data</a>
+                                        <td>
+                                            <a href="#" class="{% if service.running_status != true %} hide  {% endif %} btn btn-xs btn-secondary stop-button" data-serviceid="{{service.id}}">
+                                                <span class="glyphicons glyphicons-stop"></span>
+                                            </a>
+                                            <a href="#" class="{% if service.running_status %} hide {% endif %} btn btn-xs btn-secondary start-button" data-serviceid="{{service.id}}">
+                                                <span class="glyphicons glyphicons-play"></span>
+                                            </a>
+                                            <a href="#" class="{% if service.notification_status.mute != true %} hide  {% endif %} btn btn-xs btn-secondary mute-button" data-serviceid="{{service.id}}">
+                                                <span class="glyphicons glyphicons-mute"></span>
+                                            </a>
+                                            <a href="#" class="{% if service.notification_status.mute %} hide {% endif %} btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">
+                                                <span class="glyphicons glyphicons-bell"></span>
+                                            </a>
+                                            <a href="/services/{{service.id}}/edit" class="btn btn-xs btn-secondary">
+                                                <span class="glyphicon glyphicon-edit"></span>
+                                            </a>
+                                            <a href="/services/{{service.id}}/delete" class="btn btn-xs btn-secondary">
+                                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                            </a>
+                                            <a href="/services/{{ service.id }}/data" class="btn btn-xs btn-secondary">View Data</a>
+                                        </td>
+                                        <td class="text">
+                                            {{service.last_checked|date}}
+                                            </ul>
+                        </div>
                         </td>
-                        <td class="text">
-<!--                           <div class="btn-group"> -->
- <!--                            <button type="button" class="btn btn-info btn-sm fs12 fw500 dropdown-toggle ph10" data-toggle="dropdown" aria-expanded="false"> -->
-                              {{service.last_checked}}
-<!--                               <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                              <li>
-                                <a href="/services/{{ service.id }}/edit">Edit</a>
-                              </li>
-                              <li>
-                                <a href="#">Stop</a>
-                              </li>
-                              <li>
-                                <a href="#">Mute</a>
-                              </li>
-                              <li>
-                                <a href="/services/{{ service.id }}/delete">Delete</a>
-                              </li>
-                              <li class="divider"></li>
-                              <li>
-                                <a href="#">View charts for this service</a>
-                              </li>
-                              <li>
-                                <a href="#">Duplicate Service</a>
-                              </li> -->
-
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-                      
-                      {% endfor %}
-
-                    </tbody>
-                  </table>
-                <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
-              </div>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+                        <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
+    </div>
 </div>
 </div>
-</div>
-{% endblock %}
-{% block footer_scripts %}
-
+{% endblock %} {% block footer_scripts %}
 <script type="text/javascript">
-    
-    $('.stop-button').click(function(){
+$('.stop-button').click(function() {
 
-      var stop_button = $(this);
-      var service_id = stop_button.data('serviceid');
-      var req_url = '/services/' + service_id + '/action/start_stop';
-     
-      $.getJSON(req_url, function(data){
-        if(data.success == 1 && data.new_status == false) {
-          stop_button.hide();
-          stop_button.parent().find('.start-button').removeClass('hide').show();
+    var stop_button = $(this);
+    var service_id = stop_button.data('serviceid');
+    var req_url = '/services/' + service_id + '/action/start_stop';
+
+    $.getJSON(req_url, function(data) {
+        if (data.success == 1 && data.new_status == false) {
+            stop_button.hide();
+            stop_button.parent().find('.start-button').removeClass('hide').show();
         }
-      });
-      
-    });    
-
-    $('.start-button').click(function(){
-
-      var start_button = $(this);
-      var service_id = start_button.data('serviceid');
-      var req_url = '/services/' + service_id + '/action/start_stop';
-     
-      $.getJSON(req_url, function(data){
-        if(data.success == 1 && data.new_status == true) {
-          start_button.hide();
-          start_button.parent().find('.stop-button').removeClass('hide').show();
-        }
-      });
-
-    }); 
-
-    $('.mute-button').click(function(){
-
-      var stop_button = $(this);
-      var service_id = stop_button.data('serviceid');
-      var req_url = '/services/' + service_id + '/action/mute_unmute';
-     
-      $.getJSON(req_url, function(data){
-        if(data.success == 1 && data.new_status == false) {
-          stop_button.hide();
-          stop_button.parent().find('.unmute-button').removeClass('hide').show();
-        }
-      });
-      
-    });    
-
-    $('.unmute-button').click(function(){
-
-      var start_button = $(this);
-      var service_id = start_button.data('serviceid');
-      var req_url = '/services/' + service_id + '/action/mute_unmute';
-     
-      $.getJSON(req_url, function(data){
-        if(data.success == 1 && data.new_status == true) {
-          start_button.hide();
-          start_button.parent().find('.mute-button').removeClass('hide').show();
-        }
-      });
-
     });
 
-</script>    
+});
 
+$('.start-button').click(function() {
+
+    var start_button = $(this);
+    var service_id = start_button.data('serviceid');
+    var req_url = '/services/' + service_id + '/action/start_stop';
+
+    $.getJSON(req_url, function(data) {
+        if (data.success == 1 && data.new_status == true) {
+            start_button.hide();
+            start_button.parent().find('.stop-button').removeClass('hide').show();
+        }
+    });
+
+});
+
+$('.mute-button').click(function() {
+
+    var stop_button = $(this);
+    var service_id = stop_button.data('serviceid');
+    var req_url = '/services/' + service_id + '/action/mute_unmute';
+
+    $.getJSON(req_url, function(data) {
+        if (data.success == 1 && data.new_status == false) {
+            stop_button.hide();
+            stop_button.parent().find('.unmute-button').removeClass('hide').show();
+        }
+    });
+
+});
+
+$('.unmute-button').click(function() {
+
+    var start_button = $(this);
+    var service_id = start_button.data('serviceid');
+    var req_url = '/services/' + service_id + '/action/mute_unmute';
+
+    $.getJSON(req_url, function(data) {
+        if (data.success == 1 && data.new_status == true) {
+            start_button.hide();
+            start_button.parent().find('.mute-button').removeClass('hide').show();
+        }
+    });
+
+});
+</script>
 {% endblock %}

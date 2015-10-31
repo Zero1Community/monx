@@ -80,7 +80,7 @@ router.get('/notifications', function(req, res) {
    //  });
 
 
-  Notification.find({user: req.user}).sort('-createdAt').exec(function(err, notifics) {
+  Notification.find({user: req.user}).sort('-createdAt').populate('service').exec(function(err, notifics) {
 			if(!err && notifics) {
 				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
 			} else {
