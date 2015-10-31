@@ -50,27 +50,24 @@
                         <td>{{service.type}}</td>
                         <td><a href="/services/{{ service.id }}/history">{% if service.status == 'ERROR' %} blacklisted {% else %} clean {% endif %}</a></td>
                         <td>
-                            
-                            <button class="{% if service.running_status != true %} hide  {% endif %} btn btn-xs btn-secondary stop-button" data-serviceid="{{service.id}}">  
-                              <span class='glyphicons glyphicons-stop'></span> 
-                            </button>
-                            <button class="{% if service.running_status %} hide {% endif %} btn btn-xs btn-secondary start-button" data-serviceid="{{service.id}}">  
-                              <span class='glyphicons glyphicons-play'></span> 
-                            </button>  
-
-                            <button class="{% if service.notification_status.mute != true %} hide  {% endif %} btn btn-xs btn-secondary mute-button" data-serviceid="{{service.id}}">  
- <!--                              <span class='glyphicons glyphicons-ban'></span>  -->
-                              <span class='glyphicons glyphicons-mute'></span> 
-                            </button>
-                            <button class="{% if service.notification_status.mute %} hide {% endif %} btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">  
-                              <span class='glyphicons glyphicons-bell'></span> 
-                            </button>
-                            <button class="btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">  
-                              <span class="glyphicons glyphicons-edit"></span>
-                            </button>
-                            <button class="btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">  
-                              <span class="glyphicons glyphicons-circle-remove"></span> 
-                            </button>
+                            <a href="#" class="{% if service.running_status != true %} hide  {% endif %} btn btn-xs btn-secondary stop-button" data-serviceid="{{service.id}}">
+                                <span class="glyphicons glyphicons-stop"></span>
+                            </a>
+                            <a href="#" class="{% if service.running_status %} hide {% endif %} btn btn-xs btn-secondary start-button" data-serviceid="{{service.id}}">
+                                <span class="glyphicons glyphicons-play"></span>
+                            </a>
+                            <a href="#" class="{% if service.notification_status.mute != true %} hide  {% endif %} btn btn-xs btn-secondary mute-button" data-serviceid="{{service.id}}">
+                                <span class="glyphicons glyphicons-mute"></span>
+                            </a>
+                            <a href="#" class="{% if service.notification_status.mute %} hide {% endif %} btn btn-xs btn-secondary unmute-button" data-serviceid="{{service.id}}">
+                                <span class="glyphicons glyphicons-bell"></span>
+                            </a>
+                            <a href="/services/{{service.id}}/edit" class="btn btn-xs btn-secondary">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                            <a href="/services/{{service.id}}/delete" class="btn btn-xs btn-secondary">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </a>
                         </td>
                         <td class="text">
                           <a href="/services/{{ service.id }}/data"> View Data</a>
