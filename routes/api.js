@@ -19,7 +19,7 @@ router.post('/service-data/add', function(req, res){
 	if(configs.debug) console.log(data);
 
 	// TODO check before hand
-	data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	//data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 	console.log('Calling checker');
 	checker(data,function(err,res){
 		if(err){

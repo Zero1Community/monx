@@ -37,7 +37,6 @@
                         <th>Type</th>
                         <th>Health Status</th>
                         <th>Actions </th>
-                        <th>Data</th>
                         <th>Last Check</th>
                       </tr>
                     </thead>
@@ -68,9 +67,7 @@
                             <a href="/services/{{service.id}}/delete" class="btn btn-xs btn-secondary">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                             </a>
-                        </td>
-                        <td class="text">
-                          <a href="/services/{{ service.id }}/data"> View Data</a>
+                          <a href="/services/{{ service.id }}/data" class="btn btn-xs btn-secondary">View Data</a>
                         </td>
                         <td class="text">
 <!--                           <div class="btn-group"> -->
