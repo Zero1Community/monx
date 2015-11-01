@@ -2,3 +2,4 @@ node_modules/
 npm-debug.log
 logs/
 fix-perm.sh
+config/configs.js
