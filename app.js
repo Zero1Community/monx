@@ -11,9 +11,9 @@ var paginate = require('express-paginate');
 var moment = require('moment');
 
 //Connect to MongoDB
-dbConfig = require('./config/db.js');
+configs = require('./config/configs.js');
 var mongoose = require('mongoose');
-mongoose.connect(dbConfig.url);
+mongoose.connect(configs.mongodb.url);
 
 
 var app = express();

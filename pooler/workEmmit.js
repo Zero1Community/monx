@@ -6,7 +6,6 @@ var configs = require('../config/configs.js');
 
 var mongoose = require('mongoose');
 var User = require('../models/user.js');
-var dbConfig = require('../config/db.js');
 var Service = require('../models/service.js');
 var _ = require('underscore');
 
@@ -32,7 +31,7 @@ function scheduler(taskList){
 }
 
 function DbUpdateServices () {
-  mongoose.connect(dbConfig.url);
+  mongoose.connect(configs.mongodb.url);
   console.log('Duke marre nga DB');
   Service.find({running_status : true}, function(err, services) {
       //if(configs.debug) console.log(services);

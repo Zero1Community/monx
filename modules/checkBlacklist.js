@@ -1,6 +1,5 @@
 var dns      = require('native-dns');
 var async    = require('async');
-var dbConfig = require('../config/db.js');
 var configs  = require('../config/configs.js');
 var logger   = require('./logger.js');
 var redis = require('redis');
@@ -89,7 +88,7 @@ function getServersFromDB(callback) {
     
     var MongoClient = require('mongodb').MongoClient;
 
-    MongoClient.connect(dbConfig.url, function (err, db) {
+    MongoClient.connect(configs.mongodb.url, function (err, db) {
       if (err) {
         if(configs.debug) logger.debug('Unable to connect to the mongoDB server.', err);
         return callback(err);
