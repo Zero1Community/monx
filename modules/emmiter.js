@@ -1,9 +1,10 @@
 var when = require('when');
 var amqp = require('amqplib');
+var configs = require('../config/configs.js');
 
 function workEmmiter(jobToDo,queue){
 
-  amqp.connect('amqp://localhost').then(function(conn) {
+  amqp.connect(configs.rabbitmq.url).then(function(conn) {
     return when(conn.createChannel().then(function(ch) {
 
       var q = queue;
