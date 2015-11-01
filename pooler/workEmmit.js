@@ -59,7 +59,7 @@ function startInterval (rabbit_task) {
 
 DbUpdateServices();
 
-amqp.connect('amqp://localhost').then(function(conn) {
+amqp.connect(configs.rabbitmq.url).then(function(conn) {
   process.once('SIGINT', function() { conn.close(); });
   return conn.createChannel().then(function(ch) {
     

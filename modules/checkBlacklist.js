@@ -113,9 +113,13 @@ function getServersFromDB(callback) {
 
 function getAndCacheServers(callback) {
 
-  var client = redis.createClient();
-  //redis.debug_mode = configs.debug;
+  if(typeof configs.redis !== 'undefined') {
+    var client = redis.createClient(configs.redis.url);  
+  } else {
+    var client = redis.createClient();  
+  }
 
+  //redis.debug_mode = configs.debug;
 
     client.on("error", function (err) {
         if(configs.debug) logger.debug('Unable to connect to the Redis server.', err);

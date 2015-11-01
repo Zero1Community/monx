@@ -4,6 +4,12 @@ module.exports = {
   mongodb: {
     url: 'MONGODB URL'
   }, 
+  redis: {
+    url: 'redis://user:pass@localhost:6379'
+  },
+  rabbitmq: {
+    url: 'amqp://localhost',
+  },
 	email: {
 		service: 'EMAIL SERVICE (GMAIL)',
 		auth: {
