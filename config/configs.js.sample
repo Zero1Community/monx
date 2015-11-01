@@ -1,0 +1,15 @@
+module.exports = {
+	debug : true,
+	api_url: 'API URL',
+  mongodb: {
+    url: 'MONGODB URL'
+  }, 
+	email: {
+		service: 'EMAIL SERVICE (GMAIL)',
+		auth: {
+          user: 'EMAIL USER',
+          pass: 'EMAIL PASS'
+        },
+        from: 'EMAIL FROM'
+	}
+}
