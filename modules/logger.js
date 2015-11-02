@@ -30,7 +30,34 @@ var logger = new winston.Logger({
     exitOnError: false
 });
 
-module.exports = logger;
+
+function initLogger(prefix, status){
+  if(status) {
+    return function(level){
+      
+      var args = Array.prototype.slice.call(arguments, 1);
+      args.push({module:prefix});
+
+      switch(level) {
+          case 'info':
+              logger.info.apply(null, args);
+              break;
+          case 'debug':
+              logger.info.apply(null, args);
+              break;
+          case 'warn':
+              logger.info.apply(null, args);
+              break;
+          case 'crit':
+              logger.info.apply(null, args);
+              break;
+      }
+    }
+  }
+  return;
+}
+
+module.exports = initLogger;
 
 //for express
 module.exports.stream = {
