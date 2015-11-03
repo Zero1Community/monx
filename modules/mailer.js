@@ -4,7 +4,8 @@ var emailTemplates = require('email-templates');
 var nodemailer     = require('nodemailer');
 var async          = require('async');
 var configs        = require('../config/configs.js');
-var logger         = require('./logger.js');
+//var logger         = require('./logger.js');
+var logger = require('../modules/logger.js')('workEmmit', configs.logs.mailer);
 
 var Mailer = {
 
@@ -12,7 +13,7 @@ var Mailer = {
     emailTemplates(templatesDir, function(err, template) {
 
       if (err) {
-        if(configs.debug) logger.debug(err);
+        logger('error',err);
         return callback(err);
       } else {
         // Prepare nodemailer transport object
@@ -26,7 +27,7 @@ var Mailer = {
 
         template(template_name, data, function(err, html) {
           if (err) {
-            if(configs.debug) logger.debug(err);
+            logger('error',err);
             return callback(err);
           } else {
             transport.sendMail({
@@ -37,10 +38,10 @@ var Mailer = {
               // generateTextFromHTML: true,
             }, function(err, responseStatus) {
               if (err) {
-                if(configs.debug) logger.debug(err);
+                logger('error',err);
                 return callback(err);
               } else {
-                if(configs.debug) logger.debug(responseStatus);
+                logger('info',responseStatus);
                 return callback(null, responseStatus);
               }
             });
@@ -57,11 +58,11 @@ var Mailer = {
   	async.each(many_data, function(data, doneCallback){
       Mailer.sendOne(template_name, data, function(err, res){
       	if(err) {
-      		if(configs.debug) logger.debug(err);
+      		logger('error',err);
       		doneCallback();
       		return callback(err);
       	}
-  		if(configs.debug) logger.debug(res);
+  		logger('info',res);
   		doneCallback();
   		return callback(res);
       });

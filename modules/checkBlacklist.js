@@ -2,7 +2,8 @@ var dns      = require('native-dns');
 var async    = require('async');
 var dbConfig = require('../config/db.js');
 var configs  = require('../config/configs.js');
-var logger   = require('./logger.js');
+//var logger   = require('./logger.js');
+var logger = require('../modules/logger.js')('workEmmit', configs.logs.blacklist);
 var redis = require('redis');
 
 function checkDNS(rbl_server, ip, callback, timeout){
@@ -51,7 +52,7 @@ function checkRBL(host, timeout, callback) {
 
     getAndCacheServers(function(err, servers){
         if(err) {
-            if(configs.debug) logger.debug(err);
+            logger('error',err);
         } else {
             validateAndResolve(host, function(ip){
                 async.each(servers, function(server, callback){
@@ -76,7 +77,7 @@ function validateAndResolve(host, callback) {
 
   dns.resolve4(host, function(error, addr) {
     if(error) {
-      logger.debug('Error resolving', error);
+      logger('error','Error resolving', error);
     } else {
       // TODO : po kto qe kane shume IP ?
       return callback(addr[0]);
@@ -91,19 +92,19 @@ function getServersFromDB(callback) {
 
     MongoClient.connect(dbConfig.url, function (err, db) {
       if (err) {
-        if(configs.debug) logger.debug('Unable to connect to the mongoDB server.', err);
+        logger('error','Unable to connect to the mongoDB server.', err);
         return callback(err);
       } else {
 
         var collection = db.collection('rbl_servers');
         collection.find({}).toArray(function (err, result) {
                if (err) {
-                if(configs.debug) logger.debug(err);
+                logger('error',err);
                 return callback(err);
             } else if (result.length) {
-                if(configs.debug) logger.debug("Result from Mongo ", result[0].servers);
+                logger('info','Result from Mongo ', result[0].servers);
             } else {
-                if(configs.debug) logger.debug("No result from Mongo");
+                logger('info','No result from Mongo');
             }
             db.close();
             return callback(null, result[0].servers);
@@ -118,8 +119,8 @@ function getAndCacheServers(callback) {
   //redis.debug_mode = configs.debug;
 
 
-    client.on("error", function (err) {
-        if(configs.debug) logger.debug('Unable to connect to the Redis server.', err);
+    client.on('error', function (err) {
+        logger('error','Unable to connect to the Redis server.', err);
         client.end();
         getServersFromDB(function(err, result){
             return callback(err, result);
@@ -128,12 +129,12 @@ function getAndCacheServers(callback) {
 
     client.on('ready', function(){
         client.get('rbl_servers', function(err, result) {
-            if(err) logger.debug("Redis get error", err);
-            if(configs.debug) logger.debug("Got data from redis ");
+            if(err) logger('error','Redis get error', err);
+            logger('info','Got data from redis ');
             if(result == null) {
-              if(configs.debug) logger.debug("Got null from redis, falling back to DB ");
+              logger('info','Got null from redis, falling back to DB ');
               getServersFromDB(function(err, result){
-                if(configs.debug) logger.debug("Writing this to Redis");
+                logger('info','Writing this to Redis');
                 //if(configs.debug) logger.debug("Writing this to Redis", result);
                 client.set('rbl_servers', JSON.stringify(result), redis.print);
                 client.end();

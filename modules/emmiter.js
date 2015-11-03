@@ -1,5 +1,7 @@
 var when = require('when');
 var amqp = require('amqplib');
+var logger = require('../modules/logger.js')('workEmmit', configs.logs.emmiter_lib);
+
 
 function workEmmiter(jobToDo,queue){
 
@@ -11,7 +13,7 @@ function workEmmiter(jobToDo,queue){
 
       return ok.then(function(_qok) {
         ch.sendToQueue(q, new Buffer(JSON.stringify(jobToDo)));
-        console.log(" [x] Sent job to rabbitMQ queue "+ queue);
+        logger('info',' [x] Sent job to rabbitMQ queue '+ queue);
         return ch.close();
       });
     })).ensure(function() { conn.close(); });;

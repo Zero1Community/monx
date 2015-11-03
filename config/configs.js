@@ -8,5 +8,14 @@ module.exports = {
           pass: 'asdayhri7werhvnssadni8as'
         },
         from: 'Monx <monx.notifications@gmail.com>'
+	},
+	logs: {
+	    app: true,
+	    blacklist: true,
+	    checker: true,
+	    emmiter: true,
+	    emmiter_lib: true,
+	    processor: true,
+	    mailer: true
 	}
 }

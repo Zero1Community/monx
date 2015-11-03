@@ -10,22 +10,24 @@ var dbConfig = require('../config/db.js');
 var Service = require('../models/service.js');
 var _ = require('underscore');
 
+var logger = require('../modules/logger.js')('workEmmit', configs.logs.emmiter);
+
 var intervals = [];
 var total_services = [];
 // kjo duhet bo me .then()
 var workEmmiter = require('../modules/emmiter.js');
 
 function scheduler(taskList){
-  console.log('Hyme ne scheduler');
+  logger('info','Hyme ne scheduler');
   taskList.forEach(function(task){
-  console.log('Creating interval with ID ' + task._id);
+  logger('info','Creating interval with ID ' + task._id);
   //TODO: kjo duhet me .then qe te mos ta bukosim queuen OSE
   // me limit OSE 
   // me IP rotation 
   //workEmmiter(task,'all_checks');
   intervals[task._id] = setInterval(function(task) {
-          console.log('Po monitorojme '+ task.name);
-          console.log('Me interval '+ task.interval);
+          logger('info','Po monitorojme '+ task.name);
+          logger('info','Me interval '+ task.interval);
           workEmmiter(task,'all_checks');
     }, task.interval*1000+_.random(5, 30), task);
   });
@@ -33,8 +35,9 @@ function scheduler(taskList){
 
 function DbUpdateServices () {
   mongoose.connect(dbConfig.url);
-  console.log('Duke marre nga DB');
+  logger('info','Duke marre nga DB');
   Service.find({running_status : true}, function(err, services) {
+      //TODO: po kur nuk gje gjo ?
       //if(configs.debug) console.log(services);
       scheduler(services);
       mongoose.connection.close();
@@ -45,11 +48,11 @@ function startInterval (rabbit_task) {
           //if(configs.debug) console.log(services);
       clearInterval(intervals[rabbit_task._id]);
           if(rabbit_task.running_status == true){
-              console.log('Creating interval with ID ' + rabbit_task._id);
+              logger('info','Creating interval with ID ' + rabbit_task._id);
               intervals[rabbit_task._id] = setInterval(function(rabbit_task) {
                       //let's emmit the work on RabbitMQ
-                      console.log('Po monitorojme '+ rabbit_task.name);
-                      console.log('Me interval '+ rabbit_task.interval);
+                      logger('info','Po monitorojme '+ rabbit_task.name);
+                      logger('info','Me interval '+ rabbit_task.interval);
                       workEmmiter(rabbit_task,'all_checks');
                       //if(configs.debug) console.log(task);
                 }, rabbit_task.interval*1000+_.random(5, 30), rabbit_task);          
@@ -68,7 +71,7 @@ amqp.connect('amqp://localhost').then(function(conn) {
     // todo : error catching per kur nuk lidhet queueja 
     ok = ok.then(function(_qok) {
       return ch.consume('service_updates', function(msg) {
-        if(configs.debug) console.log(" [x] Received a service update task");
+        logger('info',' [x] Received a service update task');
         var toCheck = JSON.parse(msg.content.toString());
         //if(configs.debug) console.log(toCheck);
         startInterval(toCheck);
@@ -78,7 +81,7 @@ amqp.connect('amqp://localhost').then(function(conn) {
     });
 
     return ok.then(function(_consumeOk) {
-      if(configs.debug) console.log(' [*] Waiting for messages. To exit press CTRL+C');
+      logger('info',' [*] Waiting for messages. To exit press CTRL+C');
     });
   });
-}).then(null, console.warn);
+}).then(null, logger('info',console.warn));
