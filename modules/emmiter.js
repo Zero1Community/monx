@@ -1,6 +1,6 @@
 var when = require('when');
 var amqp = require('amqplib');
-
+var configs = require('../config/configs.js');
 var logger = require('../modules/logger.js')('workEmmit', configs.logs.emmiter_lib);
 
 function workEmmiter(jobToDo,queue){
