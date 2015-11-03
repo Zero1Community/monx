@@ -1,103 +1,78 @@
-{% extends '../master_layout.html' %}
-{% block content %}
-
-
+{% extends '../master_layout.html' %} {% block content %}
 <div id="content" class="">
-
-
-
-        <div class="row">
-
-          <div class="col-md-10 col-md-offset-1">
-
-<!--       <div class="mt30 mb25">
-        {% include "../includes/notifications.html" %}
-      </div>
- -->            <!-- Input Fields -->
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+        <div class="mt30 mb25">
+          {% include "../includes/notifications.html" %}
+        </div>
+            <!-- Input Fields -->
             <div class="panel">
-              <div class="panel-heading">
-                <span class="panel-title">Event Details</span>
-                <div class="widget-menu mr10">
-                    <div class="btn-group">
-                    </div>
-                  </div>
-              </div>
-              <div class="panel-body">
-
-                <div class="col-md-6">
-                  <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                      <label class="col-lg-6 control-label">Event Status</label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">{{event_data.status}}</p>
+                <div class="panel-heading">
+                    <span class="panel-title">Event Details</span>
+                    <div class="widget-menu mr10">
+                        <div class="btn-group">
                         </div>
-                      </div>
                     </div>
-                    <div class="form-group">
-                      <label class="col-lg-6 control-label">Event ID</label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">{{event_data._id}}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-lg-6 control-label">Node Source </label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">{{event_data.source}}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-
-                  <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                      <label class="col-lg-6 control-label">Event Date</label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">{{event_data.createdAt}}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
                 </div>
-                <div class="col-md-6">
-                  <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                      <label class="col-lg-6 control-label">Event Message</label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">
-
-                          {% for item in event_data.message.listed %}
-                            {{ item.server }} with status 
-                            {{ item.status }}<br>
-                          {% endfor %}
-
-                          </p>
-                        </div>
-                      </div>
+                <div class="panel-body">
+                    <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-lg-6 control-label">Event Status</label>
+                                <div class="col-lg-6">
+                                    <div class="bs-component">
+                                        <p class="form-control-static text-muted">{{event_data.status}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-6 control-label">Event ID</label>
+                                <div class="col-lg-6">
+                                    <div class="bs-component">
+                                        <p class="form-control-static text-muted">{{event_data._id}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-6 control-label">Node Source </label>
+                                <div class="col-lg-6">
+                                    <div class="bs-component">
+                                        <p class="form-control-static text-muted">{{event_data.source}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-6 control-label">Event Date</label>
+                                <div class="col-lg-6">
+                                    <div class="bs-component">
+                                        <p class="form-control-static text-muted">{{event_data.createdAt}}</p>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
-                      <label class="col-lg-6 control-label">Event Action</label>
-                      <div class="col-lg-6">
-                        <div class="bs-component">
-                          <p class="form-control-static text-muted">
-
-                          {% for item in event_data.message.diff %}
-                            {% if item.action == 'added' %}
-                              {{item.action}} to {{ item.server }}<br>
-                            {% endif %}
-                            {% if item.action == 'removed' %}
-                              {{item.action}} from {{ item.server }}<br>
-                            {% endif %}
-                          {% endfor %}
-                          </p>
-                        </div>
-                      </div>
-                    </div>                    
-<!--                     <div class="form-group">
+                    <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-lg-6 control-label">Event Message</label>
+                                <div class="col-lg-6">
+                                    <div class="bs-component">
+                                        <p class="form-control-static text-muted">
+                                            {% for item in event_data.message.listed %} {{ item.server }} with status {{ item.status }}
+                                            <br> {% endfor %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-lg-6 control-label">Event Action</label>
+                            <div class="col-lg-6">
+                                <div class="bs-component">
+                                    <p class="form-control-static text-muted">
+                                        {% for item in event_data.message.diff %} {% if item.action == 'added' %} {{item.action}} to {{ item.server }}
+                                        <br> {% endif %} {% if item.action == 'removed' %} {{item.action}} from {{ item.server }}
+                                        <br> {% endif %} {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                    </div>
+                    <!--                     <div class="form-group">
                       <label class="col-lg-6 control-label">Server</label>
                       <div class="col-lg-6">
                         <div class="bs-component">
@@ -105,16 +80,10 @@
                         </div>
                       </div>
                     </div>
- --> 
-                  </form>
+ -->
                 </div>
-
-              </div>
             </div>
-          </div>
         </div>
-
-      </div>
-
-
+    </div>
+</div>
 {% endblock %}

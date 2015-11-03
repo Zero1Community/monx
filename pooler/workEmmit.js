@@ -6,7 +6,6 @@ var configs = require('../config/configs.js');
 
 var mongoose = require('mongoose');
 var User = require('../models/user.js');
-var dbConfig = require('../config/db.js');
 var Service = require('../models/service.js');
 var _ = require('underscore');
 
@@ -34,8 +33,10 @@ function scheduler(taskList){
 }
 
 function DbUpdateServices () {
+
   mongoose.connect(dbConfig.url);
   logger('info','Duke marre nga DB');
+
   Service.find({running_status : true}, function(err, services) {
       //TODO: po kur nuk gje gjo ?
       //if(configs.debug) console.log(services);
@@ -63,7 +64,7 @@ function startInterval (rabbit_task) {
 
 DbUpdateServices();
 
-amqp.connect('amqp://localhost').then(function(conn) {
+amqp.connect(configs.rabbitmq.url).then(function(conn) {
   process.once('SIGINT', function() { conn.close(); });
   return conn.createChannel().then(function(ch) {
     
@@ -75,7 +76,7 @@ amqp.connect('amqp://localhost').then(function(conn) {
         var toCheck = JSON.parse(msg.content.toString());
         //if(configs.debug) console.log(toCheck);
         startInterval(toCheck);
-        workEmmiter(task,'all_checks');
+        workEmmiter(toCheck,'all_checks');
         //if(configs.debug) console.log(msg);
       }, {noAck: true});
     });

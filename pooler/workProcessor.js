@@ -12,7 +12,7 @@ var logger = require('../modules/logger.js')('workProcessor', configs.logs.proc
 // tipit 
 // dns, web, match, snmpt,pop, etj..
 
-amqp.connect('amqp://localhost').then(function(conn) {
+amqp.connect(configs.rabbitmq.url).then(function(conn) {
 	process.once('SIGINT', function() { conn.close(); });
 	return conn.createChannel().then(function(ch) {
 		

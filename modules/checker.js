@@ -55,6 +55,7 @@ function updateAndNotify(notific,status_subject){
 			u.service = notific.service_id;
 			u.status = notific.status;
 			u.message = collected_message;
+			u.seen = false;
 			u.save(function(err) {
 				if(err){
 					logger('error','Unable to save the event in the db : ');

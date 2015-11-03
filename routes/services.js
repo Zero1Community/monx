@@ -1,5 +1,6 @@
 var express     = require('express');
 var router      = express.Router();
+//var router  = require('../tests/extroute.js')();
 var dns         = require('dns');
 var checkRBL    = require('../modules/checkBlacklist.js');
 var Service     = require('../models/service.js');
@@ -14,7 +15,7 @@ var mongoose = require('mongoose');
 var workEmmiter = require('../modules/emmiter.js');
 
 
-router.get('/', routeName.add('services.index'), function(req, res){
+router.get('/', function(req, res){
   var user = req.user;
   // TODO:  getaddrinfo ENOTFOUND ds031882.mongolab.com ?? (nuk lidhemi dot me db dmth)
   Service.find({ user: user._id }).sort('-createdAt').exec( function(err, services) {
@@ -29,11 +30,11 @@ router.get('/', routeName.add('services.index'), function(req, res){
   });
 });
 
-router.get('/add', routeName.add('services.add'), function(req, res){
+router.get('/add', function(req, res){
 	res.render('services/add', {page_title: 'Add new service'});
 });
 
-router.get('/:id/events/:event_id', routeName.add('services.events'), function(req, res){
+router.get('/:id/events/:event_id', function(req, res){
 
   req.check('id', 'ID Required').notEmpty();
   req.check('event_id', 'Event ID Required').notEmpty();
@@ -58,7 +59,7 @@ router.get('/:id/events/:event_id', routeName.add('services.events'), function(r
 		});
 });
 
-router.get('/notifications', routeName.add('services.notifications'), function(req, res) {
+router.get('/notifications', function(req, res) {
 
 	  // Notification.paginate({}, { page: req.query.page, limit: req.query.limit , sortBy: {createdAt : -1} }, function(err, notifics, pageCount, itemCount) {
       
@@ -79,7 +80,7 @@ router.get('/notifications', routeName.add('services.notifications'), function(r
    //  });
 
 
-  Notification.find({user: req.user}).sort('-createdAt').exec(function(err, notifics) {
+  Notification.find({user: req.user}).sort('-createdAt').populate('service').exec(function(err, notifics) {
 			if(!err && notifics) {
 				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
 			} else {
@@ -92,7 +93,7 @@ router.get('/notifications', routeName.add('services.notifications'), function(r
 });
 
 
-router.get('/:id/edit', routeName.add('services.edit'), m.hasServiceAccess, function(req, res){
+router.get('/:id/edit', m.hasServiceAccess, function(req, res){
 	 
   req.check('id', 'ID Required').notEmpty();
 
@@ -332,7 +333,7 @@ router.get('/:id/history', function service_data(req, res) {
 
 
 
-router.get('/:id', routeName.add('services.view'), function(req, res) {
+router.get('/:id', function(req, res) {
 
   req.check('id', 'ID Required').notEmpty();
 

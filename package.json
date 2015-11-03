@@ -19,6 +19,7 @@
     "express-paginate": "0.0.8",
     "express-session": "^1.10.4",
     "express-validator": "^2.10.0",
+    "moment": "^2.10.6",
     "mongodb": "^2.0.33",
     "mongojs": "^0.18.2",
     "mongoose": "^4.0.0",
