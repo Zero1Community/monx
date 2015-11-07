@@ -32,7 +32,10 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
 			logger('info',' [*] Waiting for messages. To exit press CTRL+C');
 		});
 	});
-}).then(null, logger('info',console.warn));
+}).then(null, logger('info',console.warn)).catch(function (err) {
+	logger('error', err);
+	process.exit(1);
+});
 
 
 // atm here we have only blacklist_check but this eventually will be extended 

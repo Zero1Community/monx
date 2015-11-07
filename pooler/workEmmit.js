@@ -34,7 +34,7 @@ function scheduler(taskList){
 
 function DbUpdateServices () {
 
-  mongoose.connect(dbConfig.url);
+  mongoose.connect(configs.mongodb.url);
   logger('info','Duke marre nga DB');
 
   Service.find({running_status : true}, function(err, services) {
@@ -79,10 +79,22 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
         workEmmiter(toCheck,'all_checks');
         //if(configs.debug) console.log(msg);
       }, {noAck: true});
-    });
+    }).catch(function (err){
+  logger('error',err);
+  process.exit(1);
+});
 
     return ok.then(function(_consumeOk) {
       logger('info',' [*] Waiting for messages. To exit press CTRL+C');
-    });
-  });
-}).then(null, logger('info',console.warn));
+    }).catch(function (err){
+  logger('error',err);
+  process.exit(1);
+});
+  }).catch(function (err){
+  logger('error',err);
+  process.exit(1);
+});
+}).then(null, logger('info',console.warn)).catch(function (err){
+  logger('error',err);
+  process.exit(1);
+});

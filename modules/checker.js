@@ -5,7 +5,7 @@ var Service     = require('../models/service.js');
 var configs = require('../config/configs.js');
 var ServiceData = require('../models/service_data.js');
 //var logger      = require('../modules/logger.js');
-var logger = require('../modules/logger.js')('workEmmit', configs.logs.checker);
+var logger = require('../modules/logger.js')('checker', configs.logs.checker);
 var _ = require('underscore');
 
 function updateAndNotify(notific,status_subject){
@@ -87,7 +87,7 @@ function checker(new_data){
 
 		service.status = new_data.status;
 		service.last_checked = new Date();
-		logger('error','Saving the service status and last checked');
+		logger('info','Saving the service status and last checked');
 		service.save(function(err) {
 			 if(err) {
 				logger('error','There was an error saving the service status', err);
