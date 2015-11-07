@@ -4,7 +4,8 @@ var Notification = require('../models/notification.js');
 var Service     = require('../models/service.js');
 var configs = require('../config/configs.js');
 var ServiceData = require('../models/service_data.js');
-var logger      = require('../modules/logger.js');
+//var logger      = require('../modules/logger.js');
+var logger = require('../modules/logger.js')('workEmmit', configs.logs.checker);
 var _ = require('underscore');
 
 function updateAndNotify(notific,status_subject){
@@ -20,7 +21,7 @@ function updateAndNotify(notific,status_subject){
 	// pasi notificationi eshte ne baze sherbimi
 	User.findOne({_id: notific.user}, function(err, user) {
 	   	if(err)	{
-	   		if(configs.debug) console.log(err);	
+	   		logger('error',err);	
 	   		//TODO: fix this return
 	   		return;
 	   	}
@@ -43,9 +44,9 @@ function updateAndNotify(notific,status_subject){
 			//     at SMTPConnection._formatError
 			Mailer.sendOne("notifications/new",tick,function(err,res){
 					if(err){
-						if(configs.debug) console.log(err);
+						logger('error',err);
 					}else{
-						if(configs.debug) console.log(res);
+						logger('info',res);
 					}
 			});
 		}
@@ -57,10 +58,10 @@ function updateAndNotify(notific,status_subject){
 			u.seen = false;
 			u.save(function(err) {
 				if(err){
-					if(configs.debug) console.log('Unable to save the event in the db : ');
-					if(configs.debug) console.log(err);
+					logger('error','Unable to save the event in the db : ');
+					logger('error',err);
 				} else {
-					if(configs.debug) console.log('Event successfully saved');
+					logger('info','Event successfully saved');
 				}
 				//return;
 			});
@@ -70,14 +71,14 @@ function updateAndNotify(notific,status_subject){
 
 function checker(new_data){
 
-	console.log('Got into phase 2 in checker');
-	console.log(new_data);
+	logger('info','Got into phase 2 in checker');
+	logger('info',new_data);
 	// TODO: handle kur ska sherbim ?
 	Service.findById(new_data.service_id, function(err, service){
-		console.log('Finding the service ');
+		logger('info','Finding the service ');
 		if(err) {
-			console.log('Error finding the service with id' + data.service_id );
-			console.log(err);
+			logger('error','Error finding the service with id' + data.service_id );
+			logger('error',err);
 			return err;
 		}
 
@@ -86,13 +87,13 @@ function checker(new_data){
 
 		service.status = new_data.status;
 		service.last_checked = new Date();
-		console.log('Saving the service status and last checked');
+		logger('error','Saving the service status and last checked');
 		service.save(function(err) {
 			 if(err) {
-				logger.debug('There was an error saving the service status', err);
+				logger('error','There was an error saving the service status', err);
 				//TODO: hmm nej return ktu ?
 			 } else {
-			  	logger.debug('The new service status was saved!');
+			  	logger('info','The new service status was saved!');
 				}
 			});
 	});
@@ -105,7 +106,7 @@ function checker(new_data){
 		var new_data_servers = []; 
 		
 		if(err){
-			if(configs.debug) console.log(err);
+			logger('error',err);
 			return err;
 		}
 		if(last_data === null){
@@ -116,15 +117,15 @@ function checker(new_data){
 			//TODO: fix this qe sdel heren e pare
 			new_data['notification_id'] = last_data.id;
 			last_data.message.listed.forEach(function (element) {
-					console.log("Listing last data");
-					console.dir(element.server);
+					logger('info','Listing last data');
+					//console.dir(element.server);
 					last_data_servers.push(element.server);
 			});
 		}
 
 		new_data.message.listed.forEach(function (element) {
-				console.log("Listing new data");
-				console.dir(element.server);
+				logger('info','Listing new data');
+				//console.dir(element.server);
 				new_data_servers.push(element.server);
 		});
 
@@ -158,10 +159,10 @@ function checker(new_data){
 				});
 				sData.save(function(err) {
 		      if(!err) {
-		      	console.log('Event successfully saved');
+		      	logger('info','Event successfully saved');
 		      }
 		      else{
-		      	console.log('Error saving the event' + err);
+		      	logger('error','Error saving the event' + err);
 		      }	
 				});
 			}
@@ -173,7 +174,7 @@ function checker(new_data){
 			//mongoose.connection.close();	
 			console.log(notification_data);
 			if(err) {
-				if(configs.debug) console.log(err); 
+				logger('error',err); 
 				return;
 			}
 			//console.log(notification_data);
@@ -187,26 +188,26 @@ function checker(new_data){
 			}
 
 			var notification_status = notification_data.status;
-			if(configs.debug) console.log("Current Status: \n")
-			if(configs.debug) console.log('Last status '+ last_status);
-			if(configs.debug) console.log('New status '+ new_status);
-			if(configs.debug) console.log('Last Notification status '+ notification_status);
+			logger('info',"Current Status: \n")
+			logger('info','Last status '+ last_status);
+			logger('info','New status '+ new_status);
+			logger('info','Last Notification status '+ notification_status);
 
 			if(last_status === 'OK' && new_status === 'OK') {
 				if(notification_status === 'OK') return;
 				//"RECOVERY" 
 				updateAndNotify(new_data,"** Service Recovery", function(){
-							console.log("Mail sent");
+							logger('info',"Mail sent");
 					}); 
 			}
 
 			if(last_status === 'ERROR' && new_status === 'ERROR') {
 				// DIFF HERE
 				//TODO kjo sma mbush mendjen..
-				console.log(new_data.message);
+				logger('info',new_data.message);
 				if(notification_status === 'ERROR' && !new_data.message.diff) return;
 				 updateAndNotify(new_data,"** Service Status Update", function(){
-							console.log("Mail sent");
+							logger('info',"Mail sent");
 					}); 
 			}
 
@@ -214,14 +215,14 @@ function checker(new_data){
 				//TODO: check statuset e fundit me modifiku titullin ne "Service flapping"
 				if(notification_status === 'ERROR') return;
 					updateAndNotify(new_data,"** Service Error", function(){
-							console.log("Mail sent");
+							logger('info',"Mail sent");
 					});
 			}
 
 			if(last_status === 'ERROR' && new_status === 'OK') {
 				if(notification_status === 'OK') return;
 				updateAndNotify(new_data,"** Service Recovery", function(){
-							console.log("Mail sent");
+							logger('info',"Mail sent");
 					}); //STATUS RECOVERY
 			}
 

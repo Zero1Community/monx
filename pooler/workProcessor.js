@@ -1,7 +1,7 @@
 var configs = require('../config/configs.js');
 // libs and shit
 var amqp = require('amqplib');
-
+var logger = require('../modules/logger.js')('workProcessor', configs.logs.processor);
 // TODO: error handling post to api
 
 
@@ -20,7 +20,7 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
 		// todo : error catching per kur nuk lidhet queueja 
 		ok = ok.then(function(_qok) {
 			return ch.consume('all_checks', function(msg) {
-				if(configs.debug) console.log(" [x] Received a task");
+				logger('info',' [x] Received a task');
 				var toCheck = JSON.parse(msg.content.toString());
 				//if(configs.debug) console.log(toCheck);
 				processWork(toCheck);
@@ -29,17 +29,17 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
 		});
 
 		return ok.then(function(_consumeOk) {
-			if(configs.debug) console.log(' [*] Waiting for messages. To exit press CTRL+C');
+			logger('info',' [*] Waiting for messages. To exit press CTRL+C');
 		});
 	});
-}).then(null, console.warn);
+}).then(null, logger('info',console.warn));
 
 
 // atm here we have only blacklist_check but this eventually will be extended 
 // with port scan, ssl check, smtp, ping and other stuff like that
 
 function processWork(tC,callback){
-	//console.log(tC.type);
+	logger('info','Got type: ' + tC.type);
 	if(tC.type === "blacklist"){
 		monxBlacklist(tC);
 	}
@@ -49,7 +49,7 @@ function processWork(tC,callback){
 // posting data to API function
 function postToAPI (data) {
 	var request = require('request');
-	console.log("Posting to API");
+	logger('info','Posting to API');
 	//if(configs.debug) console.log('Data received', data);
 	var options = {
 	  uri: configs.api_url + 'service-data/add',
@@ -66,11 +66,11 @@ function postToAPI (data) {
 	};
 	request(options, function(error, response, body){
 	  if(error) {
-	      console.log('Got error while posting data to API !');
-	      console.log(error);
+	      logger('error','Got error while posting data to API !');
+	      logger('error',error);
 	  } else {
-	      console.log('Data posted to API!');
-	      console.log(response.statusCode);
+	      logger('info','Data posted to API!');
+	      logger('info',response.statusCode);
 		}
 	});
 }
@@ -81,7 +81,7 @@ function monxBlacklist(blacklistObject){
 	var checkRBL = require('../modules/checkBlacklist.js');
 
 	checkRBL(blacklistObject.host, 80000, function(totalResults){
-		if(configs.debug) console.log('Scan finished for: ' + blacklistObject.host);
+		logger('info','Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
 		var blackStatus = [];
 		var timeoutStatus = [];
@@ -101,7 +101,7 @@ function monxBlacklist(blacklistObject){
 			else{
 				cleanStatus.push(totalResults[i]);
 			}
-			console.log(totalResults[i]);
+			logger('info',totalResults[i]);
 		};
 
 // TODO: FIX THIS
@@ -131,9 +131,9 @@ function monxBlacklist(blacklistObject){
 
 		postToAPI(data, function(err) {
 			if(err){
-				if(configs.debug) console.log(err)
+				logger('error',err);
 			} else {
-				if(configs.debug) console.log('Data posted!');
+				logger('info','Data posted!');
 			}
 		}, 3000);
 	});
