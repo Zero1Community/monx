@@ -5,6 +5,7 @@ var customColors = {
   debug: 'green',
   info: 'green',
   warn: 'yellow',
+  error: 'red',
   crit: 'red',
   fatal: 'red'
 };
@@ -20,7 +21,7 @@ var logger = new winston.Logger({
             colorize: false
         }),
         new winston.transports.Console({
-        	colors: customColors,
+          colors: customColors,
           level: 'debug',
           handleExceptions: true,
           json: false,
@@ -43,13 +44,16 @@ function initLogger(prefix, status){
               logger.info.apply(null, args);
               break;
           case 'debug':
-              logger.info.apply(null, args);
+              logger.debug.apply(null, args);
               break;
           case 'warn':
-              logger.info.apply(null, args);
+              logger.warn.apply(null, args);
+              break;
+          case 'error':
+              logger.error.apply(null, args);
               break;
           case 'crit':
-              logger.info.apply(null, args);
+              logger.crit.apply(null, args);
               break;
       }
     }
@@ -62,6 +66,6 @@ module.exports = initLogger;
 //for express
 module.exports.stream = {
     write: function(message, encoding){
-        logger.info('Express: ', message);
+        logger.info(message, {module:'app'});
     }
 };
