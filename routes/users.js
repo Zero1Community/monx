@@ -6,6 +6,7 @@ var crypto = require('crypto');
 var Mailer = require('../modules/mailer.js');
 var async = require('async');
 var configs = require('../config/configs.js');
+var logger = require('../modules/logger.js')('users', configs.logs.users);
 var bCrypt = require('bcrypt-nodejs');
 
 
@@ -19,7 +20,7 @@ module.exports = function(passport){
 	router.post('/login', function(req, res, next){
 			
 	req.check('username', 'A valid email is required').isEmail();
-  req.check('password', 'A password is required').notEmpty();
+  	req.check('password', 'A password is required').notEmpty();
     
     var errors = req.validationErrors();
 
@@ -110,7 +111,8 @@ module.exports = function(passport){
 
 				    user.save(function (err) {
 				        if(err) {
-				            console.error('ERROR!');
+				            logger('error','Error saving user');
+				            logger('error',err);
 				        }
 						done(err, token, user);
 				    });
@@ -126,8 +128,10 @@ module.exports = function(passport){
 
 			  Mailer.sendOne("users/forgot_password", email_data,function(err,res){
 					if(err){
-						if(configs.debug) console.log(err);
+						logger('error', 'Error sending email');
+						logger('error', err);
 					}else{
+						logger('info', 'Sent email for forgot password');
 						req.flash('success_messages', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         				done(err, 'done');
 					}
@@ -158,12 +162,13 @@ module.exports = function(passport){
 	router.post('/reset/:token', function(req, res) {
 
     req.check('password', 'The password is required').notEmpty();
-		req.check('password_confirmation', 'The password confirmation is required').notEmpty();
+	req.check('password_confirmation', 'The password confirmation is required').notEmpty();
     req.check('password_confirmation', 'The password confirmation is not the same as password').equals(req.body.password);
     
     var errors = req.validationErrors();
 
     if(errors) {
+    	logger('error', 'Error reseting password');
     	req.flash('error_messages', errors);
     	return res.redirect('/users/reset/' + req.params.token );    
     }    
@@ -173,6 +178,7 @@ module.exports = function(passport){
 	    function(done) {
 	      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
 	        if (!user) {
+	        	    	logger('error', 'Password reset token is invalid or has expired');
 	          req.flash('error_messages', 'Password reset token is invalid or has expired.');
 	          return res.redirect('back');
 	        }
@@ -182,7 +188,15 @@ module.exports = function(passport){
 	        user.resetPasswordExpires = undefined;
 
 	        user.save(function(err) {
+	        	if(err){
+	        		logger('error', 'Error saving user atributes');
+	        		logger('error', err);
+	        	}
 	          req.logIn(user, function(err) {
+	          	if(err){
+					logger('error', 'Error saving user atributes');
+					logger('error', err);
+	          	}
 	            done(err, user);
 	          });
 	        });
@@ -197,7 +211,8 @@ module.exports = function(passport){
 	     	
 	     	Mailer.sendOne("users/password_reset_success", mail_data, function(err,res){
 				if(err){
-					if(configs.debug) console.log(err);
+					logger('error', 'Error sending email');
+					logger('error', err);
 				}else{
 	        		req.flash('success_messages', 'Success! Your password has been changed.');
     				done(err, 'done');
@@ -241,6 +256,7 @@ module.exports = function(passport){
     var updated_user = { name: req.body.name, email: req.body.email, twitter: req.body.twitter, phone : req.body.phone };
      
     if(errors){  
+    	logger('error', errors);
     	req.flash('error_messages', errors);
     	return res.redirect('/users/settings/edit'); 
     } 
@@ -262,6 +278,9 @@ module.exports = function(passport){
             		req.flash('success_messages', 'User updated.');
             		res.redirect('/users/settings');
 	            }
+	        else{
+	        	logger('error', error);
+	        }
 	        });
 		});
 

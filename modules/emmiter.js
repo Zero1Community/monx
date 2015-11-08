@@ -1,7 +1,7 @@
 var when = require('when');
 var amqp = require('amqplib');
 var configs = require('../config/configs.js');
-var logger = require('../modules/logger.js')('workEmmit', configs.logs.emmiter_lib);
+var logger = require('../modules/logger.js')('emmiter_lib', configs.logs.emmiter_lib);
 
 function workEmmiter(jobToDo,queue){
 
@@ -16,7 +16,8 @@ function workEmmiter(jobToDo,queue){
         logger('info',' [x] Sent job to rabbitMQ queue '+ queue);
         return ch.close();
       });
-    })).ensure(function() { conn.close(); });;
+    })).ensure(function() { conn.close(); });
+    //TODO error handle + ca eshte kjo consoli ktu ?
   }).then(null, console.warn);
 }
 

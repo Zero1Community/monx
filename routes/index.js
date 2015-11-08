@@ -5,18 +5,16 @@ var router       = express.Router();
 var m            = require('../middlewares/middlewares.js');
 var logger       = require('../modules/logger.js');
 var routeName  = require('../middlewares/namedRoutes.js');
+var logger = require('../modules/logger.js')('dashboard', configs.logs.dashboard);
 
 router.get('/dashboard', routeName.add('dashboard'), m.isAuthenticated, function(req, res, next) {
 	Notification.find({user: req.user} ,function(err, notifics) {
 			if(!err && notifics) {
-
-					Service.find({ user: req.user }, function(err, services) {
-				    
+					Service.find({ user: req.user }, function(err, services) {				    
 				    if(!err) {
 					    var data_input = 0;
 					    var services_number = 0;
 					    var notifications_sent = notifics.length;
-
 							for (var i = 0, len = services.length; i < len; i++) {
 							  services_number += 1;
 							  data_input += 3600/services[i].interval;
@@ -28,14 +26,16 @@ router.get('/dashboard', routeName.add('dashboard'), m.isAuthenticated, function
 				  				page_title: 'Dashboard'
 				  			});
 				    }
+				    else{
+				    	logger('error',err);
+				    }
 				});
 			} else {
-				logger.debug(err);
+				logger('error','No data at all! /dashboard');
+				logger('error',err);
 				res.end('No data at all!');
 			}
 		});
-
-
 });
 
 router.get('/', function(req, res, next){
