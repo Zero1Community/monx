@@ -87,14 +87,14 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
     return ok.then(function(_consumeOk) {
       logger('info',' [*] Waiting for messages. To exit press CTRL+C');
     }).catch(function (err){
-  logger('error',err);
-  process.exit(1);
-});
+      logger('error',err);
+      process.exit(1);
+    });
   }).catch(function (err){
-  logger('error',err);
-  process.exit(1);
-});
-}).then(null, logger('info',console.warn)).catch(function (err){
-  logger('error',err);
-  process.exit(1);
+      logger('error',err);
+      process.exit(1);
+  });
+  }).then(null, logger('info',console.warn)).catch(function (err){
+    logger('error',err);
+    process.exit(1);
 });

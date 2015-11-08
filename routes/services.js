@@ -13,6 +13,7 @@ var util        = require('util');
 var logger      = require('../modules/logger.js');
 var mongoose = require('mongoose');
 var workEmmiter = require('../modules/emmiter.js');
+var logger = require('../modules/logger.js')('services', configs.logs.services);
 
 
 router.get('/', function(req, res){
@@ -26,6 +27,10 @@ router.get('/', function(req, res){
         services: services,
         page_title: 'Services'
       });
+    }
+    else{
+      logger('error','Error getting the services/index route');
+      logger('error',err);
     }
   });
 });
@@ -42,6 +47,7 @@ router.get('/:id/events/:event_id', function(req, res){
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',error);
     req.flash('error_messages', errors);
     return res.redirect('/services/' + req.params.id + '');
   }
@@ -49,9 +55,10 @@ router.get('/:id/events/:event_id', function(req, res){
 	var serviceData = ServiceData(req.params.id);
 	serviceData.findById(req.params.event_id, function(err, data) {
 			if(!err) {
+        logger('error',err);
 				res.render('services/event', {event_data: data, page_title: 'Event Details'});
 			} else {
-				logger.debug(err);
+				logger('error',err);
 				  res.flash('error_messages', 'No data for this service');
 		      res.redirect('/services');
 			}
@@ -84,7 +91,7 @@ router.get('/notifications', function(req, res) {
 			if(!err && notifics) {
 				res.render('services/notifics', {notifications: notifics, page_title: 'Notifications'});
 			} else {
-				logger.debug(err);
+				logger('error',err);
 				res.flash('error_messages', 'No notifications for this service');
 		    return res.redirect('/services/index');
 			}
@@ -100,12 +107,14 @@ router.get('/:id/edit', m.hasServiceAccess, function(req, res){
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',errors);
     req.flash('error_messages', errors);
     return res.redirect('/services/' + req.params.id + '');
   } 
 
 	Service.findById(req.params.id, function (err, service) {
 			if(err){
+        logger('error',err);
         //TODO throw 404
 				res.end('No service found');
 			}
@@ -129,13 +138,17 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
 	var errors = req.validationErrors();
 
-  if(errors){ 
+  if(errors){
+    logger('error',errors);
     req.flash('error_messages', errors);
     return res.redirect('/services/' + req.params.id + '/edit');
   }
 
 	Service.findById(req.params.id, function(err, service){
-    console.log(req.body);
+    if(err){
+
+    }
+    logger('info',req.body);
   	service.name = req.body.name;
   	service.host = req.body.host;
   	service.type = req.body.type;
@@ -156,11 +169,12 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
     workEmmiter(service,'service_updates');
 		  service.save(function(err) {
 		     if(err) {
-		     	logger.debug('There was an error saving the service', err);
+		     	logger('error','There was an error saving the service');
+          logger('error',err);
 		      req.flash('error_messages', 'There was an error saving the service');
 		      res.redirect('/services');
 		     } else {
-		     	logger.debug('Service updated!');
+		     	logger('error','Service updated!');
 		      req.flash('success_messages', 'Service updated.');
 		      res.redirect('/services');
 		     }
@@ -175,12 +189,15 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',errors);
     req.flash('error_messages', errors);
     return res.redirect('/services/' + req.params.id + '');
   } 
 
-  Service.findById(req.params.id).remove(function(){
-
+  Service.findById(req.params.id).remove(function(err){
+    if(err){
+      logger('error',err);
+    }
   	var service = {
   	  	_id: req.params.id,
   	  	running_status : false,
@@ -197,6 +214,9 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
         req.flash('success_messages', 'Service deleted.');
         res.redirect('/services');
       }
+      else{
+        logger('error',err);
+      }
       
     });
 
@@ -212,6 +232,7 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',errors);
     return res.json({success:0, error: errors});
   } 
 
@@ -222,44 +243,39 @@ router.get('/:id/action/:action', m.hasServiceAccess, function(req, res){
 	  if(!err){
 
 	  	switch(action) {
-
 	  		case 'start_stop':
-
 	  			var new_status = service.running_status ? false : true;
-
 	  			service.running_status = new_status;
 	  			workEmmiter(service,'service_updates');
 	  			service.save(function(err) {
 		            if(err) {
+                  logger('error',err);
 		            	res.json({success:0});
 		            } else {
 		            	res.json({success:1, new_status: new_status});
 		            }
   			 	});
-
 	  			break;
-
 	  		case 'mute_unmute':
-
           var new_status = service.notification_status.mute ? false : true;
-
           service.notification_status.mute = new_status;
-
           service.save(function(err) {
             if(err) {
+              logger('error',err);
               res.json({success:0});
             } else {
               res.json({success:1, new_status: new_status});
             }
-          });
-          		
+          });		
 	  			break;
-          
         default:
           res.json({success:0});
         break;
 	  	}
 	  }
+    else{
+      logger('error',err);
+    }
 	});
 });
 
@@ -270,6 +286,7 @@ router.get('/:id/data', function service_data(req, res) {
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',errors);
     return res.json({success:0, error: errors});
   } 
 
@@ -288,21 +305,20 @@ router.get('/:id/data', function service_data(req, res) {
           page_title: 'Data for service'
         });
 			} else {
-				logger.debug(err);
+				logger('error',err);
 				res.flash('error_messages', 'No data for this service');
 		    return res.redirect('/services/index');
 			}
-
 		});
-		
 });
+
 router.get('/:id/history', function service_data(req, res) {
 
   req.check('id', 'ID Required').notEmpty();
-
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',errors);
     return res.json({success:0, error: errors});
   } 
 
@@ -321,13 +337,11 @@ router.get('/:id/history', function service_data(req, res) {
           page_title: 'Data for service'
         });
       } else {
-        logger.debug(err);
+        logger('error',err);
         res.flash('error_messages', 'No data for this service');
         return res.redirect('/services/index');
       }
-
     });
-    
 });
 
 
@@ -336,28 +350,31 @@ router.get('/:id/history', function service_data(req, res) {
 router.get('/:id', function(req, res) {
 
   req.check('id', 'ID Required').notEmpty();
-
   var errors = req.validationErrors();
 
   if(errors){
+    logger('error',errors);
     req.flash('error_messages', errors);
     return res.redirect('/services');
   } 
 
 	Service.findById(req.params.id, function(err, service){
 		if(err) {
-      logger.debug('There was an error finding the service', err);
+      logger('error','There was an error finding the service');
+      logger('error',err);
     } else {
         var service_id = req.params.id; 
         var serviceData = ServiceData(service_id);
               serviceData.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, service_data) {
                 if (err) {
-			               logger.debug('There was an error finding the last event', err);
-                } else if(service_data){
+			               logger('error','There was an error finding the last event');
+                     logger('error',err);
+                }
+                else if(service_data){
                   res.render('services/view', {service: service, service_data: service_data,page_title: 'Service details'});
                 };
                 res.render('services/view', {service: service, page_title: 'Service details'});
-              })
+              });
 		}	
 	});
 });

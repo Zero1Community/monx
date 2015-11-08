@@ -9,9 +9,9 @@ var logger = require('./modules/logger.js');
 var m  = require('./middlewares/middlewares.js');
 var paginate = require('express-paginate');
 var moment = require('moment');
-
-//Connect to MongoDB
 configs = require('./config/configs.js');
+var logger = require('../modules/logger.js')('app', configs.logs.app);
+
 var mongoose = require('mongoose');
 mongoose.connect(configs.mongodb.url);
 
@@ -103,6 +103,8 @@ app.use('/api', api_routes);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
+  logger('error','Got 404');
+  logger('error',err);
   err.status = 404;
   next(err);
 });
@@ -115,6 +117,7 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+      logger('error','Something went wrong starting the service');
       message: err.message,
       error: err
     });
@@ -126,6 +129,7 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
+    logger('error','Something went wrong starting the service');
     message: err.message,
     error: {}
   });
