@@ -21,7 +21,7 @@ var logger = new winston.Logger({
             colorize: false
         }),
         new winston.transports.Console({
-        	colors: customColors,
+          colors: customColors,
           level: 'debug',
           handleExceptions: true,
           json: false,
@@ -66,6 +66,6 @@ module.exports = initLogger;
 //for express
 module.exports.stream = {
     write: function(message, encoding){
-        logger.info('Express: ', message);
+        logger.info(message, {module:'app'});
     }
 };
