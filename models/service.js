@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var ServiceData = require('./service_data.js');
+var mongoose         = require('mongoose');
+var ServiceData      = require('./service_data.js');
 var mongoosePaginate = require('mongoose-paginate');
-var timestamps = require('mongoose-timestamp');
+var timestamps       = require('mongoose-timestamp');
 
 var serviceSchema = new mongoose.Schema({
       name: String,

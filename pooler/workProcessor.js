@@ -1,7 +1,6 @@
 var configs = require('../config/configs.js');
-// libs and shit
-var amqp = require('amqplib');
-var logger = require('../modules/logger.js')('workProcessor', configs.logs.processor);
+var amqp    = require('amqplib');
+var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
 // TODO: error handling post to api
 
 

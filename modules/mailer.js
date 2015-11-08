@@ -4,8 +4,7 @@ var emailTemplates = require('email-templates');
 var nodemailer     = require('nodemailer');
 var async          = require('async');
 var configs        = require('../config/configs.js');
-//var logger         = require('./logger.js');
-var logger = require('../modules/logger.js')('mailer', configs.logs.mailer);
+var logger         = require('../modules/logger.js')('mailer', configs.logs.mailer);
 
 var Mailer = {
 

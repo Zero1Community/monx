@@ -1,12 +1,11 @@
-var Mailer = require('./mailer.js');
-var User = require('../models/user.js');
+var Mailer       = require('./mailer.js');
+var User         = require('../models/user.js');
 var Notification = require('../models/notification.js');
-var Service     = require('../models/service.js');
-var configs = require('../config/configs.js');
-var ServiceData = require('../models/service_data.js');
-//var logger      = require('../modules/logger.js');
-var logger = require('../modules/logger.js')('checker', configs.logs.checker);
-var _ = require('underscore');
+var Service      = require('../models/service.js');
+var configs      = require('../config/configs.js');
+var ServiceData  = require('../models/service_data.js');
+var logger       = require('../modules/logger.js')('checker', configs.logs.checker);
+var _            = require('underscore');
 
 function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications

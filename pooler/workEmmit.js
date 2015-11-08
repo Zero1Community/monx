@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-var when = require('when');
-var amqp = require('amqplib');
-var configs = require('../config/configs.js');
+var when     = require('when');
+var amqp     = require('amqplib');
+var configs  = require('../config/configs.js');
 
 var mongoose = require('mongoose');
-var User = require('../models/user.js');
-var Service = require('../models/service.js');
-var _ = require('underscore');
+var User     = require('../models/user.js');
+var Service  = require('../models/service.js');
+var _        = require('underscore');
 
-var logger = require('../modules/logger.js')('workEmmit', configs.logs.emmiter);
+var logger   = require('../modules/logger.js')('workEmmit', configs.logs.emmiter);
 
 var intervals = [];
 var total_services = [];

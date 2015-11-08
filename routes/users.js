@@ -1,13 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user.js');
-var middlewares =  require('../middlewares/middlewares.js');
-var crypto = require('crypto');
-var Mailer = require('../modules/mailer.js');
-var async = require('async');
-var configs = require('../config/configs.js');
-var logger = require('../modules/logger.js')('users', configs.logs.users);
-var bCrypt = require('bcrypt-nodejs');
+var express     = require('express');
+var router      = express.Router();
+var User        = require('../models/user.js');
+var middlewares = require('../middlewares/middlewares.js');
+var crypto      = require('crypto');
+var Mailer      = require('../modules/mailer.js');
+var async       = require('async');
+var configs     = require('../config/configs.js');
+var logger      = require('../modules/logger.js')('users', configs.logs.users);
+var bCrypt      = require('bcrypt-nodejs');
 
 
 module.exports = function(passport){

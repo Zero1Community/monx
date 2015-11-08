@@ -1,9 +1,8 @@
 var dns      = require('native-dns');
 var async    = require('async');
 var configs  = require('../config/configs.js');
-//var logger   = require('./logger.js');
-var logger = require('../modules/logger.js')('blacklist', configs.logs.blacklist);
-var redis = require('redis');
+var logger   = require('../modules/logger.js')('blacklist', configs.logs.blacklist);
+var redis    = require('redis');
 
 function checkDNS(rbl_server, ip, callback, timeout){
 

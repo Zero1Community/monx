@@ -1,11 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var middleware = require('../middlewares/middlewares.js');
-//var serviceData = require('../models/serviceData.js');
-var configs = require('../config/configs.js');
-var logger = require('../modules/logger.js')('api', configs.logs.api);
-var checker = require('../modules/checker.js');
-var mongoose = require('mongoose');
+var express     = require('express');
+var router      = express.Router();
+var middleware  = require('../middlewares/middlewares.js');
+var configs     = require('../config/configs.js');
+var logger      = require('../modules/logger.js')('api', configs.logs.api);
+var checker     = require('../modules/checker.js');
+var mongoose    = require('mongoose');
 var ServiceData = require('../models/service_data.js');
 
 

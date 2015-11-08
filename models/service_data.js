@@ -1,10 +1,9 @@
 function serviceData(service_id){
-	var mongoose = require('mongoose');
+	var mongoose         = require('mongoose');
 	var mongoosePaginate = require('mongoose-paginate');
-	var timestamps = require('mongoose-timestamp');
-
-
-	var collection = 'service_data_' + service_id;
+	var timestamps       = require('mongoose-timestamp');
+	var collection       = 'service_data_' + service_id;
+	
 	var serviceDataSchema = new mongoose.Schema({
 			status: String,
 			source: String,

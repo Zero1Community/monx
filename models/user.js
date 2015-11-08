@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+var mongoose         = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
-var timestamps = require('mongoose-timestamp');
+var timestamps       = require('mongoose-timestamp');
  
 var usersSchema = new mongoose.Schema({
     name: String,
