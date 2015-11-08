@@ -58,7 +58,7 @@ function initLogger(prefix, status){
       }
     }
   }
-  return;
+  return function(){ return; };
 }
 
 module.exports = initLogger;

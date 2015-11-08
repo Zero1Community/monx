@@ -1,18 +1,17 @@
-var express = require('express');
+var express          = require('express');
 var expressValidator = require('express-validator');
-var nunjucks = require('nunjucks');
-var path = require('path');
-var favicon = require('serve-favicon');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var logger = require('./modules/logger.js');
-var m  = require('./middlewares/middlewares.js');
-var paginate = require('express-paginate');
-var moment = require('moment');
-configs = require('./config/configs.js');
-var logger = require('../modules/logger.js')('app', configs.logs.app);
+var nunjucks         = require('nunjucks');
+var path             = require('path');
+var favicon          = require('serve-favicon');
+var cookieParser     = require('cookie-parser');
+var bodyParser       = require('body-parser');
+var m                = require('./middlewares/middlewares.js');
+var paginate         = require('express-paginate');
+var moment           = require('moment');
+var configs          = require('./config/configs.js');
+var logger           = require('./modules/logger.js')('app', configs.logs.app);
+var mongoose         = require('mongoose');
 
-var mongoose = require('mongoose');
 mongoose.connect(configs.mongodb.url);
 
 
@@ -117,7 +116,6 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-      logger('error','Something went wrong starting the service');
       message: err.message,
       error: err
     });
@@ -129,7 +127,6 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
-    logger('error','Something went wrong starting the service');
     message: err.message,
     error: {}
   });

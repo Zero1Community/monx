@@ -174,7 +174,7 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 		      req.flash('error_messages', 'There was an error saving the service');
 		      res.redirect('/services');
 		     } else {
-		     	logger('error','Service updated!');
+		     	logger('info','Service updated!');
 		      req.flash('success_messages', 'Service updated.');
 		      res.redirect('/services');
 		     }
