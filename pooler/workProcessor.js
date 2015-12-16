@@ -45,7 +45,12 @@ function processWork(tC,callback){
 	if(tC.type === "blacklist"){
 		monxBlacklist(tC);
 	}
+	if(tC.type === "http_status"){
+		monxHttpStatus(tC);
+	}
 }
+
+
 
 
 // posting data to API function
@@ -77,6 +82,22 @@ function postToAPI (data) {
 	});
 }
 
+// http status module
+function monxHttpStatus(httpStatObject){
+	var checkHttpStatus = require('../modules/checkHttpStatus.js');
+	checkHttpStatus(httpStatObject.url,function(){
+		// duhet fut timeout
+	});
+
+	var data = {
+			message: {
+
+			},
+			status: stat,
+			service_id: blacklistObject._id,
+			user: blacklistObject.user
+		}
+}
 
 // blacklist module
 function monxBlacklist(blacklistObject){
