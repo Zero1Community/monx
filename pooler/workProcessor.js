@@ -84,19 +84,12 @@ function postToAPI (data) {
 
 // http status module
 function monxHttpStatus(httpStatObject){
+	// duhet taru timeouti
 	var checkHttpStatus = require('../modules/checkHttpStatus.js');
-	checkHttpStatus(httpStatObject.url,function(){
+	checkHttpStatus(httpStatObject.url,8000.,function(data){
 		// duhet fut timeout
+		//postToAPI(data);
 	});
-
-	var data = {
-			message: {
-
-			},
-			status: stat,
-			service_id: blacklistObject._id,
-			user: blacklistObject.user
-		}
 }
 
 // blacklist module
