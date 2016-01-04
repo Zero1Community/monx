@@ -33,7 +33,7 @@ var Demo = function() {
       });
     }
 
-  }
+  };
 
   // Demo Header Functions
   var runDemoTopbar = function() {
@@ -46,7 +46,7 @@ var Demo = function() {
       });
     }
 
-  }
+  };
 
   // Demo AdminForm Functions
   var runDemoSourceCode = function() {
@@ -93,7 +93,7 @@ var Demo = function() {
       $(modalSource).appendTo('body');
 
       // Code btn definition
-      var codeBtn = $("<div id='source-button' class='btn btn-primary btn-xs'>&lt; &gt;</div>")
+      var codeBtn = $("<div id='source-button' class='btn btn-primary btn-xs'>&lt; &gt;</div>");
       codeBtn.click(function() {
         var html = $(this).parent().html();
         html = cleanSource(html);
@@ -116,7 +116,7 @@ var Demo = function() {
 
         $(document).keypress(function(e) {
           if (e.which == 99) {
-            console.log('go')
+            console.log('go');
               // highlight source code if user preses "c" key
             $('.btn-clipboard').click();
           }
@@ -151,7 +151,7 @@ var Demo = function() {
 
         lines = lines.join("\n");
         return lines;
-      }
+      };
 
       // Helper function to highlight code text
       jQuery.fn.selectText = function() {
@@ -173,7 +173,7 @@ var Demo = function() {
 
     }
 
-  }
+  };
 
   // DEMO FUNCTIONS - primarily trash
   var runDemoSettings = function() {
@@ -488,7 +488,7 @@ var Demo = function() {
                 location.reload();
               }, 200);
             } else {
-              return;
+
             }
           });
 
@@ -497,7 +497,7 @@ var Demo = function() {
       });
 
     }
-  }
+  };
 
   var runFullscreenDemo = function() {
 
@@ -531,7 +531,7 @@ var Demo = function() {
       }
     });
 
-  }
+  };
 
   return {
     init: function() {

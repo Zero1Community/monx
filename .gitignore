@@ -3,3 +3,4 @@ npm-debug.log
 logs/
 fix-perm.sh
 config/configs.js
+.idea

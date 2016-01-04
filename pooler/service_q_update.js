@@ -18,7 +18,7 @@ task = { _id: '55c7bf565e2a379306bc5db4',
   host: 'mail.duapune.com',
   name: 'duapune',
   status: 'ERROR',
-  notification_status: { mute: true } 
-}
+  notification_status: {mute: true}
+};
 
 workEmmiter(task,'service_updates');

@@ -84,7 +84,9 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
   process.exit(1);
 });
 
-    return ok.then(function(_consumeOk) {
+
+      // TODO: handle the errors here and catch the .exit(1); its ugly, its bad and I should feel bad
+      return ok.then(function (consumeOk) {
       logger('info',' [*] Waiting for messages. To exit press CTRL+C');
     }).catch(function (err){
       logger('error',err);

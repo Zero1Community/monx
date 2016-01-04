@@ -37,7 +37,7 @@ function updateAndNotify(notific,status_subject){
 				event_id : notific.notification_id,
 				service_id : notific.service_id,
 				event_body : JSON.stringify(notific.message)
-			}
+			};
 			// TODO: fix this
 			// www-0 debug:  Error: Connection timeout
 			//     at SMTPConnection._formatError
@@ -187,7 +187,7 @@ function checker(new_data){
 			}
 
 			var notification_status = notification_data.status;
-			logger('info',"Current Status: \n")
+			logger('info', "Current Status: \n");
 			logger('info','Last status '+ last_status);
 			logger('info','New status '+ new_status);
 			logger('info','Last Notification status '+ notification_status);

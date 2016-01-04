@@ -32,13 +32,11 @@ function isoDateString(){
 	var d = new Date();
 	var pad = function (n){
 		return n<10 ? '0'+n : n
-	}
+	};
 	return d.getUTCFullYear()+'-'
 		+ pad(d.getUTCMonth()+1)+'-'
 		+ pad(d.getUTCDate())
-};
-
-
+}
 $(document).ready(function() {
 	editor = new $.fn.dataTable.Editor( {
 		ajax: "../php/staff.php",

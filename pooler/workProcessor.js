@@ -88,7 +88,16 @@ function monxHttpStatus(httpStatObject){
 	var checkHttpStatus = require('../modules/checkHttpStatus.js');
 	checkHttpStatus(httpStatObject.url,8000.,function(data){
 		// duhet fut timeout
-		//postToAPI(data);
+        console.log(data);
+        data['service_id'] = httpStatObject._id;
+
+        postToAPI(data, function (err) {
+            if (err) {
+                logger('error', err);
+            } else {
+                logger('info', 'Data posted!');
+            }
+        }, 3000);
 	});
 }
 
@@ -118,8 +127,7 @@ function monxBlacklist(blacklistObject){
 				cleanStatus.push(totalResults[i]);
 			}
 			logger('info',totalResults[i]);
-		};
-
+        }
 // TODO: FIX THIS
 //   Error
 // { [Error: connect ECONNREFUSED]
@@ -143,7 +151,7 @@ function monxBlacklist(blacklistObject){
 			status: stat,
 			service_id: blacklistObject._id,
 			user: blacklistObject.user
-		}
+        };
 
 		postToAPI(data, function(err) {
 			if(err){

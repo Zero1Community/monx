@@ -202,7 +202,7 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
   	  	running_status : false,
   	  	interval : 60,
   	  	name : "Temp",
-  	  }
+    };
 
 	  workEmmiter(service,'service_updates');
     var service_data_collection = 'service_data_' + req.params.id;
@@ -371,8 +371,8 @@ router.get('/:id', function(req, res) {
                 }
                 else if(service_data){
                   res.render('services/view', {service: service, service_data: service_data,page_title: 'Service details'});
-                };
-                res.render('services/view', {service: service, page_title: 'Service details'});
+                }
+                  res.render('services/view', {service: service, page_title: 'Service details'});
               });
 		}	
 	});

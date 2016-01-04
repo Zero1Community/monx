@@ -21,6 +21,6 @@ function monxHttpStatus(httpStatObject){
 
 var ZeLink = {
 	url : 'http://mondi.com/a'
-}
+};
 
 monxHttpStatus(ZeLink);

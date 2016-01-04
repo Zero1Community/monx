@@ -67,6 +67,6 @@ var Mailer = {
     });
 
   }
-}
+};
 
 module.exports = Mailer;

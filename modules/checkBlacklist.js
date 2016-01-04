@@ -33,7 +33,7 @@ function checkDNS(rbl_server, ip, callback, timeout){
     else{
         var delta = (Date.now()) - start;
         result = {server: rbl_server, status : 1, res_time : delta};
-      };
+    }
   });
 
   req.on('end', function () {

@@ -121,7 +121,7 @@ $.ui.fancytree.registerExtension({
 /* *****************************************************************************
  * Fancytree extension: profiler
  */
-;(function($, window, document, undefined) {
+(function ($, window, document, undefined) {
 	$.ui.fancytree.registerExtension({
 		name: "profiler",
 		version: "0.0.1",

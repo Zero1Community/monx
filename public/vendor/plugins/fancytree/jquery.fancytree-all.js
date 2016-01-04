@@ -4324,7 +4324,7 @@ $.extend($.ui.fancytree,
 
 // To keep the global namespace clean, we wrap everything in a closure
 
-;(function($, undefined) {
+(function ($, undefined) {
 
 // Consider to use [strict mode](http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/)
 "use strict";
@@ -4498,9 +4498,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 /*******************************************************************************
  * Private functions and variables
@@ -4950,9 +4949,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 /* *****************************************************************************
  * Private functions and variables
@@ -5514,9 +5512,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 
 /*******************************************************************************
@@ -5861,9 +5858,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 
 /*******************************************************************************
@@ -6036,9 +6032,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 /* *****************************************************************************
  * Private functions and variables
@@ -6169,9 +6164,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 
 /*******************************************************************************
@@ -6371,9 +6365,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 
 /*******************************************************************************
@@ -6726,9 +6719,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 /* *****************************************************************************
  * Private functions and variables
@@ -7088,9 +7080,8 @@ $.ui.fancytree.registerExtension({
  * @date 2014-11-29T08:33
  */
 
-;(function($, window, document, undefined) {
-
-"use strict";
+(function ($, window, document, undefined) {
+	"use strict";
 
 /*******************************************************************************
  * Extension code

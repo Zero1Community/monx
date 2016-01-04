@@ -78,7 +78,7 @@ DataTable.ext.renderer.header.jqueryui = function ( settings, cell, column, idx,
 					column.sSortingClassJUI
 			);
 	} );
-}
+};
 
 
 /*

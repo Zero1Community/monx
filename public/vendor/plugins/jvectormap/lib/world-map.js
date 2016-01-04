@@ -103,7 +103,7 @@ jvm.WorldMap = function(params) {
 
   this.onResize = function(){
     map.setSize();
-  }
+  };
   jvm.$(window).resize(this.onResize);
 
   for (e in jvm.WorldMap.apiEvents) {
@@ -342,7 +342,7 @@ jvm.WorldMap.prototype = {
                 touchStartScale * scale,
                 centerTouchX,
                 centerTouchY
-              )
+              );
               map.label.hide();
               e.preventDefault();
             } else {
@@ -540,7 +540,7 @@ jvm.WorldMap.prototype = {
                 y: Math.min(bbox.y, itemBbox.y),
                 width: Math.max(bbox.x + bbox.width, itemBbox.x + itemBbox.width) - Math.min(bbox.x, itemBbox.x),
                 height: Math.max(bbox.y + bbox.height, itemBbox.y + itemBbox.height) - Math.min(bbox.y, itemBbox.y)
-              }
+              };
               bbox = newBbox;
             }
           }
@@ -627,8 +627,7 @@ jvm.WorldMap.prototype = {
 
     for (i = 0; i < selected.length; i++) {
       select[selected[i]] = false;
-    };
-
+    }
     this.setSelected(type, select);
   },
 
@@ -782,7 +781,7 @@ jvm.WorldMap.prototype = {
     this.createMarkers(markers);
     for (i = 0; i < seriesData.length; i++) {
       this.series.markers[i].setValues(seriesData[i] || {});
-    };
+    }
   },
 
   /**
@@ -795,7 +794,7 @@ jvm.WorldMap.prototype = {
     for (i = 0; i < markers.length; i++) {
       this.markers[ markers[i] ].element.remove();
       delete this.markers[ markers[i] ];
-    };
+    }
   },
 
   /**

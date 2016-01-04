@@ -130,7 +130,7 @@ page.onLoadFinished = function() {
 		page.render(out);
 		phantom.exit();
 	}, 300);
-}
+};
 
 //  apply css inline because that usually renders better
 var css = '';

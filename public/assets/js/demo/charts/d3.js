@@ -6,7 +6,7 @@ var D3Charts = function () {
 
 		// Plugin 1
 
-	}
+    };
 
     // Init Flot Charts Plugin
     var runD3Charts = function () {

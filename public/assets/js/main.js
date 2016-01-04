@@ -206,7 +206,7 @@ var Core = function(options) {
       // Attach debounced resize handler
       var rescale = function() {
          sbOnResize();
-      }
+      };
       var lazyLayout = _.debounce(rescale, 300);
       $(window).resize(lazyLayout);
 
@@ -258,7 +258,7 @@ var Core = function(options) {
          // we only close menu items which are not a child of the uppermost top level menu
          else {
             var activeMenu = $(this).next('ul.sub-nav');
-            var siblingMenu = $(this).parent().siblings('li').children('a.accordion-toggle.menu-open').next('ul.sub-nav')
+            var siblingMenu = $(this).parent().siblings('li').children('a.accordion-toggle.menu-open').next('ul.sub-nav');
 
             activeMenu.slideUp('fast', 'swing', function() {
                $(this).attr('style', '').prev().removeClass('menu-open');
@@ -277,7 +277,7 @@ var Core = function(options) {
          }
 
       });
-   }
+   };
 
    // Footer Functions
    var runFooter = function() {
@@ -287,8 +287,8 @@ var Core = function(options) {
       if (pageFooterBtn.length) {
         pageFooterBtn.smoothScroll({offset: -55});
       }
-      
-   }
+
+   };
 
    // jQuery Helper Functions
    var runHelpers = function() {
@@ -304,7 +304,7 @@ var Core = function(options) {
       // Find element scrollbar visibility
       $.fn.hasScrollBar = function() {
          return this.get(0).scrollHeight > this.height();
-      }
+      };
 
       // Test for IE, Add body class if version 9
       function msieversion() {
@@ -326,7 +326,7 @@ var Core = function(options) {
          $('#content').removeClass('animated fadeIn');
       },800);
 
-   }
+   };
 
    // Delayed Animations
    var runAnimations = function() {
@@ -344,7 +344,7 @@ var Core = function(options) {
       // if only delay is provided fadeIn will be set as default
       // eg. data-animate='["500","fadeIn"]'
       $('.animated-delay[data-animate]').each(function() {
-         var This = $(this)
+         var This = $(this);
          var delayTime = This.data('animate');
          var delayAnimation = 'fadeIn';
 
@@ -381,7 +381,7 @@ var Core = function(options) {
          var waypoint = new Waypoint({
             element: This,
             handler: function(direction) {
-               console.log(offsetVal)
+               console.log(offsetVal);
                if (This.hasClass('animated-waypoint')) {
                   This.removeClass('animated-waypoint').addClass('animated ' + Animation)
                      .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
@@ -393,7 +393,7 @@ var Core = function(options) {
          });
       });
 
-   }
+   };
 
    // Header Functions
    var runHeader = function() {
@@ -420,7 +420,7 @@ var Core = function(options) {
                searchForm.focus().one('keydown', function() {
                   $(this).val('');
                });
-            },250)
+            }, 250);
 
             // If remove icon clicked close search bar
             if ($(e.target).attr('class') == 'search-remove') {
@@ -501,7 +501,7 @@ var Core = function(options) {
             menu.slideToggle(150).toggleClass('topbar-menu-open');
          }, 250);
       });
-   }
+   };
 
    // Tray related Functions
    var runTrays = function() {
@@ -526,13 +526,12 @@ var Core = function(options) {
          // Scroll lock all fixed content overflow
          $('#content').scrollLock('on', 'div');
 
-      };
-
+      }
       // Debounced resize handler
       var rescale = function() {
          if ($(window).width() < 1000) { Body.addClass('tray-rescale'); }
          else { Body.removeClass('tray-rescale tray-rescale-left tray-rescale-right'); }
-      }
+      };
       var lazyLayout = _.debounce(rescale, 300);
 
       if (!Body.hasClass('disable-tray-rescale')) {
@@ -571,15 +570,18 @@ var Core = function(options) {
            dataAppend.appendTo($(dataTray.data('tray-mobile')));
          }
          else { dataAppend.appendTo(dataTray); }
-       };
-       fcRefresh();
+       }
+
+      fcRefresh();
 
        // Attach debounced resize handler
-       var fcResize = function() { fcRefresh(); }
+      var fcResize = function () {
+         fcRefresh();
+      };
        var fcLayout = _.debounce(fcResize, 300);
        $(window).resize(fcLayout);
 
-   }
+   };
 
    // Form related Functions
    var runFormElements = function() {
@@ -694,7 +696,7 @@ var Core = function(options) {
         }); 
       }
 
-   }
+   };
    return {
       init: function(options) {
 

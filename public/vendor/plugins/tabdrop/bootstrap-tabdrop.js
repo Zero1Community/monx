@@ -92,7 +92,7 @@
 				this.dropdown.addClass('hide');
 			}
 		}
-	}
+	};
 
 	$.fn.tabdrop = function ( option ) {
 		return this.each(function () {

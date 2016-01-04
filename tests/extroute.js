@@ -38,5 +38,5 @@ var PowerRouter = function (path) {
     });
 
   return Router;
-}
+};
 module.exports = PowerRouter;

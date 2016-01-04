@@ -2,7 +2,7 @@ jvm.SVGCanvasElement = function(container, width, height){
   this.classPrefix = 'SVG';
   jvm.SVGCanvasElement.parentClass.call(this, 'svg');
   jvm.AbstractCanvasElement.apply(this, arguments);
-}
+};
 
 jvm.inherits(jvm.SVGCanvasElement, jvm.SVGElement);
 jvm.mixin(jvm.SVGCanvasElement, jvm.AbstractCanvasElement);
