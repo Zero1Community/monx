@@ -115,59 +115,68 @@ function checker(new_data){
 		}else{
 			//TODO: fix this qe sdel heren e pare
 			new_data['notification_id'] = last_data.id;
-			last_data.message.listed.forEach(function (element) {
-					logger('info','Listing last data');
-					//console.dir(element.server);
-					last_data_servers.push(element.server);
-			});
+
+            if (new_data.type == 'blacklist') {
+                last_data.message.listed.forEach(function (element) {
+                    logger('info', 'Listing last data');
+                    //console.dir(element.server);
+                    last_data_servers.push(element.server);
+                });
+            }
+            if (new_data.type == 'http_status') {
+
+            }
 		}
+        if (new_data.type == 'blacklist') {
+            new_data.message.listed.forEach(function (element) {
+                logger('info', 'Listing new data');
+                //console.dir(element.server);
+                new_data_servers.push(element.server);
+            });
 
-		new_data.message.listed.forEach(function (element) {
-				logger('info','Listing new data');
-				//console.dir(element.server);
-				new_data_servers.push(element.server);
-		});
+            var removed = _.difference(last_data_servers, new_data_servers);
+            var added = _.difference(new_data_servers, last_data_servers);
 
-		var removed = _.difference(last_data_servers,new_data_servers);
-		var added = _.difference(new_data_servers,last_data_servers);
+            if (removed.length > 0 || added.length > 0) {
+                var diff = [];
+                if (removed.length > 0) {
+                    removed.forEach(function (server) {
+                        diff.push({server: server, action: 'removed'});
+                    });
+                }
 
-		if(removed.length > 0 || added.length > 0) {
-			var diff = [];
-			if(removed.length > 0){
-				removed.forEach(function (server) {
-						diff.push({server: server, action: 'removed'});
-				});
-			}
+                if (added.length > 0) {
+                    added.forEach(function (server) {
+                        diff.push({server: server, action: 'added'});
+                    });
+                }
 
-			if(added.length > 0){
-				added.forEach(function (server) {
-						diff.push({server: server, action: 'added'});
-				});
-			}
-
-			new_data.message.diff = diff;
-			if(diff.length > 0){
-				//ruajme eventin 
-				// TODO check before hand
-				// TODO: if type blaclist
-				var sData = new serviceData({
-						message: new_data.message,
-						status: new_data.status,
-						source: new_data.source,
-						// to be ndrruar source_IP me x-forwarded-for me vone
-				});
-				sData.save(function(err) {
-		      if(!err) {
-		      	logger('info','Event successfully saved');
-		      }
-		      else{
-		      	logger('error','Error saving the event' + err);
-		      }	
-				});
-			}
-		}
+                new_data.message.diff = diff;
+                if (diff.length > 0) {
+                    //ruajme eventin
+                    // TODO check before hand
+                    // TODO: if type blaclist
+                    var sData = new serviceData({
+                        message: new_data.message,
+                        status: new_data.status,
+                        source: new_data.source,
+                        // to be ndrruar source_IP me x-forwarded-for me vone
+                    });
+                    sData.save(function (err) {
+                        if (!err) {
+                            logger('info', 'Event successfully saved');
+                        }
+                        else {
+                            logger('error', 'Error saving the event' + err);
+                        }
+                    });
+                }
+            }
+        }
 	//});
+        if (new_data.type == 'http_status') {
 
+        }
 		// TODO : check if this is OK
 		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'createdAt' : -1 } }, function(err, notification_data){
 			//mongoose.connection.close();	

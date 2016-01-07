@@ -18,9 +18,9 @@ router.post('/service-data/add', function(req, res){
 	var data = req.body.data;
 	logger('info',data);
 
-	// TODO check before hand
 	//data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 	logger('info','Calling checker');
+	//TODO: data integrity check here
 	checker(data,function(err,res){
 		if(err){
 			logger('error','Got error in phase 1 on checker ');
