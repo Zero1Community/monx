@@ -65,7 +65,8 @@ function postToAPI (data) {
 		    message: data.message,
 		    status: data.status,
 		    service_id: data.service_id,
-		    user: data.user
+			user: data.user,
+			name: data.name
 	    }
 	  }
 	};
@@ -88,7 +89,7 @@ function monxHttpStatus(httpStatObject){
 		// duhet fut timeout
         console.log(data);
         data['service_id'] = httpStatObject._id;
-
+		data['name'] = httpStatObject.name;
         postToAPI(data, function (err) {
             if (err) {
                 logger('error', err);

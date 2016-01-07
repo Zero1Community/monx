@@ -25,14 +25,15 @@ function updateAndNotify(notific,status_subject){
 	   		return;
 	   	}
 
-		var collected_message = status_subject + " for " + notific.service_name + " \n ";
-			
+        //var collected_message = status_subject + " for " + notific.service_name + " \n ";
+        var collected_message = status_subject;
+
 		if(!notific.mute_status){
 
 			var tick = {
 				message : collected_message,
-				subject : status_subject + ' for service ' + notific.service_name,
-				name : user.name,
+                subject: status_subject,
+                name: user.name,
 				email : user.email,
 				event_id : notific.notification_id,
 				service_id : notific.service_id,
@@ -80,8 +81,9 @@ function checker(new_data){
 			logger('error',err);
 			return err;
 		}
-
-		new_data['service_name'] = service.name;
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+        console.log(new_data);
+        //new_data['service_name'] = service.name;
 		new_data['mute_status'] = service.notification_status.mute;
 
 		service.status = new_data.status;
@@ -175,8 +177,24 @@ function checker(new_data){
         }
 	//});
         if (new_data.type == 'http_status') {
-
+            if (new_data.status_code = !last_data.status_code) {
+                var sData = new serviceData({
+                    message: new_data.message,
+                    status: new_data.status,
+                    source: new_data.source,
+                    // to be ndrruar source_IP me x-forwarded-for me vone
+                });
+                sData.save(function (err) {
+                    if (!err) {
+                        logger('info', 'Event successfully saved');
+                    }
+                    else {
+                        logger('error', 'Error saving the event' + err);
+                    }
+                });
+            }
         }
+
 		// TODO : check if this is OK
 		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'createdAt' : -1 } }, function(err, notification_data){
 			//mongoose.connection.close();	
@@ -211,12 +229,21 @@ function checker(new_data){
 
 			if(last_status === 'ERROR' && new_status === 'ERROR') {
 				// DIFF HERE
-				//TODO kjo sma mbush mendjen..
+                //TODO kjo sma mbush mendjen.. prandaj kjo duhet bere me status code (ne ket rast nqs ekziston nje DIFF
 				logger('info',new_data.message);
-				if(notification_status === 'ERROR' && !new_data.message.diff) return;
-				 updateAndNotify(new_data,"** Service Status Update", function(){
-							logger('info',"Mail sent");
-					}); 
+                if (new_data.type == 'blacklist') {
+                    if (notification_status === 'ERROR' && !new_data.message.diff) return;
+                    updateAndNotify(new_data, "** Service Status Update", function () {
+                        logger('info', "Mail sent");
+                    });
+                }
+                if (new_data.type == 'http_check') {
+                    // check statuscodet
+                    if (notification_status === 'ERROR' && (new_data.status_code = !last_data.status_code)) return;
+                    updateAndNotify(new_data, "** Service Status Update", function () {
+                        logger('info', "Mail sent");
+                    });
+                }
 			}
 
 			if(last_status === 'OK' && new_status === 'ERROR') {
