@@ -2,7 +2,7 @@ var mongoose         = require('mongoose');
 var ServiceData      = require('./service_data.js');
 var mongoosePaginate = require('mongoose-paginate');
 var timestamps       = require('mongoose-timestamp');
-var logger = require('../modules/logger.js')('checker', configs.logs.model_services);
+//var logger = require('../modules/logger.js')('checker', configs.logs.model_services);
 
 var serviceSchema = new mongoose.Schema({
       name: String,
@@ -23,7 +23,13 @@ var serviceSchema = new mongoose.Schema({
 serviceSchema.post('save', function (service) {
   var collection = 'service_data_' + service._id;
   mongoose.connection.db.createCollection(collection, function(err, collection) {
-      logger('info', collection + " was created!");
+      if (err) {
+          console.log('Error while creating collection ' + err);
+          // return ktu ??
+      } else {
+          //logger('info', collection + " was created!");
+          console.log(collection + ' was created!');
+      }
   });
 });
 

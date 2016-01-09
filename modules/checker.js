@@ -77,34 +77,6 @@ function checker(new_data){
 	logger('info','Got into phase 2 in checker');
 	logger('info',new_data);
 	// TODO: handle kur ska sherbim ?
-	Service.findById(new_data.service_id, function(err, service){
-		logger('info','Finding the service ');
-		if(err) {
-			logger('error','Error finding the service with id' + data.service_id );
-			logger('error',err);
-			return err;
-		}
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-        console.log(new_data);
-        console.log(service);
-        new_data['user'] = service.user;
-        new_data['service_name'] = service.name;
-		new_data['mute_status'] = service.notification_status.mute;
-
-		service.status = new_data.status;
-		service.last_checked = new Date();
-
-        //TODO: nuk e di sa asinkron eshte kjo po duhet te behet asinkron se me sh mundesi vonon
-		logger('info','Saving the service status and last checked');
-		service.save(function(err) {
-			 if(err) {
-				logger('error','There was an error saving the service status', err);
-                 return;
-			 } else {
-			  	logger('info','The new service status was saved!');
-				}
-			});
-	});
 
 	var serviceData = ServiceData(new_data.service_id);
 

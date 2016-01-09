@@ -1,6 +1,7 @@
 var express     = require('express');
 var router      = express.Router();
 var middleware  = require('../middlewares/middlewares.js');
+var Service = require('../models/service.js');
 var configs     = require('../config/configs.js');
 var logger      = require('../modules/logger.js')('api', configs.logs.api);
 var checker     = require('../modules/checker.js');
@@ -42,7 +43,9 @@ router.post('/service-data/add', function(req, res){
 	var data = req.body.data;
 	logger('info',data);
 
-	//data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    if (!data['source']) {
+        data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    }
 	logger('info','Calling checker');
     //TODO: data integrity check here and aggregation
     //TODO: bej nje funksion integriteti qe i kalon listen e celsave dhe te kthen true ose false
@@ -56,6 +59,36 @@ router.post('/service-data/add', function(req, res){
 
     if (hasKeys(data, ['message', 'status', 'service_id', 'user', 'name'])) {
         logger('info', 'JSON check successful, required keys are in place');
+        //TODO: nej filtrim ktu jarebi
+        Service.findById(data.service_id, function (err, service) {
+            logger('info', 'Finding the service ');
+            if (err) {
+                logger('error', 'Error finding the service with id' + data.service_id);
+                logger('error', err);
+                return err;
+            }
+            logger('debug', data);
+            logger('debug', service);
+            data['user'] = service.user;
+            data['service_name'] = service.name;
+            data['mute_status'] = service.notification_status.mute;
+
+            service.status = data.status;
+            service.last_checked = new Date();
+
+            //TODO: nuk e di sa asinkron eshte kjo po duhet te behet asinkron se me sh mundesi vonon
+            logger('info', 'Saving the service status and last checked');
+            service.save(function (err) {
+                if (err) {
+                    logger('error', 'There was an error saving the service status', err);
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({'success': 0, error: 1}));
+                    //return;
+                } else {
+                    logger('info', 'The new service status was saved!');
+                }
+            });
+        });
 
         checker(data, function (err, res) {
             if (err) {
