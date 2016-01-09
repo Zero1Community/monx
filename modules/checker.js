@@ -11,7 +11,7 @@ function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
 	// in the notific object we have the user ID and the service ID 
 	// this enables us to get the email from the userID  
-	// console.log(notific);
+    logger('info', notific);
 	// console.log(status_subject);
 	//mongoose.connect(dbConfig.url);
 
@@ -24,6 +24,9 @@ function updateAndNotify(notific,status_subject){
 	   		//TODO: fix this return
 	   		return;
 	   	}
+        console.log('BBBBBBBBBBBBBBBBBBBBBBBBBB');
+        console.log(user);
+        console.log(notific);
 
         //var collected_message = status_subject + " for " + notific.service_name + " \n ";
         var collected_message = status_subject;
@@ -83,16 +86,20 @@ function checker(new_data){
 		}
         console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         console.log(new_data);
-        //new_data['service_name'] = service.name;
+        console.log(service);
+        new_data['user'] = service.user;
+        new_data['service_name'] = service.name;
 		new_data['mute_status'] = service.notification_status.mute;
 
 		service.status = new_data.status;
 		service.last_checked = new Date();
+
+        //TODO: nuk e di sa asinkron eshte kjo po duhet te behet asinkron se me sh mundesi vonon
 		logger('info','Saving the service status and last checked');
 		service.save(function(err) {
 			 if(err) {
 				logger('error','There was an error saving the service status', err);
-				//TODO: hmm nej return ktu ?
+                 return;
 			 } else {
 			  	logger('info','The new service status was saved!');
 				}
@@ -100,25 +107,27 @@ function checker(new_data){
 	});
 
 	var serviceData = ServiceData(new_data.service_id);
+
 	serviceData.findOne({}, {}, { sort: { 'createdAt' : -1 } }, function(err, last_data) {
 		//need to implement additional check here for service data
-		
-		var last_data_servers = []; 
-		var new_data_servers = []; 
-		
+
 		if(err){
 			logger('error',err);
 			return err;
 		}
+
 		if(last_data === null){
-			last_data = {
+            logger('info', 'Got null from collection');
+            last_data = {
 				status : 'OK'
 			}
 		}else{
 			//TODO: fix this qe sdel heren e pare
 			new_data['notification_id'] = last_data.id;
-
+            logger('info', last_data);
             if (new_data.type == 'blacklist') {
+                var last_data_servers = [];
+                var new_data_servers = [];
                 last_data.message.listed.forEach(function (element) {
                     logger('info', 'Listing last data');
                     //console.dir(element.server);
@@ -203,7 +212,7 @@ function checker(new_data){
 				logger('error',err); 
 				return;
 			}
-			//console.log(notification_data);
+            logger('info', notification_data);
 
 			var last_status = last_data.status;
 			var new_status = new_data.status;
@@ -214,10 +223,14 @@ function checker(new_data){
 			}
 
 			var notification_status = notification_data.status;
-			logger('info', "Current Status: \n");
+            logger('info', "Current Status: ");
 			logger('info','Last status '+ last_status);
 			logger('info','New status '+ new_status);
 			logger('info','Last Notification status '+ notification_status);
+            logger('info', 'Notification data: ');
+            logger('info', notification_data);
+            logger('info', 'New data: ');
+            logger('info', new_data);
 
 			if(last_status === 'OK' && new_status === 'OK') {
 				if(notification_status === 'OK') return;
