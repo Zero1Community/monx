@@ -36,7 +36,9 @@ function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
 	// in the notific object we have the user ID and the service ID 
 	// this enables us to get the email from the userID  
-    logger('info', notific);
+
+    logger('debug', '[updateAndNotify] Got notific from checker: ');
+    logger('debug', notific);
 	// console.log(status_subject);
 	//mongoose.connect(dbConfig.url);
 
@@ -45,19 +47,21 @@ function updateAndNotify(notific,status_subject){
 	// pasi notificationi eshte ne baze sherbimi
 	User.findOne({_id: notific.user}, function(err, user) {
 	   	if(err)	{
-	   		logger('error',err);	
+            logger('error', err);
 	   		//TODO: fix this return
 	   		return;
 	   	}
-        logger('debug', 'Got user from database:');
+        logger('debug', '[updateAndNotify] Got user from database:');
         logger('debug', user);
-        logger('debug', 'Got notific from parameters:');
-        logger('debug', notific);
+        if (user === null) {
+            logger('error', '[updateAndNotify] Got null user from database');
+        }
+        var collected_message = status_subject;
+        //var collected_message = status_subject + " for " + notific.service_name + " \n ";
 
-        var collected_message = status_subject + " for " + notific.service_name + " \n ";
-
-		if(!notific.mute_status){
-			var tick = {
+        if (!notific.mute_status) {
+            logger('debug', '[updateAndNotify] Service NOT muted, sending email');
+            var tick = {
 				message : collected_message,
                 subject: status_subject,
                 name: user.name,
@@ -77,14 +81,19 @@ function updateAndNotify(notific,status_subject){
 					}
 			});
 		}
+        else {
+            logger('debug', '[updateAndNotify] Service muted, NOT sending email');
+        }
+        logger('debug', '[updateAndNotify] Ready to save notification');
 
-			var u = new Notification();
-			u.user = notific.user;
-			u.service = notific.service_id;
-			u.status = notific.status;
-			u.message = collected_message;
-			u.seen = false;
-			u.save(function(err) {
+        var u = new Notification();
+        u.user = notific.user;
+        u.service = notific.service_id;
+        u.status = notific.status;
+        u.message = collected_message;
+        u.seen = false;
+        logger('debug', u);
+        u.save(function (err) {
 				if(err){
 					logger('error','Unable to save the event in the db : ');
 					logger('error',err);
@@ -103,7 +112,7 @@ function updateAndNotify(notific,status_subject){
  */
 function checker(new_data){
 
-    logger('debug', 'Got into checker, new_data: ');
+    logger('debug', '[checker], got new_data from the API : ');
     logger('debug', new_data);
 	var serviceData = ServiceData(new_data.service_id);
     var diff = [];
@@ -115,19 +124,23 @@ function checker(new_data){
 			return err;
 		}
 
-		if(last_data === null){
-            logger('info', 'Got null from collection');
+        logger('debug', '[checker] Got last_data from database:');
+
+        if (last_data === null) {
+            logger('warn', '[checker] Got null from service collection, altering data');
+            logger('debug', last_data);
             last_data = {
                 status: 'OK',
                 status_code: '-1',
                 no_previous_data: 1
 			}
-		}else{
-			new_data['notification_id'] = last_data.id;
+        } else {
+            logger('debug', '[checker] Got NOT null from service collection, adding flags');
+            logger('debug', last_data);
+            new_data['notification_id'] = last_data.id;
             last_data.no_previous_data = 0;
-            logger('info', last_data);
 
-            // rast specifik per blacklisten
+            // case specific to blacklist:
             if (new_data.type == 'blacklist') {
                 var last_data_servers = [];
                 var new_data_servers = [];
@@ -139,8 +152,12 @@ function checker(new_data){
             }
 		}
 
-        logger('debug', 'Type checking for new_data')
+        logger('debug', '[checker] Finished adding flags');
+        logger('debug', 'New data: ');
         logger('debug', new_data);
+        logger('debug', 'Last data: ');
+        logger('debug', last_data);
+        logger('debug', 'Diff length: ' + diff.length);
 
         if (new_data.type == 'blacklist') {
             new_data.message.listed.forEach(function (element) {
@@ -168,17 +185,20 @@ function checker(new_data){
                 new_data.message.diff = diff;
             }
         }
-        // generic af
-        if (new_data.status_code !== last_data.status_code || last_data.no_previous_data === 1 || diff.length > 0) {
+
+        logger('debug', 'Checking OLD and NEW status code');
+        logger('debug', 'New: ' + new_data.status_code + " Old: " + last_data.status_code);
+        if (new_data.status_code != last_data.status_code || last_data.no_previous_data == 1 || diff.length > 0) {
             var sData = new serviceData({
                 message: new_data.message,
                 status: new_data.status,
+                status_code: new_data.status_code,
                 source: new_data.source
                 // to be ndrruar source_IP me x-forwarded-for me vone
             });
             sData.save(function (err) {
                 if (!err) {
-                    logger('info', 'Event successfully saved');
+                    logger('info', '[checker] Event successfully saved into collection');
                 }
                 else {
                     logger('error', 'Error saving the event' + err);
@@ -188,80 +208,84 @@ function checker(new_data){
         else {
             logger('warn', 'No changes on service since last time..')
         }
-    }
 
 		// TODO : check if this is OK
 		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'createdAt' : -1 } }, function(err, notification_data){
 			//mongoose.connection.close();	
-			console.log(notification_data);
+            logger('debug', '[checker] Got NOTIFICATION DATA from database:');
 			if(err) {
-				logger('error',err); 
-				return;
-			}
-            logger('info', notification_data);
+                logger('error', err);
+                return;
+            }
 
-			var last_status = last_data.status;
-			var new_status = new_data.status;
-			if(notification_data === null){
-				notification_data = {
-                    status_code: '-1',
+            var last_status = last_data.status;
+            var new_status = new_data.status;
+            if (notification_data === null) {
+                logger('warn', '[checker] Notification data is null, creating data');
+                notification_data = {
                     status: 'OK',
                     no_previous_data: 1
 				}
 			}
             else {
+                logger('debug', '[checker] Notification data is NOT null, altering data');
+                logger('debug', notification_data);
                 notification_data.no_previous_data = 0;
             }
 
 			var notification_status = notification_data.status;
+
             logger('info', 'Status Overview ');
 			logger('info','Last status '+ last_status);
 			logger('info','New status '+ new_status);
 			logger('info','Last Notification status '+ notification_status);
-            logger('info', 'Notification data: ');
+            logger('debug', 'No previous data ' + notification_data.no_previous_data);
+            logger('info', 'Last notification data: ');
             logger('info', notification_data);
             logger('info', 'New data: ');
             logger('info', new_data);
 
 			if(last_status === 'OK' && new_status === 'OK') {
-                if (notification_status === 'OK' && notification_status.no_previous_data == 0) return;
-				//"RECOVERY" 
-				updateAndNotify(new_data,"** Service Recovery", function(){
-							logger('info',"Mail sent");
-					}); 
-			}
-
-			if(last_status === 'ERROR' && new_status === 'ERROR') {
-				logger('info',new_data.message);
-                if (new_data.type == 'blacklist') {
-                    if (notification_status === 'ERROR' && !new_data.message.diff) return;
-                    updateAndNotify(new_data, "** Service Status Update", function () {
-                        logger('info', "Mail sent");
-                    });
+                logger('debug', '[checker_algo] Got into OK OK');
+                // for some odd reason this doesnt work as it should..
+                if (notification_status === 'OK' && notification_data.no_previous_data == 0) {
+                    return;
                 }
-                if (new_data.type == 'http_check') {
-                    // check statuscodet
-                    if (notification_status === 'ERROR' && (new_data.status_code == last_data.status_code)) return;
-                    updateAndNotify(new_data, "** Service Status Update", function () {
-                        logger('info', "Mail sent");
-                    });
-                }
-			}
+                //if (notification_status === 'OK') return;
 
-			if(last_status === 'OK' && new_status === 'ERROR') {
-				//TODO: check statuset e fundit me modifiku titullin ne "Service flapping"
-				if(notification_status === 'ERROR') return;
-					updateAndNotify(new_data,"** Service Error", function(){
-							logger('info',"Mail sent");
+                logger('debug', '[checker_algo] OK OK notification triggered');
+                updateAndNotify(new_data, '** Service Recovery', function () {
+                    logger('info', 'Notification sent to process');
+                });
+            }
+
+            if (last_status === 'ERROR' && new_status === 'ERROR') {
+                logger('debug', '[checker_algo] Got into ERROR ERROR ');
+                if (notification_status === 'ERROR' && (new_data.status_code == last_data.status_code || !new_data.message.diff)) return;
+                logger('debug', '[checker_algo] ERROR ERROR notification triggered');
+                updateAndNotify(new_data, '** Service Status Update', function () {
+                    logger('info', 'Notification sent to process');
+                });
+            }
+
+            if (last_status === 'OK' && new_status === 'ERROR') {
+                logger('debug', '[checker_algo] Got into OK ERROR ');
+                if (notification_status === 'ERROR') return;
+                logger('debug', '[checker_algo] OK ERROR notification triggered');
+                updateAndNotify(new_data, '** Service Error', function () {
+                    logger('info', 'Notification sent to process');
 					});
-			}
+            }
 
-			if(last_status === 'ERROR' && new_status === 'OK') {
-				if(notification_status === 'OK') return;
-				updateAndNotify(new_data,"** Service Recovery", function(){
-							logger('info',"Mail sent");
-					}); //STATUS RECOVERY
-			}
+            if (last_status === 'ERROR' && new_status === 'OK') {
+                //TODO: check statuset e fundit me modifiku titullin ne "Service flapping"
+                logger('debug', '[checker_algo] Got into ERROR OK');
+                if (notification_status === 'OK') return;
+                logger('debug', '[checker_algo] ERROR OK notification triggered');
+                updateAndNotify(new_data, '** Service Recovery', function () {
+                    logger('info', 'Notification sent to process');
+                }); //STATUS RECOVERY
+            }
 
 		});
 	});

@@ -57,7 +57,8 @@ function processWork(tC,callback){
  */
 function postToAPI (data) {
 	var request = require('request');
-	logger('info','Posting to API');
+    logger('info', 'Posting data to API');
+    logger('debug', data);
 	//if(configs.debug) console.log('Data received', data);
 	var options = {
 	  uri: configs.api_url + 'service-data/add',

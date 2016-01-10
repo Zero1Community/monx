@@ -6,6 +6,7 @@ function serviceData(service_id){
 	
 	var serviceDataSchema = new mongoose.Schema({
 			status: String,
+		status_code: String,
 			source: String,
 			message: {}
 			},{ strict: false });

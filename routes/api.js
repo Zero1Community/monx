@@ -42,7 +42,8 @@ router.post('/service-data/add', function(req, res){
 	// TODO: duhet bo extend ky dhe duhet kaluar me poshte 
 	// mbasi eshte gjetur objekti ne menyre qe te fusim edhe EMRIN e sherbimit te subjekti
 	var data = req.body.data;
-	logger('info',data);
+    logger('debug', 'API data from post: ')
+    logger('debug', data);
 
     if (!data['source']) {
         data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -71,6 +72,7 @@ router.post('/service-data/add', function(req, res){
             data['mute_status'] = service.notification_status.mute;
 
             service.status = data.status;
+            service.status = data.status_code;
             service.last_checked = new Date();
 
             //TODO: kjo me sh mundesi na vonon
