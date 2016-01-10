@@ -59,7 +59,7 @@ function updateAndNotify(notific,status_subject){
         var collected_message = status_subject;
         //var collected_message = status_subject + " for " + notific.service_name + " \n ";
 
-        if (!notific.mute_status) {
+        if (notific.mute_status == false) {
             logger('debug', '[updateAndNotify] Service NOT muted, sending email');
             var tick = {
 				message : collected_message,
@@ -254,9 +254,16 @@ function checker(new_data){
                 //if (notification_status === 'OK') return;
 
                 logger('debug', '[checker_algo] OK OK notification triggered');
-                updateAndNotify(new_data, '** Service Recovery', function () {
-                    logger('info', 'Notification sent to process');
-                });
+                if (notification_data.no_previous_data == 1) {
+                    updateAndNotify(new_data, '** Monitoring Service Started', function () {
+                        logger('info', 'Notification sent to process');
+                    });
+                }
+                else {
+                    updateAndNotify(new_data, '** Service Recovery', function () {
+                        logger('info', 'Notification sent to process');
+                    });
+                }
             }
 
             if (last_status === 'ERROR' && new_status === 'ERROR') {
