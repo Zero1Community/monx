@@ -22,4 +22,5 @@ task = {
   notification_status: {mute: true}
 };
 
+
 workEmmiter(task, 'all_checks');
