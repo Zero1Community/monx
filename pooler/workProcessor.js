@@ -1,6 +1,6 @@
 var configs = require('../config/configs.js');
 var amqp    = require('amqplib');
-var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
+var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
 // TODO: error handling post to api
 
 
@@ -8,15 +8,15 @@ var logger  = require('../modules/logger.js')('workProcessor', configs.logs.pro
 // throttle (kjo behet ne vend tjeter faktikisht)
 
 // web analysis per te identifiku sensoret automatikisht
-// tipit 
+// tipit
 // dns, web, match, snmpt,pop, etj..
 
 amqp.connect(configs.rabbitmq.url).then(function(conn) {
 	process.once('SIGINT', function() { conn.close(); });
 	return conn.createChannel().then(function(ch) {
-		
+
 		var ok = ch.assertQueue('all_checks', {durable: false});
-		// todo : error catching per kur nuk lidhet queueja 
+		// todo : error catching per kur nuk lidhet queueja
 		ok = ok.then(function(_qok) {
 			return ch.consume('all_checks', function(msg) {
 				logger('info',' [x] Received a task');
@@ -37,7 +37,7 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
 });
 
 
-// atm here we have only blacklist_check but this eventually will be extended 
+// atm here we have only blacklist_check but this eventually will be extended
 // with port scan, ssl check, smtp, ping and other stuff like that
 
 function processWork(tC,callback){
@@ -45,38 +45,65 @@ function processWork(tC,callback){
 	if(tC.type === "blacklist"){
 		monxBlacklist(tC);
 	}
+	if(tC.type === "http_status"){
+		monxHttpStatus(tC);
+	}
 }
 
 
-// posting data to API function
+/**
+ *
+ * @param data
+ */
 function postToAPI (data) {
 	var request = require('request');
-	logger('info','Posting to API');
+	logger('info', 'Posting data to API');
+	logger('debug', data);
 	//if(configs.debug) console.log('Data received', data);
 	var options = {
-	  uri: configs.api_url + 'service-data/add',
-	  //headers: { 'Content-Type': 'application/json', },
-	  method: 'POST',
-	  json: {
-	    data : {
-		    message: data.message,
-		    status: data.status,
-		    service_id: data.service_id,
-		    user: data.user
-	    }
-	  }
+		uri: configs.api_url + 'service-data/add',
+		//headers: { 'Content-Type': 'application/json', },
+		method: 'POST',
+		json: {
+			data : {
+				message: data.message,
+				status: data.status,
+				service_id: data.service_id,
+				user: data.user,
+				status_code: data.status_code,
+				name: data.name
+			}
+		}
 	};
 	request(options, function(error, response, body){
-	  if(error) {
-	      logger('error','Got error while posting data to API !');
-	      logger('error',error);
-	  } else {
-	      logger('info','Data posted to API!');
-	      logger('info',response.statusCode);
+		if(error) {
+			logger('error','Got error while posting data to API !');
+			logger('error',error);
+		} else {
+			logger('info','Data posted to API!');
+			logger('debug',response.statusCode);
 		}
 	});
 }
 
+// http status module
+function monxHttpStatus(httpStatObject){
+	// duhet taru timeouti
+	var checkHttpStatus = require('../modules/checkHttpStatus.js');
+	checkHttpStatus(httpStatObject.url, 8000, function (data) {
+		// duhet fut timeout
+		console.log(data);
+		data['service_id'] = httpStatObject._id;
+		data['name'] = httpStatObject.name;
+		postToAPI(data, function (err) {
+			if (err) {
+				logger('error', err);
+			} else {
+				logger('info', 'Data posted!');
+			}
+		}, 3000);
+	});
+}
 
 // blacklist module
 function monxBlacklist(blacklistObject){
@@ -103,10 +130,9 @@ function monxBlacklist(blacklistObject){
 			else{
 				cleanStatus.push(totalResults[i]);
 			}
-			logger('info',totalResults[i]);
-		};
-
-// TODO: FIX THIS
+			logger('debug',totalResults[i]);
+		}
+// TODO: FIX THIS, unable to reach API
 //   Error
 // { [Error: connect ECONNREFUSED]
 //   code: 'ECONNREFUSED',
@@ -119,16 +145,19 @@ function monxBlacklist(blacklistObject){
 //   errno: 'ECONNREFUSED',
 //   syscall: 'connect' }
 // undefined
-
 		var data = {
 			message: {
 				listed : blackStatus,
 				timeout: timeoutStatus,
 				clean: cleanStatus
 			},
+			status_code: '-30',
 			status: stat,
 			service_id: blacklistObject._id,
 			user: blacklistObject.user
+		};
+		if (data.status === 'OK') {
+			data.status_code = '-35';
 		}
 
 		postToAPI(data, function(err) {

@@ -4,7 +4,6 @@ var Notification = require('../models/notification.js');
 var router       = express.Router();
 var m            = require('../middlewares/middlewares.js');
 var logger       = require('../modules/logger.js');
-//var routeName    = require('../middlewares/namedRoutes.js');
 var configs      = require('../config/configs.js');
 var logger       = require('../modules/logger.js')('dashboard', configs.logs.dashboard);
 

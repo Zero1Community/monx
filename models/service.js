@@ -8,6 +8,7 @@ var serviceSchema = new mongoose.Schema({
       type: String,
       host: String,
       status: String,
+      status_code: {type: String, default: -1},
       last_checked: Date,
       running_status: Boolean,
       notification_status: {
