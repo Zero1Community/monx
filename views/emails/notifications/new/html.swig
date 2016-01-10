@@ -6,31 +6,11 @@
 <body>
 {{subject}}
 <br>
-There is a new event update for service service.name
+There is a new event update for service {{name}}
 <br>
 
-<!-- {%if event_body %}
-	Current status:
-	{{event_body.message.listed}}
-	{% for item in event_body.message.listed %}
-		{{ item.server }} with status 
-		{{ item.status }}<br>
-	{% endfor %}
-	<br>
-	Event details:
-	{{event_body.message.diff}}
-	{% for item in event_body.message.diff %}
-		{% if item.action == 'added' %}
-		  {{item.action}} to {{ item.server }}<br>
-		{% endif %}
-		{% if item.action == 'removed' %}
-		  {{item.action}} from {{ item.server }}<br>
-		{% endif %}
-	{% endfor %}
-{% else %}
-	Service status OK
-{% endif %}
- --><br>
+Message: {{event_body}}
+
 <br>
 <br>
 To find more:
