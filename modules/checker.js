@@ -71,7 +71,12 @@ function updateAndNotify(notific,status_subject){
 		});
 }
 
-
+/**
+ * ky funksion eshte nena
+ * @param new_data
+ * @return bool
+ * @throws skpunoException
+ */
 function checker(new_data){
 
 	logger('info','Got into phase 2 in checker');
