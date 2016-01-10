@@ -71,6 +71,7 @@ router.post('/service-data/add', function(req, res){
             logger('debug', service);
             data['user'] = service.user;
             data['service_name'] = service.name;
+            data['type'] = service.type;
             data['mute_status'] = service.notification_status.mute;
 
             service.status = data.status;
@@ -88,16 +89,15 @@ router.post('/service-data/add', function(req, res){
                     logger('info', 'The new service status was saved!');
                 }
             });
-        });
-
-        checker(data, function (err, res) {
-            if (err) {
-                logger('error', 'Got error in phase 1 on checker ');
-                logger('error', err);
-            }
-            else {
-                logger('info', res);
-            }
+            checker(data, function (err, res) {
+                if (err) {
+                    logger('error', 'Got error in phase 1 on checker ');
+                    logger('error', err);
+                }
+                else {
+                    logger('info', res);
+                }
+            });
         });
     }
     else {

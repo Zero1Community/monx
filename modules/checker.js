@@ -82,7 +82,6 @@ function checker(new_data){
 
 	serviceData.findOne({}, {}, { sort: { 'createdAt' : -1 } }, function(err, last_data) {
 		//need to implement additional check here for service data
-
 		if(err){
 			logger('error',err);
 			return err;
@@ -91,11 +90,13 @@ function checker(new_data){
 		if(last_data === null){
             logger('info', 'Got null from collection');
             last_data = {
-				status : 'OK'
+                status: 'OK',
+                no_previous_data: 1
 			}
 		}else{
 			//TODO: fix this qe sdel heren e pare
 			new_data['notification_id'] = last_data.id;
+            last_data.no_previous_data = 0;
             logger('info', last_data);
             if (new_data.type == 'blacklist') {
                 var last_data_servers = [];
@@ -110,6 +111,9 @@ function checker(new_data){
 
             }
 		}
+        logger('debug', 'Type checking for new_data')
+        logger('debug', new_data.type);
+
         if (new_data.type == 'blacklist') {
             new_data.message.listed.forEach(function (element) {
                 logger('info', 'Listing new data');
@@ -142,7 +146,7 @@ function checker(new_data){
                     var sData = new serviceData({
                         message: new_data.message,
                         status: new_data.status,
-                        source: new_data.source,
+                        source: new_data.source
                         // to be ndrruar source_IP me x-forwarded-for me vone
                     });
                     sData.save(function (err) {
@@ -157,12 +161,12 @@ function checker(new_data){
             }
         }
 	//});
-        if (new_data.type == 'http_status') {
-            if (new_data.status_code = !last_data.status_code) {
+        else if (new_data.type == 'http_status') {
+            if (new_data.status_code = !last_data.status_code || last_data.no_previous_data == 1) {
                 var sData = new serviceData({
                     message: new_data.message,
                     status: new_data.status,
-                    source: new_data.source,
+                    source: new_data.source
                     // to be ndrruar source_IP me x-forwarded-for me vone
                 });
                 sData.save(function (err) {
@@ -174,6 +178,12 @@ function checker(new_data){
                     }
                 });
             }
+            else {
+                logger('warn', 'No changes on service since last time..')
+            }
+        }
+        else {
+            logger('error', 'No valid type was provided');
         }
 
 		// TODO : check if this is OK

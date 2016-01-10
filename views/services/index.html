@@ -36,7 +36,8 @@
                                     <tr>
                                         <td><a href="/services/{{ service.id }}">{{service.name}}</td>
                         <td>{{service.type}}</td>
-                        <td><a href="/services/{{ service.id }}/history">{% if service.status == 'ERROR' %} blacklisted {% else %} clean {% endif %}</a></td>
+                                        <td><a href="/services/{{ service.id }}/history">{% if service.status == 'ERROR'
+                                            %} ERROR {% else %} OK {% endif %}</a></td>
                                         <td>
                                             <a href="#" class="{% if service.running_status != true %} hide  {% endif %} btn btn-xs btn-secondary stop-button" data-serviceid="{{service.id}}">
                                                 <span class="glyphicons glyphicons-stop"></span>
