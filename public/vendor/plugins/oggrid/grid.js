@@ -511,7 +511,7 @@ var Grid = (function() {
 		getEl : function() {
 			return this.$previewEl;
 		}
-	}
+	};
 
 	return { 
 		init : init,

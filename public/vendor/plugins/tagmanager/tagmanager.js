@@ -291,7 +291,7 @@
 
         prefill: function (pta) {
             var $self = $(this);
-            var opts = $self.data('opts')
+            var opts = $self.data('opts');
             $.each(pta, function (key, val) {
                 if (opts.externalTagId === true) {
                     publicMethods.pushTag.call($self, val[opts.prefillValueFieldName], true, val[opts.prefillIdFieldName]);

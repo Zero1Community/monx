@@ -221,7 +221,7 @@
         requestAnimationFrame(function(timestamp) {
             draw(timestamp, o);
         });
-    }
+    };
 
     var draw = function(timestamp, o) {
 
@@ -257,7 +257,7 @@
         } else {
             if (o.onComplete != null) o.onComplete();
         }
-    }
+    };
 
     var applyStyles = function(data, value) {
 

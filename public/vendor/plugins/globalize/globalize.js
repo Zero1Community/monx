@@ -352,7 +352,7 @@ isArray = Array.isArray || function( obj ) {
 
 isFunction = function( obj ) {
 	return Object.prototype.toString.call( obj ) === "[object Function]"
-}
+};
 
 isObject = function( obj ) {
 	return Object.prototype.toString.call( obj ) === "[object Object]";

@@ -65,7 +65,7 @@ var demoHighCharts = function () {
                                 highlightLineColor: bgWarningLr
                             });
                         });
-                }
+                };
 
                 // Refresh Sparklines on Resize
                 var refreshSparklines;
@@ -142,13 +142,13 @@ var demoHighCharts = function () {
                         // Add responsive font sizing functionality
                         $('.info-circle').find('.circle-text-value').fitText(0.4);
                     },50);
-                } 
+                };
                 var lazyLayout = _.debounce(rescale, 300);
                 $(window).resize(lazyLayout);
               
             }
 
-        } // End Circle Graphs Demo
+        }; // End Circle Graphs Demo
 
 
 
@@ -407,7 +407,7 @@ var demoHighCharts = function () {
                 }
 
 
-            } // End High Columns
+            }; // End High Columns
 
             var demoHighBars = function() {
 
@@ -480,7 +480,7 @@ var demoHighCharts = function () {
                         }]
                     });
                 }
-            }
+            };
 
             var demoHighLines = function() {
 
@@ -716,7 +716,7 @@ var demoHighCharts = function () {
 
                 }
 
-            } // End High Line Charts Demo
+            }; // End High Line Charts Demo
 
             // Pie Charts
             var demoHighPies = function() { 
@@ -774,7 +774,7 @@ var demoHighCharts = function () {
                         }]
                     });
                 }
-            } // End High Pie Charts Demo
+            }; // End High Pie Charts Demo
 
             // Demo High Area Charts
             var demoHighAreas = function() {
@@ -846,7 +846,7 @@ var demoHighCharts = function () {
                         }]
                     });
                 }
-            }
+            };
 
             // Init Chart Types
             demoHighColumns();
@@ -855,7 +855,7 @@ var demoHighCharts = function () {
             demoHighPies();
             demoHighAreas();
 
-        } // End Demo HighCharts
+        }; // End Demo HighCharts
 
 
         // High Charts Demo
@@ -947,7 +947,7 @@ var demoHighCharts = function () {
                 });
             }
 
-        } // End Demo HighChart Menus
+        }; // End Demo HighChart Menus
 
 
         // Advanced HighChart Demo
@@ -1356,7 +1356,7 @@ var demoHighCharts = function () {
             // create master and in its callback, create the detail chart
             createMaster();
 
-        } // end HighChartsAdvanced   
+        }; // end HighChartsAdvanced
 
 	return {
         init: function () {
@@ -1372,8 +1372,9 @@ var demoHighCharts = function () {
             }
 
         }
-	} 
-}();
+    }
+}();;;;;;;
+
 
 
 

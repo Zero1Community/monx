@@ -2,12 +2,14 @@ var mongoose         = require('mongoose');
 var ServiceData      = require('./service_data.js');
 var mongoosePaginate = require('mongoose-paginate');
 var timestamps       = require('mongoose-timestamp');
+//var logger = require('../modules/logger.js')('checker', configs.logs.model_services);
 
 var serviceSchema = new mongoose.Schema({
       name: String,
       type: String,
       host: String,
       status: String,
+    status_code: {type: String, default: -1},
       last_checked: Date,
       running_status: Boolean,
       notification_status: {
@@ -22,7 +24,13 @@ var serviceSchema = new mongoose.Schema({
 serviceSchema.post('save', function (service) {
   var collection = 'service_data_' + service._id;
   mongoose.connection.db.createCollection(collection, function(err, collection) {
-    //console.log(collection + " was created!");
+      if (err) {
+          console.log('Error while creating collection ' + err);
+          // return ktu ??
+      } else {
+          //logger('info', collection + " was created!");
+          console.log(collection + ' was created!');
+      }
   });
 });
 

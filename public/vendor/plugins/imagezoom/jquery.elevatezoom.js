@@ -27,7 +27,8 @@
 
 if ( typeof Object.create !== 'function' ) {
 	Object.create = function( obj ) {
-		function F() {};
+		function F() {
+		}
 		F.prototype = obj;
 		return new F();
 	};
@@ -48,7 +49,7 @@ if ( typeof Object.create !== 'function' ) {
 				//TINT OVERRIDE SETTINGS
 				if(self.options.tint) {
 					self.options.lensColour = "none", //colour of the lens background
-					self.options.lensOpacity =  "1" //opacity of the lens
+						self.options.lensOpacity = "1"; //opacity of the lens
 				}
 				//INNER OVERRIDE SETTINGS
 				if(self.options.zoomType == "inner") {self.options.showLens = false;}
@@ -106,10 +107,10 @@ if ( typeof Object.create !== 'function' ) {
 					self.currentImage = self.imageSrc;
 					//let caller know image has been loaded
 					self.options.onZoomedImageLoaded(self.$elem);
-				}
+				};
 				newImg.src = imgsrc; // this must be done AFTER setting onload
 
-				return;
+
 
 			},
 
@@ -502,7 +503,7 @@ if ( typeof Object.create !== 'function' ) {
 							//do something
 						}, 250));
 
-						var theEvent = e.originalEvent.wheelDelta || e.originalEvent.detail*-1
+						var theEvent = e.originalEvent.wheelDelta || e.originalEvent.detail * -1;
 
 
 						//this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
@@ -660,7 +661,7 @@ if ( typeof Object.create !== 'function' ) {
 				// if the mouse position of the slider is one of the outerbounds, then hide  window and lens
 				if (self.mouseLeft <= 0 || self.mouseTop < 0 || self.mouseLeft > self.nzWidth || self.mouseTop > self.nzHeight ) {				          
 					self.setElements("hide");
-					return;
+
 				}
 				//else continue with operations
 				else {
@@ -1026,7 +1027,7 @@ if ( typeof Object.create !== 'function' ) {
 
 									clearInterval(self.loop);
 									self.xp = self.windowLeftPos;
-									self.yp = self.windowTopPos            
+									self.yp = self.windowTopPos;
 
 									self.xp = ((e.pageX - self.nzOffset.left) * self.widthRatio - self.zoomWindow.width() / 2) * (-1);
 									self.yp = (((e.pageY - self.nzOffset.top) * self.heightRatio - self.zoomWindow.height() / 2) * (-1));                         
@@ -1174,8 +1175,8 @@ if ( typeof Object.create !== 'function' ) {
 
 
 					self.swapAction(smallimage, largeimage);
-					return;              
-				}          
+
+				};
 				newImg.src = largeimage; // this must be done AFTER setting onload
 
 			},
@@ -1191,9 +1192,9 @@ if ( typeof Object.create !== 'function' ) {
 					self.nzWidth = newImg2.width;
 					self.options.onImageSwapComplete(self.$elem);
 
-					self.doneCallback();  
-					return;      
-				}          
+					self.doneCallback();
+
+				};
 				newImg2.src = smallimage; 
 
 				//reset the zoomlevel to that initially set in options
@@ -1219,8 +1220,8 @@ if ( typeof Object.create !== 'function' ) {
 
 				if(self.options.imageCrossfade){
 					var oldImg = self.$elem;
-					var newImg = oldImg.clone();         
-					self.$elem.attr("src",smallimage)
+					var newImg = oldImg.clone();
+					self.$elem.attr("src", smallimage);
 					self.$elem.after(newImg);
 					newImg.stop(true).fadeOut(self.options.imageCrossfade, function() {
 						$(this).remove();         
@@ -1237,8 +1238,8 @@ if ( typeof Object.create !== 'function' ) {
 					if(self.options.tint && self.options.zoomType != "inner") {
 
 						var oldImgTint = self.zoomTintImage;
-						var newImgTint = oldImgTint.clone();         
-						self.zoomTintImage.attr("src",largeimage)
+						var newImgTint = oldImgTint.clone();
+						self.zoomTintImage.attr("src", largeimage);
 						self.zoomTintImage.after(newImgTint);
 						newImgTint.stop(true).fadeOut(self.options.imageCrossfade, function() {
 							$(this).remove();         
@@ -1692,7 +1693,9 @@ if ( typeof Object.create !== 'function' ) {
 				//
 			},
 			closeAll: function(){
-				if(self.zoomWindow){self.zoomWindow.hide();};
+				if (self.zoomWindow) {
+					self.zoomWindow.hide();
+				}
 				if(self.zoomLens){self.zoomLens.hide();}
 				if(self.zoomTint){self.zoomTint.hide();}
 			}

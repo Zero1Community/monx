@@ -7,7 +7,7 @@ var notificationsSchema = new mongoose.Schema({
       service: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' },
       status: String,
       seen: Boolean,
-    });
+}, {strict: false});
 
 notificationsSchema.plugin(timestamps);
 

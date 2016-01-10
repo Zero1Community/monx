@@ -170,7 +170,7 @@
                var mobile = (controlW + titleW);
                arr[ID] = mobile;
             });
-            console.log(arr)
+            console.log(arr);
 
             $.each(arr, function(i, e) {
 
@@ -188,7 +188,7 @@
                         return Content;
                      },
                      template: '<div data-popover-id="'+i+'" class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                  }
+                  };
                   controls.popover(options);
                } else {
                   controls.removeClass('mobile-controls');
@@ -386,7 +386,7 @@
 
                // Create an editbox if one is not found
                if (!panel.find('.panel-colorbox').length) {
-                  var colorBox = '<div class="panel-colorbox"> <span class="bg-white" data-panel-color="panel-default"></span> <span class="bg-primary" data-panel-color="panel-primary"></span> <span class="bg-info" data-panel-color="panel-info"></span> <span class="bg-success" data-panel-color="panel-success"></span> <span class="bg-warning" data-panel-color="panel-warning"></span> <span class="bg-danger" data-panel-color="panel-danger"></span> <span class="bg-alert" data-panel-color="panel-alert"></span> <span class="bg-system" data-panel-color="panel-system"></span> <span class="bg-dark" data-panel-color="panel-dark"></span> </div>'
+                  var colorBox = '<div class="panel-colorbox"> <span class="bg-white" data-panel-color="panel-default"></span> <span class="bg-primary" data-panel-color="panel-primary"></span> <span class="bg-info" data-panel-color="panel-info"></span> <span class="bg-success" data-panel-color="panel-success"></span> <span class="bg-warning" data-panel-color="panel-warning"></span> <span class="bg-danger" data-panel-color="panel-danger"></span> <span class="bg-alert" data-panel-color="panel-alert"></span> <span class="bg-system" data-panel-color="panel-system"></span> <span class="bg-dark" data-panel-color="panel-dark"></span> </div>';
                   panelHeading.after(colorBox);
                }
 
@@ -397,7 +397,7 @@
                panelColorBox.on('click', '> span', function(e) {
                   var dataColor = $(this).data('panel-color');
                   var altColors = 'panel-primary panel-info panel-success panel-warning panel-danger panel-alert panel-system panel-dark panel-default panel-white';
-                  panel.removeClass(altColors).addClass(dataColor).data('panel-color', dataColor)
+                  panel.removeClass(altColors).addClass(dataColor).data('panel-color', dataColor);
                   methods.updateSettings(options);
                });
 
@@ -610,7 +610,7 @@
             // Pull localstorage obj, parse the data, and then loop
             // through each panel and set its position
             $(pluginGrid).each(function(i, e) {
-               var rowID = $(e)
+               var rowID = $(e);
                $.each(parsePosition[i], function(i, ele) {
                   $('#' + ele).appendTo(rowID);
                });
@@ -632,7 +632,7 @@
                options.onSave();
             }
          }
-      }
+      };
 
       // Plugin implementation
       return this.each(function() {

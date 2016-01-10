@@ -2975,9 +2975,9 @@ SVGRenderer.prototype = {
 		// used in text outline hack.
 		if (!hasMarkup && !textStroke && textStr.indexOf(' ') === -1) {
 			textNode.appendChild(doc.createTextNode(textStr));
-			return;
 
-		// Complex strings, add more logic
+
+			// Complex strings, add more logic
 		} else {
 
 			styleRegex = /<.*style="([^"]+)".*>/;
@@ -14928,9 +14928,9 @@ var AreaSeries = extendClass(Series, {
 					stackPoint;
 
 				if (connectNulls && (!pointMap[x] || pointMap[x].y === null)) { // #1836
-					return;
 
-				// The point exists, push it to the segment
+
+					// The point exists, push it to the segment
 				} else if (pointMap[x]) {
 					segment.push(pointMap[x]);
 

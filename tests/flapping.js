@@ -22,6 +22,5 @@ checkRBL('31.170.160.66', 80000, function(totalResults){
 		// 	cleanStatus.push(totalResults[i]);
 		// }
 		console.log(totalResults[i]);
-	};
-
+	}
 });

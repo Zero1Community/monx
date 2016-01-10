@@ -21,6 +21,6 @@ var Breadcrumb = {
     }
     return this.breadcrumb.unshift([this.routes[route_name].name, this.routes[route_name].path]); 
   }
-}
+};
 
 module.exports = Breadcrumb;

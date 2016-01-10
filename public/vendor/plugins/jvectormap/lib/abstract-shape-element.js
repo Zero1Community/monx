@@ -82,4 +82,4 @@ jvm.AbstractShapeElement.mergeStyles = function(styles, newStyles){
       styles[key] = newStyles[key];
     }
   }
-}
+};

@@ -48,6 +48,6 @@ var middleware = {
       res.redirect('/dashboard');
 
     }
-}
+};
 
 module.exports = middleware;

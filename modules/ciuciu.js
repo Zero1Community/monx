@@ -1,4 +1,4 @@
-var Twit = require('twit')
+var Twit = require('twit');
 
 var T = new Twit({
   consumer_key: '3WobBbsfzflYkCVoJu4Jme4ei',
@@ -16,4 +16,4 @@ T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
   } else {
   	console.log("posted some stuff");
   }
-})
+});
