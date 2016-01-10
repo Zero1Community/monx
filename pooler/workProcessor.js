@@ -81,7 +81,7 @@ function postToAPI (data) {
 	      logger('error',error);
 	  } else {
 	      logger('info','Data posted to API!');
-	      logger('info',response.statusCode);
+          logger('debug', response.statusCode);
 		}
 	});
 }
@@ -130,7 +130,7 @@ function monxBlacklist(blacklistObject){
 			else{
 				cleanStatus.push(totalResults[i]);
 			}
-			logger('info',totalResults[i]);
+            logger('debug', totalResults[i]);
         }
 // TODO: FIX THIS, unable to reach API
 //   Error

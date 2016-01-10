@@ -1,5 +1,4 @@
 var mongoose         = require('mongoose');
-var ServiceData      = require('./service_data.js');
 var mongoosePaginate = require('mongoose-paginate');
 var timestamps       = require('mongoose-timestamp');
 //var logger = require('../modules/logger.js')('checker', configs.logs.model_services);

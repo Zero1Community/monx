@@ -206,7 +206,7 @@ function checker(new_data){
             });
         }
         else {
-            logger('warn', 'No changes on service since last time..')
+            logger('info', 'No changes on service since last time..')
         }
 
 		// TODO : check if this is OK
@@ -247,12 +247,9 @@ function checker(new_data){
 
 			if(last_status === 'OK' && new_status === 'OK') {
                 logger('debug', '[checker_algo] Got into OK OK');
-                // for some odd reason this doesnt work as it should..
                 if (notification_status === 'OK' && notification_data.no_previous_data == 0) {
                     return;
                 }
-                //if (notification_status === 'OK') return;
-
                 logger('debug', '[checker_algo] OK OK notification triggered');
                 if (notification_data.no_previous_data == 1) {
                     updateAndNotify(new_data, '** Monitoring Service Started', function () {
