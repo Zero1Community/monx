@@ -6,18 +6,19 @@ var configs     = require('../config/configs.js');
 var logger      = require('../modules/logger.js')('api', configs.logs.api);
 var checker     = require('../modules/checker.js');
 var mongoose    = require('mongoose');
-var ServiceData = require('../models/service_data.js');
 
 
-//function isValidJson(str) {
-//    try {
-//        JSON.parse(str);
-//    } catch (e) {
-//        return false;
-//    }
-//    return true;
-//}
-
+/**
+ * checks if our data look like this:
+ * message: data.message,
+ * status: data.status,
+ * service_id: data.service_id,
+ * user: data.user,
+ * name: data.name
+ * @param str
+ * @param keys
+ * @returns {boolean}
+ */
 function hasKeys(str, keys) {
     keys.forEach(function (el) {
         if (str.hasOwnProperty(el)) {
@@ -46,16 +47,8 @@ router.post('/service-data/add', function(req, res){
     if (!data['source']) {
         data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     }
-	logger('info','Calling checker');
-    //TODO: data integrity check here and aggregation
-    //TODO: bej nje funksion integriteti qe i kalon listen e celsave dhe te kthen true ose false
-    // our data should look like this:
-    //    message: data.message,
-    //    status: data.status,
-    //    service_id: data.service_id,
-    //    user: data.user,
-    //    name: data.name
-    //logger('info','JSON check successful');
+    logger('debug', 'Calling checker');
+    //TODO: data integrity check here
 
     if (hasKeys(data, ['message', 'status', 'service_id', 'user', 'name'])) {
         logger('info', 'JSON check successful, required keys are in place');
@@ -67,8 +60,11 @@ router.post('/service-data/add', function(req, res){
                 logger('error', err);
                 return err;
             }
+            logger('debug', 'Got data from post parameter :');
             logger('debug', data);
+            logger('debug', 'Got service from database :');
             logger('debug', service);
+
             data['user'] = service.user;
             data['service_name'] = service.name;
             data['type'] = service.type;
@@ -77,7 +73,7 @@ router.post('/service-data/add', function(req, res){
             service.status = data.status;
             service.last_checked = new Date();
 
-            //TODO: nuk e di sa asinkron eshte kjo po duhet te behet asinkron se me sh mundesi vonon
+            //TODO: kjo me sh mundesi na vonon
             logger('info', 'Saving the service status and last checked');
             service.save(function (err) {
                 if (err) {
@@ -102,7 +98,7 @@ router.post('/service-data/add', function(req, res){
     }
     else {
         // end connection, not a valid json
-        logger('error', 'Got invalid json');
+        logger('error', 'Got invalid json, key mismatch ');
     }
 	logger('info','Closing the connection');
 	res.setHeader('Content-Type', 'application/json');
@@ -110,4 +106,3 @@ router.post('/service-data/add', function(req, res){
 });
 
 module.exports = router;
-

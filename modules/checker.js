@@ -7,6 +7,31 @@ var ServiceData  = require('../models/service_data.js');
 var logger       = require('../modules/logger.js')('checker', configs.logs.checker);
 var _            = require('underscore');
 
+
+// we will store these in redis later
+function getStatusCodeDescription(statusCode) {
+    //switch(statusCode){
+    //    case '-1':
+    //        return 'unknown';
+    //        break;
+    //    case'-2' :
+    //        break;
+    //    case '-3' :
+    //        return 'unknown';
+    //        break;
+    //    case '-4' :
+    //        return 'unknown';
+    //        break;
+    //    case '-5' :
+    //        return 'unknown';
+    //        break;
+    //    case '-6' :
+    //        return 'unknown';
+    //    default:
+    //        return 'unknown';
+    //}
+}
+
 function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
 	// in the notific object we have the user ID and the service ID 
@@ -24,15 +49,14 @@ function updateAndNotify(notific,status_subject){
 	   		//TODO: fix this return
 	   		return;
 	   	}
-        console.log('BBBBBBBBBBBBBBBBBBBBBBBBBB');
-        console.log(user);
-        console.log(notific);
+        logger('debug', 'Got user from database:');
+        logger('debug', user);
+        logger('debug', 'Got notific from parameters:');
+        logger('debug', notific);
 
-        //var collected_message = status_subject + " for " + notific.service_name + " \n ";
-        var collected_message = status_subject;
+        var collected_message = status_subject + " for " + notific.service_name + " \n ";
 
 		if(!notific.mute_status){
-
 			var tick = {
 				message : collected_message,
                 subject: status_subject,
@@ -53,6 +77,7 @@ function updateAndNotify(notific,status_subject){
 					}
 			});
 		}
+
 			var u = new Notification();
 			u.user = notific.user;
 			u.service = notific.service_id;
@@ -72,18 +97,16 @@ function updateAndNotify(notific,status_subject){
 }
 
 /**
- * ky funksion eshte nena
- * @param new_data
- * @return bool
+ * checker function, black magic, do not touch
+ * @param new_data ( a JSON object that has the post from workProcessor and some attributes from the Service
  * @throws skpunoException
  */
 function checker(new_data){
 
-	logger('info','Got into phase 2 in checker');
-	logger('info',new_data);
-	// TODO: handle kur ska sherbim ?
-
+    logger('debug', 'Got into checker, new_data: ');
+    logger('debug', new_data);
 	var serviceData = ServiceData(new_data.service_id);
+    var diff = [];
 
 	serviceData.findOne({}, {}, { sort: { 'createdAt' : -1 } }, function(err, last_data) {
 		//need to implement additional check here for service data
@@ -96,13 +119,15 @@ function checker(new_data){
             logger('info', 'Got null from collection');
             last_data = {
                 status: 'OK',
+                status_code: '-1',
                 no_previous_data: 1
 			}
 		}else{
-			//TODO: fix this qe sdel heren e pare
 			new_data['notification_id'] = last_data.id;
             last_data.no_previous_data = 0;
             logger('info', last_data);
+
+            // rast specifik per blacklisten
             if (new_data.type == 'blacklist') {
                 var last_data_servers = [];
                 var new_data_servers = [];
@@ -112,12 +137,10 @@ function checker(new_data){
                     last_data_servers.push(element.server);
                 });
             }
-            if (new_data.type == 'http_status') {
-
-            }
 		}
+
         logger('debug', 'Type checking for new_data')
-        logger('debug', new_data.type);
+        logger('debug', new_data);
 
         if (new_data.type == 'blacklist') {
             new_data.message.listed.forEach(function (element) {
@@ -130,7 +153,6 @@ function checker(new_data){
             var added = _.difference(new_data_servers, last_data_servers);
 
             if (removed.length > 0 || added.length > 0) {
-                var diff = [];
                 if (removed.length > 0) {
                     removed.forEach(function (server) {
                         diff.push({server: server, action: 'removed'});
@@ -144,52 +166,29 @@ function checker(new_data){
                 }
 
                 new_data.message.diff = diff;
-                if (diff.length > 0) {
-                    //ruajme eventin
-                    // TODO check before hand
-                    // TODO: if type blaclist
-                    var sData = new serviceData({
-                        message: new_data.message,
-                        status: new_data.status,
-                        source: new_data.source
-                        // to be ndrruar source_IP me x-forwarded-for me vone
-                    });
-                    sData.save(function (err) {
-                        if (!err) {
-                            logger('info', 'Event successfully saved');
-                        }
-                        else {
-                            logger('error', 'Error saving the event' + err);
-                        }
-                    });
-                }
             }
         }
-	//});
-        else if (new_data.type == 'http_status') {
-            if (new_data.status_code = !last_data.status_code || last_data.no_previous_data == 1) {
-                var sData = new serviceData({
-                    message: new_data.message,
-                    status: new_data.status,
-                    source: new_data.source
-                    // to be ndrruar source_IP me x-forwarded-for me vone
-                });
-                sData.save(function (err) {
-                    if (!err) {
-                        logger('info', 'Event successfully saved');
-                    }
-                    else {
-                        logger('error', 'Error saving the event' + err);
-                    }
-                });
-            }
-            else {
-                logger('warn', 'No changes on service since last time..')
-            }
+        // generic af
+        if (new_data.status_code !== last_data.status_code || last_data.no_previous_data === 1 || diff.length > 0) {
+            var sData = new serviceData({
+                message: new_data.message,
+                status: new_data.status,
+                source: new_data.source
+                // to be ndrruar source_IP me x-forwarded-for me vone
+            });
+            sData.save(function (err) {
+                if (!err) {
+                    logger('info', 'Event successfully saved');
+                }
+                else {
+                    logger('error', 'Error saving the event' + err);
+                }
+            });
         }
         else {
-            logger('error', 'No valid type was provided');
+            logger('warn', 'No changes on service since last time..')
         }
+    }
 
 		// TODO : check if this is OK
 		Notification.findOne({service:new_data.service_id}, {}, { sort: { 'createdAt' : -1 } }, function(err, notification_data){
@@ -205,12 +204,17 @@ function checker(new_data){
 			var new_status = new_data.status;
 			if(notification_data === null){
 				notification_data = {
-					status : 'OK'
+                    status_code: '-1',
+                    status: 'OK',
+                    no_previous_data: 1
 				}
 			}
+            else {
+                notification_data.no_previous_data = 0;
+            }
 
 			var notification_status = notification_data.status;
-            logger('info', "Current Status: ");
+            logger('info', 'Status Overview ');
 			logger('info','Last status '+ last_status);
 			logger('info','New status '+ new_status);
 			logger('info','Last Notification status '+ notification_status);
@@ -220,7 +224,7 @@ function checker(new_data){
             logger('info', new_data);
 
 			if(last_status === 'OK' && new_status === 'OK') {
-				if(notification_status === 'OK') return;
+                if (notification_status === 'OK' && notification_status.no_previous_data == 0) return;
 				//"RECOVERY" 
 				updateAndNotify(new_data,"** Service Recovery", function(){
 							logger('info',"Mail sent");
@@ -228,8 +232,6 @@ function checker(new_data){
 			}
 
 			if(last_status === 'ERROR' && new_status === 'ERROR') {
-				// DIFF HERE
-                //TODO kjo sma mbush mendjen.. prandaj kjo duhet bere me status code (ne ket rast nqs ekziston nje DIFF
 				logger('info',new_data.message);
                 if (new_data.type == 'blacklist') {
                     if (notification_status === 'ERROR' && !new_data.message.diff) return;
@@ -239,7 +241,7 @@ function checker(new_data){
                 }
                 if (new_data.type == 'http_check') {
                     // check statuscodet
-                    if (notification_status === 'ERROR' && (new_data.status_code = !last_data.status_code)) return;
+                    if (notification_status === 'ERROR' && (new_data.status_code == last_data.status_code)) return;
                     updateAndNotify(new_data, "** Service Status Update", function () {
                         logger('info', "Mail sent");
                     });

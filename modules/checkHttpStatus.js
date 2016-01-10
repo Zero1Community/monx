@@ -48,26 +48,26 @@ function checkHttpStatus(URL, timeout, cb) {
 	  if(e.errno == 'ECONNRESET' || e.errno == 'ECONNREFUSED' ){
 		  // probl firewalli
 		  console.log('Connection reset/refused  / Firewall Issue');
-		  cb({message: 'Connection reset/refused  / Firewall Issue', status_code: '-1', status: 'ERROR'});
+		  cb({message: 'Connection reset/refused  / Firewall Issue', status_code: '-2', status: 'ERROR'});
 	  }
 	  else if( e.errno == 'ENOTFOUND' ){
 		// probl dns  
 		  console.log('Unable to resolve host  / DNS Issue');
-		  cb({message: 'Unable to resolve host  / DNS Issue', status_code: '-2', status: 'ERROR'});
+		  cb({message: 'Unable to resolve host  / DNS Issue', status_code: '-3', status: 'ERROR'});
 	  }
 	  else if( e.errno == 'ETIMEDOUT' ){
 		  // timeout 
 		  console.log('Connection timeout  / Port|TCP|Host Issue');
-		  cb({message: 'Connection timeout  / Port|TCP|Host Issue', status_code: '-3', status: 'ERROR'});
+		  cb({message: 'Connection timeout  / Port|TCP|Host Issue', status_code: '-4', status: 'ERROR'});
 	  }
 	  else if( e.errno == 'EHOSTUNREACH' ){
 		  //
 		  console.log('Destination host unreachable  / Network Issue');
-		  cb({message: 'Destination host unreachable  / Network Issue', status_code: '-4', status: 'ERROR'});
+		  cb({message: 'Destination host unreachable  / Network Issue', status_code: '-5', status: 'ERROR'});
 	  }
 	  else{
-		  console.log('Unhandle Issue  / Issue');
-		  cb({message: 'Unhandle Issue  / Issue', status_code: '-5', status: 'ERROR'});
+		  console.log('Unhandled Issue  / Issue');
+		  cb({message: 'Unhandled Issue  / Issue', status_code: '-6', status: 'ERROR'});
 		  // nej error i cuditshem
 		//ESOCKETTIMEDOUT,  EPIPE, EAI_AGAIN
 	  } 

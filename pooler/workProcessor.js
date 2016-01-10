@@ -51,7 +51,10 @@ function processWork(tC,callback){
 }
 
 
-// posting data to API function
+/**
+ *
+ * @param data
+ */
 function postToAPI (data) {
 	var request = require('request');
 	logger('info','Posting to API');
@@ -66,6 +69,7 @@ function postToAPI (data) {
 		    status: data.status,
 		    service_id: data.service_id,
 			user: data.user,
+            status_code: data.status_code,
 			name: data.name
 	    }
 	  }
@@ -127,7 +131,7 @@ function monxBlacklist(blacklistObject){
 			}
 			logger('info',totalResults[i]);
         }
-// TODO: FIX THIS
+// TODO: FIX THIS, unable to reach API
 //   Error
 // { [Error: connect ECONNREFUSED]
 //   code: 'ECONNREFUSED',
@@ -140,17 +144,20 @@ function monxBlacklist(blacklistObject){
 //   errno: 'ECONNREFUSED',
 //   syscall: 'connect' }
 // undefined
-
 		var data = {
 			message: {
 				listed : blackStatus,
 				timeout: timeoutStatus,
 				clean: cleanStatus
 			},
+            status_code: '-30',
 			status: stat,
 			service_id: blacklistObject._id,
 			user: blacklistObject.user
         };
+        if (data.status === 'OK') {
+            data.status_code = '-35';
+        }
 
 		postToAPI(data, function(err) {
 			if(err){
