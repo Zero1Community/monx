@@ -90,7 +90,7 @@ function postToAPI (data) {
 function monxHttpStatus(httpStatObject){
 	// duhet taru timeouti
 	var checkHttpStatus = require('../modules/checkHttpStatus.js');
-	checkHttpStatus(httpStatObject.url, 8000, function (data) {
+	checkHttpStatus(httpStatObject.host, 8000, function (data) {
 		// duhet fut timeout
 		console.log(data);
 		data['service_id'] = httpStatObject._id;
