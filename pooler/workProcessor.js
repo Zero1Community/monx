@@ -48,6 +48,9 @@ function processWork(tC,callback){
 	if(tC.type === "http_status"){
 		monxHttpStatus(tC);
 	}
+	if(tC.type === "icmp_ping"){
+		monxPing(tC);
+	}
 }
 
 
@@ -104,6 +107,25 @@ function monxHttpStatus(httpStatObject){
 		}, 3000);
 	});
 }
+
+function monxPing(pingStatObject){
+	// duhet taru timeouti
+	var checkPing = require('../modules/checkPing.js');
+	checkPing(pingStatObject.host, 2000, function (data) {
+		// duhet fut timeout
+		console.log(data);
+		data['service_id'] = pingStatObject._id;
+		data['name'] = pingStatObject.name;
+		postToAPI(data, function (err) {
+			if (err) {
+				logger('error', err);
+			} else {
+				logger('info', 'Data posted!');
+			}
+		}, 3000);
+	});
+}
+
 
 // blacklist module
 function monxBlacklist(blacklistObject){

@@ -1,5 +1,5 @@
 var configs  = require('../config/configs.js');
-var logger   = require('../modules/logger.js')('httpstatus', configs.logs.httpstatus);
+var logger   = require('../modules/logger.js')('http_status', configs.logs.http_status);
 
 function checkHttpStatus(URL, timeout, cb) {
 //	var URL = 'https://www.google.com/';
