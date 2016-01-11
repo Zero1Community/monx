@@ -19,7 +19,8 @@ function checkPing(host,timeout,cb){
             return cb({message: 'DNS Issue / Unable to resolve host', status_code : '-108', status: 'ERROR'});
         }
         else{
-            session.pingHost (ip, function (error) {
+            session.pingHost (ip, function (error, target, sent, rcvd) {
+                var ms = rcvd - sent;
                 if (error){
                     session.close();
                     if (error instanceof ping.RequestTimedOutError){
@@ -58,8 +59,8 @@ function checkPing(host,timeout,cb){
                 }
                 else{
                     session.close();
-                    console.log (ip  + ": OK");
-                    cb({message: 'Request TImed Out', status_code : '-100', status: 'OK'});
+                    console.log (ip  + ' ' + ms + " ms: OK");
+                    cb({message: 'Request Timed Out ' + ms + ' ms', status_code : '-100', status: 'OK'});
                 }
             });
         }
@@ -68,9 +69,10 @@ function checkPing(host,timeout,cb){
 
 
 function validateAndResolve(host, callback) {
-
+    //TODO: validim per ip te klasit C, broadcast dhe localhost
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(host))
     {
+        // nje regex ktu eshte
         return callback(null,host);
     }
 
@@ -87,7 +89,7 @@ function validateAndResolve(host, callback) {
 }
 
 
-checkPing('8.8.8.9', 2000, function (data) {
+checkPing('192.168.1.1', 2000, function (data) {
     // duhet fut timeout
     console.log(data);
 });
