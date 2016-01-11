@@ -12,11 +12,12 @@ function checkDNS(rbl_server, ip, callback, timeout){
   timeout =  typeof timeout === 'undefined' ? 2000 : timeout; 
 
   var start = Date.now();
-  var req = dns.Request({
+    var delta = Date.now();
+    var req = dns.Request({
     question: dns.Question({name: ip.split('.').reverse().join('.') + "." + rbl_server, type: 'A'}),
     //server: { address: '208.67.222.222', port: 53, type: 'udp' },
     server: { address: '127.0.0.1', port: 53, type: 'udp' },
-    timeout: timeout,
+    timeout: timeout
   });
 
   req.on('timeout', function () {
@@ -27,13 +28,13 @@ function checkDNS(rbl_server, ip, callback, timeout){
   req.on('message', function (err, answer) {
         //console.log(answer);
     if(answer.answer.length < 1){
-        var delta = (Date.now()) - start;
+        delta = (Date.now()) - start;
         result = {server: rbl_server, status : 0, res_time : delta};
     }
     else{
-        var delta = (Date.now()) - start;
+        delta = (Date.now()) - start;
         result = {server: rbl_server, status : 1, res_time : delta};
-      };
+      }
   });
 
   req.on('end', function () {
@@ -59,6 +60,9 @@ function checkRBL(host, timeout, callback) {
                     callback();
                   }, timeout);
                 }, function(err) {
+                    if(err){
+                        console.log(err);
+                    }
                   return callback(results);
                 });
             });
@@ -75,6 +79,7 @@ function validateAndResolve(host, callback) {
 
   dns.resolve4(host, function(error, addr) {
     if(error) {
+        //TODO: sikur sbo return kjo kur ka error
       logger('error','Error resolving', error);
     } else {
       // TODO : po kto qe kane shume IP ?
@@ -112,11 +117,11 @@ function getServersFromDB(callback) {
 }
 
 function getAndCacheServers(callback) {
-
+    var client = '';
   if(typeof configs.redis !== 'undefined') {
-    var client = redis.createClient(configs.redis.url);  
+    client = redis.createClient(configs.redis.url);
   } else {
-    var client = redis.createClient();  
+    client = redis.createClient();
   }
 
   //redis.debug_mode = configs.debug;
