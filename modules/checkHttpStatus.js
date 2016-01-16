@@ -12,7 +12,7 @@ function checkHttpStatus(URL, timeout, cb) {
     hostname: url_data.hostname,
     path: url_data.pathname,
     method: 'HEAD',
-    agent: new requester.Agent({keepAlive: false})
+    agent: new http.Agent({keepAlive: false})
   };
 
   http.request(options, function(res) {
