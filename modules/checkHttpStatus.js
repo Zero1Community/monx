@@ -72,7 +72,7 @@ function checkHttpStatus(URL, timeout, cb) {
     }
     else{
       console.log('Unhandled Issue  / Issue');
-      cb({message: 'Unhandled Issue  / Issue', status_code: '-6', status: 'ERROR'});
+      cb({message: 'Unhandled Issue  / Issue' + e, status_code: '-6', status: 'ERROR'});
       // nej error i cuditshem
       //ESOCKETTIMEDOUT,  EPIPE, EAI_AGAIN
     }
