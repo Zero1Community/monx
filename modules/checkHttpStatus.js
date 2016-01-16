@@ -1,12 +1,21 @@
 var configs  = require('../config/configs.js');
 var logger   = require('../modules/logger.js')('httpstatus', configs.logs.httpstatus);
+var url = require('url');
 
 function checkHttpStatus(URL, timeout, cb) {
-//	var URL = 'https://www.google.com/';
 
-  var requester = URL.match(/^https(.*)/) ? require('https') : require('http');
+  var url_data = url.parse(URL, true);
 
-  requester.get(URL, function(res) {
+  var requester = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
+
+  var options = {
+    hostname: url_data.hostname,
+    path: url_data.pathname,
+    method: 'HEAD',
+    agent: new requester.Agent({keepAlive: false})
+  }
+
+  requester.get(options, function(res) {
     //  console.log("statusCode: ", res.statusCode);
     //  console.log("headers: ", res.headers);
 
