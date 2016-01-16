@@ -1,12 +1,24 @@
 var configs  = require('../config/configs.js');
+<<<<<<< HEAD
 var logger   = require('../modules/logger.js')('http_status', configs.logs.http_status);
+=======
+var logger   = require('../modules/logger.js')('httpstatus', configs.logs.httpstatus);
+var url = require('url');
+>>>>>>> 80e8cfe46944711a98ffa9540082292c36510ff1
 
 function checkHttpStatus(URL, timeout, cb) {
-//	var URL = 'https://www.google.com/';
 
-  var requester = URL.match(/^https(.*)/) ? require('https') : require('http');
+  var url_data = url.parse(URL, true);
 
-  requester.get(URL, function(res) {
+  var http = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
+  var request = require('request');
+
+  var options = {
+    url: URL,
+    agent: new http.Agent({keepAlive:false}),
+  };
+
+  request.get(options, function(error, res) {
     //  console.log("statusCode: ", res.statusCode);
     //  console.log("headers: ", res.headers);
 
@@ -43,26 +55,26 @@ function checkHttpStatus(URL, timeout, cb) {
     // dns issue me { [Error: getaddrinfo ENOTFOUND www.google.coma www.google.coma:80]
     if(e.errno == 'ECONNRESET' || e.errno == 'ECONNREFUSED' ){
       // probl firewalli
-      console.log('Connection reset/refused  / Firewall Issue');
+      console.log('Connection reset/refused  / Firewall Issue' + e);
       cb({message: 'Connection reset/refused  / Firewall Issue', status_code: '-2', status: 'ERROR'});
     }
     else if( e.errno == 'ENOTFOUND' ){
       // probl dns
-      console.log('Unable to resolve host  / DNS Issue');
+      console.log('Unable to resolve host  / DNS Issue' + e);
       cb({message: 'Unable to resolve host  / DNS Issue', status_code: '-3', status: 'ERROR'});
     }
     else if( e.errno == 'ETIMEDOUT' ){
       // timeout
-      console.log('Connection timeout  / Port|TCP|Host Issue');
+      console.log('Connection timeout  / Port|TCP|Host Issue' + e);
       cb({message: 'Connection timeout  / Port|TCP|Host Issue', status_code: '-4', status: 'ERROR'});
     }
     else if( e.errno == 'EHOSTUNREACH' ){
       //
-      console.log('Destination host unreachable  / Network Issue');
+      console.log('Destination host unreachable  / Network Issue' + e);
       cb({message: 'Destination host unreachable  / Network Issue', status_code: '-5', status: 'ERROR'});
     }
     else{
-      console.log('Unhandled Issue  / Issue');
+      console.log('Unhandled Issue  / Issue' + e);
       cb({message: 'Unhandled Issue  / Issue', status_code: '-6', status: 'ERROR'});
       // nej error i cuditshem
       //ESOCKETTIMEDOUT,  EPIPE, EAI_AGAIN
