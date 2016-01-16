@@ -7,15 +7,14 @@ function checkHttpStatus(URL, timeout, cb) {
   var url_data = url.parse(URL, true);
 
   var http = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
+  var request = require('request');
 
   var options = {
-    hostname: url_data.hostname,
-    path: url_data.pathname,
-    method: 'HEAD',
-    agent: new http.Agent({keepAlive: false})
+    url: URL,
+    agent: new http.Agent({keepAlive:false}),
   };
 
-  http.request(options, function(res) {
+  request.get(options, function(error, res) {
     //  console.log("statusCode: ", res.statusCode);
     //  console.log("headers: ", res.headers);
 
@@ -52,27 +51,27 @@ function checkHttpStatus(URL, timeout, cb) {
     // dns issue me { [Error: getaddrinfo ENOTFOUND www.google.coma www.google.coma:80]
     if(e.errno == 'ECONNRESET' || e.errno == 'ECONNREFUSED' ){
       // probl firewalli
-      console.log('Connection reset/refused  / Firewall Issue');
+      console.log('Connection reset/refused  / Firewall Issue' + e);
       cb({message: 'Connection reset/refused  / Firewall Issue', status_code: '-2', status: 'ERROR'});
     }
     else if( e.errno == 'ENOTFOUND' ){
       // probl dns
-      console.log('Unable to resolve host  / DNS Issue');
+      console.log('Unable to resolve host  / DNS Issue' + e);
       cb({message: 'Unable to resolve host  / DNS Issue', status_code: '-3', status: 'ERROR'});
     }
     else if( e.errno == 'ETIMEDOUT' ){
       // timeout
-      console.log('Connection timeout  / Port|TCP|Host Issue');
+      console.log('Connection timeout  / Port|TCP|Host Issue' + e);
       cb({message: 'Connection timeout  / Port|TCP|Host Issue', status_code: '-4', status: 'ERROR'});
     }
     else if( e.errno == 'EHOSTUNREACH' ){
       //
-      console.log('Destination host unreachable  / Network Issue');
+      console.log('Destination host unreachable  / Network Issue' + e);
       cb({message: 'Destination host unreachable  / Network Issue', status_code: '-5', status: 'ERROR'});
     }
     else{
-      console.log('Unhandled Issue  / Issue');
-      cb({message: 'Unhandled Issue  / Issue' + e, status_code: '-6', status: 'ERROR'});
+      console.log('Unhandled Issue  / Issue' + e);
+      cb({message: 'Unhandled Issue  / Issue', status_code: '-6', status: 'ERROR'});
       // nej error i cuditshem
       //ESOCKETTIMEDOUT,  EPIPE, EAI_AGAIN
     }
