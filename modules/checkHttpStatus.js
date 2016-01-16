@@ -6,16 +6,16 @@ function checkHttpStatus(URL, timeout, cb) {
 
   var url_data = url.parse(URL, true);
 
-  var requester = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
+  var http = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
 
   var options = {
     hostname: url_data.hostname,
     path: url_data.pathname,
     method: 'HEAD',
     agent: new requester.Agent({keepAlive: false})
-  }
+  };
 
-  requester.get(options, function(res) {
+  http.request(options, function(res) {
     //  console.log("statusCode: ", res.statusCode);
     //  console.log("headers: ", res.headers);
 

@@ -57,6 +57,9 @@ function processWork(tC,callback){
  */
 function postToAPI (data) {
 	var request = require('request');
+
+	//TODO https if
+	var http = require('http');
 	logger('info', 'Posting data to API');
 	logger('debug', data);
 	//if(configs.debug) console.log('Data received', data);
@@ -64,6 +67,7 @@ function postToAPI (data) {
 		uri: configs.api_url + 'service-data/add',
 		//headers: { 'Content-Type': 'application/json', },
 		method: 'POST',
+		agent: new http.Agent({keepAlive:false}),
 		json: {
 			data : {
 				message: data.message,
