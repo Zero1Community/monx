@@ -68,13 +68,7 @@
                 <label class="col-lg-6 control-label">Current Status </label>
                 <div class="col-lg-6">
                     <p class="form-control-static text-muted"><a href="/services/{{ service.id }}/history">
-                    {% if service.status == 'ERROR' and service.type == 'blacklist' %} 
-                      BLACKLISTED 
-                    {% elif service.status == 'OK'%}
-                      CLEAN
-                    {% else%}
-                      ERROR
-                    {% endif %}</a></p>
+                    service.status</a></p>
                 </div>
               </div>
               <div class="form-group">
@@ -101,7 +95,7 @@
                 <label class="col-md-6 control-label">Last Service Data</label>
                 <div class="col-md-6">
                 <p class="form-control-static text-muted">
-                skemi </p>
+                Working on it </p>
                 </div>
               </div>            
             </div>
