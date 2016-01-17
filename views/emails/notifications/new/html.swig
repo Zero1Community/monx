@@ -4,12 +4,13 @@
 	<title>Monx</title>
 </head>
 <body>
-{{subject}}
+Hi {{name}},
 <br>
-There is a new event update for service {{name}}
+There is a new event update
 <br>
 
-Message: {{event_body}}
+Message: {{subject}}
+{{event_body}}
 
 <br>
 <br>
