@@ -32,7 +32,7 @@
               <div class="form-group">
                 <label class="col-md-6 control-label">Service Last Check</label>
                 <div class="col-md-6">
-                <p class="form-control-static text-muted">{{service.last_checked}}</p>
+                <p class="form-control-static text-muted">{{service.last_checked|date}}</p>
                 </div>
               </div>
 
@@ -95,7 +95,9 @@
                 <label class="col-md-6 control-label">Last Service Data</label>
                 <div class="col-md-6">
                 <p class="form-control-static text-muted">
-                Working on it </p>
+                {{service_data.status}}</p>
+                  <p class="form-control-static text-muted">{{service_data.message}}</p>
+                  <p class="form-control-static text-muted">{{service_data.createdAt|date}}</p>
                 </div>
               </div>            
             </div>
