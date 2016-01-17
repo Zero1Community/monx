@@ -1,10 +1,6 @@
 var configs  = require('../config/configs.js');
-<<<<<<< HEAD
 var logger   = require('../modules/logger.js')('http_status', configs.logs.http_status);
-=======
-var logger   = require('../modules/logger.js')('httpstatus', configs.logs.httpstatus);
 var url = require('url');
->>>>>>> 80e8cfe46944711a98ffa9540082292c36510ff1
 
 function checkHttpStatus(URL, timeout, cb) {
 
