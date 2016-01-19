@@ -9,6 +9,7 @@
 (function($) {
 
    // Place custom scripts here
+  alert('aaa');
 
 })(jQuery);
 

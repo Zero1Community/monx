@@ -10,7 +10,7 @@ function checkHttpStatus(data, timeout, cb) {
   var request = require('request');
 
   var options = {
-    url: URL,
+    url: data.host,
     agent: new http.Agent({keepAlive:false}),
   };
 
