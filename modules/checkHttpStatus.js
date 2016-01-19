@@ -19,29 +19,31 @@ function checkHttpStatus(data, timeout, cb) {
   }
   request.get(options, function(e, res) {
     if(e) {
-      if (e.errno == 'ECONNRESET' || e.errno == 'ECONNREFUSED') {
+        console.log('AAAAAAAAAAAA');
+        console.log(e.code);
+      if (e.code == 'ECONNRESET' || e.code == 'ECONNREFUSED') {
         // probl firewalli
-        console.log('Connection reset/refused  / Firewall Issue' + e);
-        cb({message: 'Connection reset/refused  / Firewall Issue', status_code: '-2', status: 'ERROR'});
+        console.log('Connection reset/refused  / Firewall Issue' + e.code );
+          return cb({message: 'Connection reset/refused  / Firewall Issue', status_code: '-2', status: 'ERROR'});
       }
-      else if (e.errno == 'ENOTFOUND') {
+      else if (e.code == 'ENOTFOUND') {
         // probl dns
-        console.log('Unable to resolve host  / DNS Issue' + e);
-        cb({message: 'Unable to resolve host  / DNS Issue', status_code: '-3', status: 'ERROR'});
+        console.log('Unable to resolve host  / DNS Issue' + e.code );
+          return cb({message: 'Unable to resolve host  / DNS Issue', status_code: '-3', status: 'ERROR'});
       }
-      else if (e.errno == 'ETIMEDOUT') {
+      else if (e.code  == 'ETIMEDOUT') {
         // timeout
-        console.log('Connection timeout  / Port|TCP|Host Issue' + e);
-        cb({message: 'Connection timeout  / Port|TCP|Host Issue', status_code: '-4', status: 'ERROR'});
+        console.log('Connection timeout  / Port|TCP|Host Issue' + e.code );
+          return cb({message: 'Connection timeout  / Port|TCP|Host Issue', status_code: '-4', status: 'ERROR'});
       }
-      else if (e.errno == 'EHOSTUNREACH') {
+      else if (e.code == 'EHOSTUNREACH') {
         //
-        console.log('Destination host unreachable  / Network Issue' + e);
-        cb({message: 'Destination host unreachable  / Network Issue', status_code: '-5', status: 'ERROR'});
+        console.log('Destination host unreachable  / Network Issue' + e.code );
+          return cb({message: 'Destination host unreachable  / Network Issue', status_code: '-5', status: 'ERROR'});
       }
       else {
-        console.log('Unhandled Issue  / Issue' + e);
-        cb({message: 'Unhandled Issue  / Issue', status_code: '-6', status: 'ERROR'});
+        console.log('Unhandled Issue  / Issue' + e.code );
+        return cb({message: 'Unhandled Issue  / Issue', status_code: '-6', status: 'ERROR'});
         // nej error i cuditshem
         //ESOCKETTIMEDOUT,  EPIPE, EAI_AGAIN
       }
