@@ -2,9 +2,9 @@ var configs  = require('../config/configs.js');
 var logger   = require('../modules/logger.js')('http_status', configs.logs.http_status);
 var url = require('url');
 
-function checkHttpStatus(URL, timeout, cb) {
+function checkHttpStatus(data, timeout, cb) {
 
-  var url_data = url.parse(URL, true);
+  var url_data = url.parse(data.host, true);
 
   var http = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
   var request = require('request');
@@ -14,6 +14,9 @@ function checkHttpStatus(URL, timeout, cb) {
     agent: new http.Agent({keepAlive:false}),
   };
 
+  if(data.protocol === 'https') {
+    options.strictSSL = data.options.ignore_ssl_issues === true ? false : true;
+  }
   request.get(options, function(error, res) {
     //  console.log("statusCode: ", res.statusCode);
     //  console.log("headers: ", res.headers);

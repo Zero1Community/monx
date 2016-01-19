@@ -399,14 +399,19 @@ router.post('/add', function(req, res){
 	var newService = new Service();
 
   newService.name = req.body.name;
-  newService.host = req.body.host;
   newService.type = req.body.type;
-  newService.interval = req.body.interval;
-  //newService.running_status = req.body.running_status;
+
+  if(newService.type === 'http_status') {
+    newService.host = req.body.protocol + '://' + req.body.host;
+    newService.options = {};
+    newService.options.ignore_ssl_issues = req.body.ignore_ssl_issues ? true : false;
+  }
+
+  newService.interval = req.body.interval * 60;
   newService.running_status = req.body.running_status ? true : false;
-  newService.notification_status.twitter = req.body.twitter_status ? true : false;
-  newService.notification_status.sms = req.body.sms_status ? true : false;
   newService.notification_status.mute = req.body.mute_status ? true : false;
+/*  newService.notification_status.twitter = req.body.twitter_status ? true : false;
+  newService.notification_status.sms = req.body.sms_status ? true : false;*/
 
   newService.user = req.user;
   workEmmiter(newService,'service_updates');
