@@ -13,7 +13,7 @@ function workEmmiter(jobToDo,queue){
 
       return ok.then(function(_qok) {
         ch.sendToQueue(q, new Buffer(JSON.stringify(jobToDo)));
-        logger('info',' [x] Sent job to rabbitMQ queue '+ queue + ' with configured interval ' + jobToDo.interval);
+        logger('info',' [x] Sent job to rabbitMQ queue '+ queue );
         return ch.close();
       });
     })).ensure(function() { conn.close(); });

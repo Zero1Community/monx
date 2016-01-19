@@ -23,9 +23,9 @@ function scheduler(taskList){
     //TODO: kjo duhet me .then qe te mos ta bukosim queuen OSE
     // me limit OSE
     // me IP rotation
-    if(task.interval > 180){
-      workEmmiter(task,'all_checks');
-    }
+    //if(task.interval > 180){
+    //  workEmmiter(task,'all_checks');
+    //}
     intervals[task._id] = setInterval(function(task) {
       logger('info','[scheduler ] Po monitorojme '+ task.name);
       logger('info','[scheduler ] Me interval '+ randInt);
