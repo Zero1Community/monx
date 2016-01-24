@@ -65,6 +65,7 @@ function updateAndNotify(notific,status_subject){
 				email : user.email,
 				event_id : notific.notification_id,
 				service_id : notific.service_id,
+				service_name: notific.service_name,
 				event_body : JSON.stringify(notific.message)
 			};
 			// TODO: fix this
@@ -248,12 +249,11 @@ function checker(new_data){
 				}
 				logger('debug', '[checker_algo] OK OK notification triggered');
 				if (notification_data.no_previous_data == 1) {
-					updateAndNotify(new_data, '** Monitoring Service Started', function () {
+					updateAndNotify(new_data, 'Monx - ' + new_data['service_name'] + ' Monitoring Started', function () {
 						logger('info', 'Notification sent to process');
 					});
-				}
-				else {
-					updateAndNotify(new_data, '** Service Recovery', function () {
+				} else {
+					updateAndNotify(new_data, 'Monx - ' + new_data['service_name']  +' Service Recovery', function () {
 						logger('info', 'Notification sent to process');
 					});
 				}
@@ -263,7 +263,7 @@ function checker(new_data){
 				logger('debug', '[checker_algo] Got into ERROR ERROR ');
 				if (notification_status === 'ERROR' && (new_data.status_code == last_data.status_code || !new_data.message.diff)) return;
 				logger('debug', '[checker_algo] ERROR ERROR notification triggered');
-				updateAndNotify(new_data, '** Service Status Update', function () {
+				updateAndNotify(new_data, 'Monx - ' + new_data['service_name'] + ' Status Update', function () {
 					logger('info', 'Notification sent to process');
 				});
 			}
@@ -272,7 +272,7 @@ function checker(new_data){
 				logger('debug', '[checker_algo] Got into OK ERROR ');
 				if (notification_status === 'ERROR') return;
 				logger('debug', '[checker_algo] OK ERROR notification triggered');
-				updateAndNotify(new_data, '** Service Error', function () {
+				updateAndNotify(new_data, 'Monx - ' + new_data['service_name'] + ' Error', function () {
 					logger('info', 'Notification sent to process');
 				});
 			}
@@ -282,7 +282,7 @@ function checker(new_data){
 				logger('debug', '[checker_algo] Got into ERROR OK');
 				if (notification_status === 'OK') return;
 				logger('debug', '[checker_algo] ERROR OK notification triggered');
-				updateAndNotify(new_data, '** Service Recovery', function () {
+				updateAndNotify(new_data, 'Monx - ' + new_data['service_name'] + ' Recovery', function () {
 					logger('info', 'Notification sent to process');
 				}); //STATUS RECOVERY
 			}
