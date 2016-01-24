@@ -403,8 +403,7 @@ router.post('/add', function(req, res){
 
   if(newService.type === 'http_status') {
     newService.host = req.body.protocol + '://' + req.body.host;
-    newService.options = {};
-    newService.options.ignore_ssl_issues = req.body.ignore_ssl_issues ? true : false;
+    newService.options['ignore_ssl_issues'] = req.body.ignore_ssl_issues ? true : false;
   }
 
   newService.interval = req.body.interval * 60;

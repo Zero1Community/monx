@@ -15,7 +15,7 @@ function checkHttpStatus(data, timeout, cb) {
   };
 
   if(data.protocol === 'https') {
-    options.strictSSL = data.options.ignore_ssl_issues === true ? false : true;
+    options.strictSSL = data.options['ignore_ssl_issues'] === true ? false : true;
   }
   request.get(options, function(e, res) {
     if(e) {
