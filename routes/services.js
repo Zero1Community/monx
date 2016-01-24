@@ -395,26 +395,26 @@ router.post('/add', function(req, res){
     req.flash('error_messages', errors);
     return res.redirect('/services/add');
   }   
-
-	var newService = new Service();
-
+    var newService = {};
   newService.name = req.body.name;
-  newService.type = req.body.type;
 
-  if(newService.type === 'http_status') {
-    newService.host = req.body.protocol + '://' + req.body.host;
-    newService.options['ignore_ssl_issues'] = req.body.ignore_ssl_issues ? true : false;
-  }
+    newService.type = req.body.type;
 
+    if(newService.type === 'http_status') {
+        newService.host = req.body.protocol + '://' + req.body.host;
+        newService.options['ignore_ssl_issues'] = req.body.ignore_ssl_issues ? true : false;
+    }
   newService.interval = req.body.interval * 60;
-  newService.running_status = req.body.running_status ? true : false;
-  newService.notification_status.mute = req.body.mute_status ? true : false;
-/*  newService.notification_status.twitter = req.body.twitter_status ? true : false;
-  newService.notification_status.sms = req.body.sms_status ? true : false;*/
 
+    newService.running_status = req.body.running_status ? true : false;
+    newService.notification_status.mute = req.body.mute_status ? true : false;
+    /*  newService.notification_status.twitter = req.body.twitter_status ? true : false;
+  newService.notification_status.sms = req.body.sms_status ? true : false;*/
   newService.user = req.user;
-  workEmmiter(newService,'service_updates');
-  newService.save(function(err) {
+
+    newService = new Service(newService, false);
+    workEmmiter(newService,'service_updates');
+    newService.save(function(err) {
      if(err) {
      	logger.debug('There was an error saving the service tek service', err);
      } else {

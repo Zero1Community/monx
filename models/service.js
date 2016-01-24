@@ -16,7 +16,6 @@ var serviceSchema = new mongoose.Schema({
         twitter: { type: Boolean, default: false },
         sms: { type: Boolean, default: false }
       },
-      options: [],
       interval: Number,
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     },{ strict: false });
