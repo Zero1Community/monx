@@ -6,7 +6,7 @@
 <body>
 Hi {{name}},
 <br>
-There is a new event update
+There is a new event update for {{service_name}}
 <br>
 
 Message: {{subject}}
@@ -16,6 +16,6 @@ Message: {{subject}}
 <br>
 To find more:
 <br>
- http://monx.zero1.al/services/{{service_id}}/events/{{event_id}}/
+ https://monx.me/services/{{service_id}}/events/{{event_id}}/
 </body>
 </html>
