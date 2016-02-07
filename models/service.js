@@ -10,6 +10,7 @@ var serviceSchema = new mongoose.Schema({
       status: String,
       status_code: {type: String, default: -1},
       last_checked: Date,
+      alert_mode: { type: Boolean, default: false }
       running_status: Boolean,
       notification_status: {
         mute: { type: Boolean, default: false },

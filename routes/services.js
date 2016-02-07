@@ -213,6 +213,7 @@ router.get('/:id/delete', m.hasServiceAccess, function(req, res){
         res.redirect('/services');
       }
       else{
+        req.flash('error_messages', 'Error deleting service');
         logger('error',err);
       }
       
@@ -400,7 +401,6 @@ router.post('/add', function(req, res){
   newService.type = req.body.type;
   newService.notification_status = {};
   newService.options = {};
-  newService.options.jari = 'jarriii';
 
   if(newService.type === 'http_status') {
       //TODO: match nqs fillon tashme me https
