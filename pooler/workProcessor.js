@@ -159,19 +159,19 @@ function monxBlacklist(blacklistObject){
 			}
 			logger('debug',totalResults[i]);
 		}
-// TODO: FIX THIS, unable to reach API
-//   Error
-// { [Error: connect ECONNREFUSED]
-//   code: 'ECONNREFUSED',
-//   errno: 'ECONNREFUSED',
-//   syscall: 'connect' }
-// undefined
-// Error
-// { [Error: connect ECONNREFUSED]
-//   code: 'ECONNREFUSED',
-//   errno: 'ECONNREFUSED',
-//   syscall: 'connect' }
-// undefined
+	// TODO: FIX THIS, unable to reach API
+	//   Error
+	// { [Error: connect ECONNREFUSED]
+	//   code: 'ECONNREFUSED',
+	//   errno: 'ECONNREFUSED',
+	//   syscall: 'connect' }
+	// undefined
+	// Error
+	// { [Error: connect ECONNREFUSED]
+	//   code: 'ECONNREFUSED',
+	//   errno: 'ECONNREFUSED',
+	//   syscall: 'connect' }
+	// undefined
 		var data = {
 			message: {
 				listed : blackStatus,
