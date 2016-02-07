@@ -28,7 +28,7 @@ function checkHttpStatus(data, timeout, cb) {
     console.log('We didnt get ignore_ssl_issues flag ');
   }
 
-  request.get(options, function(e, res) {
+  request.get(options, function(e, res, body) {
     if(e) {
         //console.log(e.code);
       if (e.code == 'ECONNRESET' || e.code == 'ECONNREFUSED') {
@@ -64,7 +64,7 @@ function checkHttpStatus(data, timeout, cb) {
       if(res.statusCode >= 600 && res.statusCode < 100){
         // invalid
         console.log('Invalid code ', res.statusCode);
-        return cb({message: 'Invalid code ', status_code: res.statusCode, status: 'ERROR'});
+        return cb({message: 'Invalid code ', status_code: res.statusCode, status: 'ERROR', dump : body});
       }
       if(res.statusCode >= 500 && res.statusCode < 600){ // to be rechecked
         // internal error
@@ -106,7 +106,7 @@ function checkHttpStatus(data, timeout, cb) {
 
         }
         console.log('Not found,  Got code: ', res.statusCode);
-        return cb({message: 'Internal Server Error ', status_code: res.statusCode, status: 'ERROR'});
+        return cb({message: 'Internal Server Error ', status_code: res.statusCode, status: 'ERROR', dump : body});
       }
 
       if(res.statusCode >= 400 && res.statusCode < 500){
@@ -170,7 +170,7 @@ function checkHttpStatus(data, timeout, cb) {
             messageC = 'Unassigned 400 ERROR';
           }
         console.log('Not found,  Got code: ', res.statusCode);
-        return cb({message: messageC , status_code: res.statusCode, status: 'ERROR'});
+        return cb({message: messageC , status_code: res.statusCode, status: 'ERROR', dump : body});
       }
 
       if(res.statusCode >= 300 && res.statusCode < 400){
@@ -208,7 +208,7 @@ function checkHttpStatus(data, timeout, cb) {
         }
 
         console.log(messageC + '  Got code: ',res.statusCode);
-        return cb({message: messageC, status_code: res.statusCode, status: 'ERROR'});
+        return cb({message: messageC, status_code: res.statusCode, status: 'ERROR', dump : body});
       }
       if(res.statusCode >= 200 && res.statusCode < 300){
         // ok but not really
