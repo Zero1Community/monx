@@ -70,43 +70,46 @@ function checkHttpStatus(data, timeout, cb) {
         // internal error
         switch(res.statusCode){
           case 500:
-            messageC = 'Bad Request';
+            messageC = 'Internal Server Error';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 501:
+            messageC = 'Not Implemented';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 502:
+            messageC = 'Bad Gateway';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 503:
+            messageC = 'Service Unavailable';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 504:
+            messageC = 'Gateway Timeout';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 505:
+            messageC = 'HTTP Version Not Supported';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 506:
+            messageC = 'Variant Also Negotiates';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 507:
+            messageC = 'Insufficient Storage';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 508:
+            messageC = 'Loop Detected';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 509:
+            messageC = 'Unassigned';
             break;
-          case 500:
-            messageC = 'Bad Request';
+          case 510:
+            messageC = 'Not Extended';
+            break;
+          case 511:
+            messageC = 'Network Authentication Required';
             break;
           default:
-
+            messageC = 'Unassigned 500 Error';
         }
         console.log('Not found,  Got code: ', res.statusCode);
-        return cb({message: 'Internal Server Error ', status_code: res.statusCode, status: 'ERROR', dump : body});
+        return cb({message: messageC, status_code: res.statusCode, status: 'ERROR', dump : body});
       }
 
       if(res.statusCode >= 400 && res.statusCode < 500){
@@ -165,6 +168,33 @@ function checkHttpStatus(data, timeout, cb) {
             break;
           case 417:
             messageC = 'Expectation Failed';
+            break;
+          case 421:
+            messageC = 'Misdirected Request';
+            break;
+          case 422:
+            messageC = 'Unprocessable Entity';
+            break;
+          case 423:
+            messageC = 'Locked';
+            break;
+          case 424:
+            messageC = 'Failed Dependency';
+            break;
+          case 426:
+            messageC = 'Upgrade Required';
+            break;
+          case 428:
+            messageC = 'Precondition Required';
+            break;
+          case 429:
+            messageC = 'Too Many Requests';
+            break;
+          case 431:
+            messageC = 'Request Header Fields Too Large';
+            break;
+          case 451:
+            messageC = 'Unavailable for Legal Reasons';
             break;
           default:
             messageC = 'Unassigned 400 ERROR';

@@ -83,6 +83,10 @@ function postToAPI (data) {
 			}
 		}
 	};
+	if(data.dump != null){
+		options.json.data.message.content = data.dump;
+	}
+
 	request(options, function(error, response, body){
 		if(error) {
 			logger('error','Got error while posting data to API !');

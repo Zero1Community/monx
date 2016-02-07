@@ -8,29 +8,6 @@ var logger       = require('../modules/logger.js')('checker', configs.logs.check
 var _            = require('underscore');
 
 
-// we will store these in redis later
-function getStatusCodeDescription(statusCode) {
-	//switch(statusCode){
-	//    case '-1':
-	//        return 'unknown';
-	//        break;
-	//    case'-2' :
-	//        break;
-	//    case '-3' :
-	//        return 'unknown';
-	//        break;
-	//    case '-4' :
-	//        return 'unknown';
-	//        break;
-	//    case '-5' :
-	//        return 'unknown';
-	//        break;
-	//    case '-6' :
-	//        return 'unknown';
-	//    default:
-	//        return 'unknown';
-	//}
-}
 
 function updateAndNotify(notific,status_subject){
 	// TODO: add notific type to implement SMS, TWEET, push_notific and other type of notifications
@@ -186,13 +163,17 @@ function checker(new_data){
 		logger('debug', 'Checking OLD and NEW status code');
 		logger('debug', 'New: ' + new_data.status_code + " Old: " + last_data.status_code);
 		if (new_data.status_code != last_data.status_code || last_data.no_previous_data == 1 || diff.length > 0) {
-			var sData = new serviceData({
+			var serviceDataObject = {
 				message: new_data.message,
 				status: new_data.status,
 				status_code: new_data.status_code,
 				source: new_data.source
 				// to be ndrruar source_IP me x-forwarded-for me vone
-			});
+			};
+			if(new_data.content != null){
+				serviceDataObject.content = new_data.content; 
+			}
+			var sData = new serviceData(serviceDataObject);
 			sData.save(function (err) {
 				if (!err) {
 					logger('info', '[checker] Event successfully saved into collection');

@@ -8,7 +8,8 @@ function serviceData(service_id){
 			status: String,
 			status_code: String,
 			source: String,
-			message: {}
+			message: {},
+			content: String
 			},{ strict: false });
 
 	serviceDataSchema.plugin(mongoosePaginate);

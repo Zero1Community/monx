@@ -361,19 +361,20 @@ router.get('/:id', function(req, res) {
 		if(err) {
       logger('error','There was an error finding the service');
       logger('error',err);
-    } else {
-        var service_id = req.params.id; 
-        var serviceData = ServiceData(service_id);
-              serviceData.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, service_data) {
-                if (err) {
-			               logger('error','There was an error finding the last event');
-                     logger('error',err);
-                }
-                else if(service_data){
-                  res.render('services/view', {service: service, service_data: service_data,page_title: 'Service details'});
-                };
-                res.render('services/view', {service: service, page_title: 'Service details'});
-              });
+    } 
+    else {
+      var service_id = req.params.id; 
+      var serviceData = ServiceData(service_id);
+      serviceData.findOne({}, {}, { sort: { 'updatedAt' : -1 } }, function(err, service_data) {
+        if (err) {
+             logger('error','There was an error finding the last event');
+             logger('error',err);
+        }
+        else if(service_data){
+          res.render('services/view', {service: service, service_data: service_data,page_title: 'Service details'});
+        };
+        res.render('services/view', {service: service, page_title: 'Service details'});
+      });
 		}	
 	});
 });
