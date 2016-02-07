@@ -41,7 +41,7 @@ function DbUpdateServices () {
 
   Service.find({running_status : true}, function(err, services) {
     //TODO: po kur nuk gje gjo ?
-    //if(configs.debug) console.log(services);
+    logger('debug',services);
     scheduler(services);
     mongoose.connection.close();
   });

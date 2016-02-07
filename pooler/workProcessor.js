@@ -22,8 +22,8 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
 				logger('info',' [x] Received a task');
 				var toCheck = JSON.parse(msg.content.toString());
 				//if(configs.debug) console.log(toCheck);
+				logger('debug',toCheck);
 				processWork(toCheck);
-				//if(configs.debug) console.log(msg);
 			}, {noAck: true});
 		});
 
