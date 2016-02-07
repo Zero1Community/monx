@@ -84,7 +84,11 @@ function postToAPI (data) {
 		}
 	};
 	if(data.dump != null){
-		options.json.data.message.content = data.dump;
+		logger('debug', 'Adding content to API Call');
+		options.json.data.content = data.dump;
+	}
+	else{
+		logger('debug', 'No HTML error content added to API call ');
 	}
 
 	request(options, function(error, response, body){

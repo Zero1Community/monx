@@ -162,6 +162,7 @@ function checker(new_data){
 
 		logger('debug', 'Checking OLD and NEW status code');
 		logger('debug', 'New: ' + new_data.status_code + " Old: " + last_data.status_code);
+		logger('debug', 'AAAAAAAAAAAAAAAAAAAAAAA Content ' + new_data.content );
 		if (new_data.status_code != last_data.status_code || last_data.no_previous_data == 1 || diff.length > 0) {
 			var serviceDataObject = {
 				message: new_data.message,
@@ -170,6 +171,7 @@ function checker(new_data){
 				source: new_data.source
 				// to be ndrruar source_IP me x-forwarded-for me vone
 			};
+
 			if(new_data.content != null){
 				serviceDataObject.content = new_data.content; 
 			}

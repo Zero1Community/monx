@@ -87,6 +87,14 @@ router.post('/service-data/add', function(req, res){
 					logger('info', 'The new service status was saved!');
 				}
 			});
+			if(data.content){
+				logger('debug', 'API Call has HTML conntet ');	
+				logger('debug', data);	
+			}
+			else{
+				logger('debug', 'No HTML conntet found in API call');	
+				logger('debug', data);	
+			}
 			checker(data, function (err, res) {
 				if (err) {
 					logger('error', 'Got error in phase 1 on checker ');
