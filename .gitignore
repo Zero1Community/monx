@@ -5,3 +5,4 @@ logs/
 fix-perm.sh
 config/configs.js
 .idea/
+newrelic_agent.log
