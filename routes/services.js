@@ -385,7 +385,7 @@ router.post('/add', function(req, res){
   req.check('host', 'Your name is required').notEmpty();
   req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'An interval is required').notEmpty();
-  // req.check('running_status', 'The status is required').notEmpty();
+  req.check('running_status', 'The status is required').notEmpty();
   // req.check('twitter_status', 'The twitter status is required').notEmpty();
   // req.check('sms_status', 'The sms status is required').notEmpty();
 
@@ -395,15 +395,18 @@ router.post('/add', function(req, res){
     req.flash('error_messages', errors);
     return res.redirect('/services/add');
   }   
-    var newService = {};
+  var newService = {};
   newService.name = req.body.name;
+  newService.type = req.body.type;
+  newService.notification_status = {};
+  newService.options = {};
+  newService.options.jari = 'jarriii';
 
-    newService.type = req.body.type;
-
-    if(newService.type === 'http_status') {
-        newService.host = req.body.protocol + '://' + req.body.host;
-        newService.options.ignore_ssl_issues = req.body.ignore_ssl_issues ? true : false;
-    }
+  if(newService.type === 'http_status') {
+      //TODO: match nqs fillon tashme me https
+      newService.host = req.body.protocol + '://' + req.body.host;
+      newService.options.ignore_ssl_issues = req.body.ignore_ssl_issues ? true : false;
+  }
   newService.interval = req.body.interval * 60;
 
     newService.running_status = req.body.running_status ? true : false;

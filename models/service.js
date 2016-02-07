@@ -17,6 +17,7 @@ var serviceSchema = new mongoose.Schema({
         sms: { type: Boolean, default: false }
       },
       interval: Number,
+      options: {},
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     },{ strict: false });
 

@@ -72,7 +72,7 @@ router.post('/service-data/add', function(req, res){
 			data['mute_status'] = service.notification_status.mute;
 
 			service.status = data.status;
-			service.status = data.status_code;
+			service.status_code = data.status_code;
 			service.last_checked = new Date();
 
 			//TODO: kjo me sh mundesi na vonon
