@@ -1,3 +1,4 @@
+// Sample Config
 module.exports = {
 	debug : true,
 	api_url: 'API URL',
