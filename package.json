@@ -23,7 +23,7 @@
     "mongodb": "^2.0.33",
     "mongojs": "^2.3.0",
     "mongoose": "^4.0.0",
-    "mongoose-paginate": "^5.0.0",
+    "mongoose-paginate": "^4.0.1",
     "mongoose-timestamp": "^0.5.0",
     "morgan": "^1.5.3",
     "native-dns": "^0.7.0",
