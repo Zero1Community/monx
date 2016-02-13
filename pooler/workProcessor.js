@@ -52,6 +52,12 @@ function processWork(tC,callback){
 	if(tC.type === "icmp_ping"){
 		monxPing(tC);
 	}
+	if(tC.type === "api_route_check"){
+		// kontrollo 3-4 URL ne grup te nje API
+	}
+	if(tC.type === "api_response_time"){
+		//monxPing(tC);
+	}
 }
 
 
