@@ -127,7 +127,6 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
   req.check('id', 'Service ID is required').notEmpty();
   req.check('name', 'Service name is required').notEmpty();
   req.check('host', 'Your name is required').notEmpty();
-  req.check('type', 'A valid type is required').notEmpty();
   req.check('interval', 'The interval is required').notEmpty();
   // req.check('running_status', 'The running status is required').notEmpty();
   // req.check('mute_status', 'The mute_status is required').notEmpty();

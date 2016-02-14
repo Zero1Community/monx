@@ -83,6 +83,8 @@ function checkHttpStatus(data, timeout, cb) {
 			415: 'Unsupported Media Type',
 			416: 'Range Not Satisfiable',
 			417: 'Expectation Failed',
+
+			420: 'Method Failure (Spring Framework) | Enhance Your Calm (Twitter)',
 			421: 'Misdirected Request',
 			422: 'Unprocessable Entity',
 			423: 'Locked',
@@ -90,8 +92,15 @@ function checkHttpStatus(data, timeout, cb) {
 			426: 'Upgrade Required',
 			428: 'Precondition Required',
 			429: 'Too Many Requests',
+
 			431: 'Request Header Fields Too Large',
-			451: 'Unavailable for Legal Reasons',
+			440: 'IIS Login Timeout',
+			449: 'IIS Retry With',
+			450: 'IIS Blocked by Windows Parental Controls (Microsoft)',
+			451: 'Unavailable for Legal Reasons || IIS Redirect',
+
+			498: 'Invalid Token (Esri)',
+			499: 'Token Required (Esri)',
 
 			500: 'Internal Server Error',
 			501: 'Not Implemented',
@@ -102,9 +111,18 @@ function checkHttpStatus(data, timeout, cb) {
 			506: 'Variant Also Negotiates',
 			507: 'Insufficient Storage',
 			508: 'Loop Detected',
-			509: 'Unassigned',
+			509: 'Bandwidth Limit Exceeded (Apache Web Server/cPanel)',
 			510: 'Not Extended',
-			511: 'Network Authentication Required'
+			511: 'Network Authentication Required',
+
+			520: 'CloudFlare Unknown Error',
+			521: 'CloudFlare Web Server Is Down',
+			522: 'CloudFlare Connection Timed Out',
+			523: 'CloudFlare Origin Is Unreachable',
+			524: 'CloudFlare A Timeout Occurred',
+			525: 'CloudFlare SSL Handshake Failed',
+			526: 'CloudFlare Invalid SSL Certificate'
+
 	};
 
 	var url_data = url.parse(data.host, true);
@@ -191,12 +209,12 @@ function checkHttpStatus(data, timeout, cb) {
 					}
 					else{
 						logger('debug', errno_h[res.statusCode] + '  Got code: ' + res.statusCode);
-						return cb({message: errno_h[res.statusCode] + '  Got code: ' + res.statusCode, status_code : res.statusCode, status: 'ERROR'});						
+						return cb({message: errno_h[res.statusCode] + '  Got code: ' + res.statusCode, status_code : res.statusCode, status: 'ERROR',dump : body});						
 					}
 				}
 				else{
 						logger('debug', 'Unexpected status code, ' + '  Got code: ' + res.statusCode);
-						return cb({message: 'Unexpected status code, ' + res.statusCode , status_code : res.statusCode, status: 'ERROR'});						
+						return cb({message: 'Unexpected status code, ' + res.statusCode , status_code : res.statusCode, status: 'ERROR', dump : body});						
 				}
 			}
 		}

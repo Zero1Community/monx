@@ -1,4 +1,3 @@
-require('newrelic');
 var configs = require('../config/configs.js');
 var amqp    = require('amqplib');
 var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
