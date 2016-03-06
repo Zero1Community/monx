@@ -18,7 +18,7 @@ var heapdump = require('heapdump');
 
 memwatch.on('leak', function(info) {
  console.error(info);
- var file = '/home/monx/monx/heapdump_' + process.pid + '-' + Date.now() + '.heapsnapshot';
+ var file = '/home/monx/monx/www' + process.pid + '-' + Date.now() + '.heapsnapshot';
  heapdump.writeSnapshot(file, function(err){
    if (err) logger('error',err);
    else logger('info','Wrote snapshot: ' + file);
