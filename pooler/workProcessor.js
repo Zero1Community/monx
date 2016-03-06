@@ -2,6 +2,13 @@ var configs = require('../config/configs.js');
 var amqp    = require('amqplib');
 var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
 
+var checkHttpStatus = require('../modules/checkHttpStatus.js');
+var checkPing = require('../modules/checkPing.js');
+var request = require('request');
+var http = require('http');
+
+
+
 var memwatch = require('memwatch-next');
 var heapdump = require('heapdump');
 
@@ -80,10 +87,7 @@ function processWork(tC,callback){
  * @param data
  */
 function postToAPI (data) {
-	var request = require('request');
-
 	//TODO https if
-	var http = require('http');
 	logger('info', 'Posting data to API');
 	logger('debug', data);
 	//if(configs.debug) console.log('Data received', data);
@@ -124,8 +128,7 @@ function postToAPI (data) {
 
 // http status module
 function monxHttpStatus(httpStatObject){
-	// duhet taru timeouti
-	var checkHttpStatus = require('../modules/checkHttpStatus.js');
+	// duhet taru timeouti	
 	checkHttpStatus(httpStatObject, 8000, function (data) {
 		// duhet fut timeout
 		console.log(data);
@@ -143,7 +146,6 @@ function monxHttpStatus(httpStatObject){
 
 function monxPing(pingStatObject){
 	// duhet taru timeouti
-	var checkPing = require('../modules/checkPing.js');
 	checkPing(pingStatObject.host, 2000, function (data) {
 		// duhet fut timeout
 		console.log(data);

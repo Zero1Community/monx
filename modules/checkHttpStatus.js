@@ -1,6 +1,8 @@
 var configs  = require('../config/configs.js');
 var logger   = require('../modules/logger.js')('http_status', configs.logs.http_status);
 var url = require('url');
+var request = require('request');
+
 
 function checkHttpStatus(data, timeout, cb) {
 	// duke parur errno.h nga headerat e kernelit variojne nga 35 deri te 133 momentalisht 
@@ -128,7 +130,6 @@ function checkHttpStatus(data, timeout, cb) {
 	var url_data = url.parse(data.host, true);
 	//console.log(data.options);
 	var http = url_data.protocol.match(/^https(.*)/) ? require('https') : require('http');
-	var request = require('request');
 
 	var options = {
 		url: data.host,
