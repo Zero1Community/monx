@@ -12,6 +12,19 @@ var moment           = require('moment');
 var configs          = require('./config/configs.js');
 var logger           = require('./modules/logger.js')('app', configs.logs.app);
 var mongoose         = require('mongoose');
+var memwatch = require('memwatch-next');
+var heapdump = require('heapdump');
+
+
+memwatch.on('leak', function(info) {
+ console.error(info);
+ var file = '/home/monx/monx/heapdump_' + process.pid + '-' + Date.now() + '.heapsnapshot';
+ heapdump.writeSnapshot(file, function(err){
+   if (err) logger('error',err);
+   else logger('info','Wrote snapshot: ' + file);
+  });
+});
+
 
 mongoose.connect(configs.mongodb.url);
 
