@@ -11,7 +11,8 @@ var util         = require('util');
 var logger       = require('../modules/logger.js');
 var mongoose     = require('mongoose');
 var workEmmiter  = require('../modules/emmiter.js');
-var logger       = require('../modules/logger.js')('services', configs.logs.services);
+//var logger       = require('../modules/logger.js')('services', configs.logs.services);
+var logger       = require('../modules/logger.js');
 
 
 router.get('/', function(req, res){
@@ -143,26 +144,38 @@ router.post('/:id/edit', m.hasServiceAccess, function(req, res){
 
 	Service.findById(req.params.id, function(err, service){
     if(err){
-
+      logger('error',errors);
+      //return ?
     }
     logger('info',req.body);
   	service.name = req.body.name;
   	service.host = req.body.host;
   	service.type = req.body.type;
-  	service.interval = req.body.interval;
+    service.interval = req.body.interval;
+
     if (req.body.running_status ) {
       service.running_status = true;
     }
     else{
       service.running_status = false;
     }
-  	service.notification_status.mute = req.body.mute_status ? true : false;
+  	
+    service.notification_status.mute = req.body.mute_status ? true : false;
     service.notification_status.twitter = req.body.twitter_status ? true : false;
     service.notification_status.sms = req.body.sms_status ? true : false;
+
+    if(service.type === 'http_status') {
+        //TODO: match nqs fillon tashme me https
+        service.host = req.body.protocol + '://' + req.body.host;
+        service.options.ignore_ssl_issues = req.body.ignore_ssl_issues ? true : false;
+        service.options.original_interval = req.body.interval * 60;
+    }
+  
    //  console.log('Setting notification statuses');
    //  console.log(service.notification_status.mute);
    //  console.log(service.notification_status.twitter);
   	// console.log(service.notification_status.sms);
+    // me e leviz me nej api te vogel me e pas scalable
     workEmmiter(service,'service_updates');
 		  service.save(function(err) {
 		     if(err) {
@@ -406,6 +419,7 @@ router.post('/add', function(req, res){
       //TODO: match nqs fillon tashme me https
       newService.host = req.body.protocol + '://' + req.body.host;
       newService.options.ignore_ssl_issues = req.body.ignore_ssl_issues ? true : false;
+      newService.options.original_interval = req.body.interval * 60;
   }
   newService.interval = req.body.interval * 60;
 

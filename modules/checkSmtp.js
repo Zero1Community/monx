@@ -1,5 +1,6 @@
 var configs  = require('../config/configs.js');
-var logger   = require('../modules/logger.js')('smtp', configs.logs.smtp);
+var logger   = require('../modules/logger.js');
+//var logger   = require('../modules/logger.js')('smtp', configs.logs.smtp);
 
 
 

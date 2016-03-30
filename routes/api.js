@@ -3,7 +3,8 @@ var router      = express.Router();
 var middleware  = require('../middlewares/middlewares.js');
 var Service = require('../models/service.js');
 var configs     = require('../config/configs.js');
-var logger      = require('../modules/logger.js')('api', configs.logs.api);
+//var logger      = require('../modules/logger.js')('api', configs.logs.api);
+var logger      = require('../modules/logger.js');
 var checker     = require('../modules/checker.js');
 var mongoose    = require('mongoose');
 

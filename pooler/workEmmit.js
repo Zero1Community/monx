@@ -8,7 +8,8 @@ var User     = require('../models/user.js');
 var Service  = require('../models/service.js');
 var _        = require('underscore');
 
-var logger   = require('../modules/logger.js')('workEmmit', configs.logs.emmiter);
+//var logger   = require('../modules/logger.js')('workEmmit', configs.logs.emmiter);
+var logger   = require('../modules/logger.js');
 
 var intervals = [];
 var total_services = [];

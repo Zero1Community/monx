@@ -4,7 +4,8 @@ var Notification = require('../models/notification.js');
 var Service      = require('../models/service.js');
 var configs      = require('../config/configs.js');
 var ServiceData  = require('../models/service_data.js');
-var logger       = require('../modules/logger.js')('checker', configs.logs.checker);
+var logger       = require('../modules/logger.js');
+//var logger       = require('../modules/logger.js')('checker', configs.logs.checker);
 var _            = require('underscore');
 
 

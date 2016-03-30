@@ -1,9 +1,14 @@
 var configs = require('../config/configs.js');
 var amqp    = require('amqplib');
-var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
+//var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
+var logger  = require('../modules/logger.js');
 
+
+//var checkRBL = require('../modules/checkBlacklist.js');
 var checkHttpStatus = require('../modules/checkHttpStatus.js');
-var checkPing = require('../modules/checkPing.js');
+var workEmmiter  = require('../modules/emmiter.js');
+
+//var checkPing = require('../modules/checkPing.js');
 var request = require('request');
 var http = require('http');
 
@@ -130,42 +135,69 @@ function postToAPI (data) {
 function monxHttpStatus(httpStatObject){
 	// duhet taru timeouti	
 	checkHttpStatus(httpStatObject, 8000, function (data) {
-		// duhet fut timeout
-		console.log(data);
-		data['service_id'] = httpStatObject._id;
-		data['name'] = httpStatObject.name;
-		postToAPI(data, function (err) {
-			if (err) {
-				logger('error', err);
-			} else {
-				logger('info', 'Data posted!');
-			}
-		}, 3000);
+		// duhet fut timeout si parameter jareby
+		//double check here
+		//TODO: duhet ripare llogjika e ksaj ndoshta duhet me .then 
+		if(data.status === 'ERROR'){
+			checkHttpStatus(httpStatObject, 8000, function (rechecked_data) {
+				console.log('PO RIKONTROLLOHET'); // me logger kjo kur ta tarosh
+				rechecked_data['service_id'] = httpStatObject._id;
+				rechecked_data['name'] = httpStatObject.name;
+				
+				console.log('CURRENT RECHECKER DATA'); // me logger kjo kur ta tarosh
+				console.log(httpStatObject); // me logger kjo kur ta tarosh
+				if(httpStatObject.interval > 60 && rechecked_data.status === 'ERROR'){
+						httpStatObject.interval = 60;
+						console.log('UPDATING DATA TO SERVICEEEEEEE')
+						workEmmiter(httpStatObject,'service_updates');
+				}
+				else if(rechecked_data.status === 'OK' && httpStatObject.interval === 60 && httpStatObject.options.original_interval !== 60){
+						httpStatObject.interval = httpStatObject.options.original_interval;
+						workEmmiter(httpStatObject,'service_updates');
+				}
+				postToAPI(rechecked_data, function (err) {
+					if (err) {
+						logger('error', err);
+					} else {
+						logger('info', 'Data posted!');
+					}
+				}, 3000);
+			});
+		} else {
+			console.log(data);
+			data['service_id'] = httpStatObject._id;
+			data['name'] = httpStatObject.name;
+			postToAPI(data, function (err) {
+				if (err) {
+					logger('error', err);
+				} else {
+					logger('info', 'Data posted!');
+				}
+			}, 3000);
+		}
 	});
 }
 
 function monxPing(pingStatObject){
-	// duhet taru timeouti
-	checkPing(pingStatObject.host, 2000, function (data) {
-		// duhet fut timeout
-		console.log(data);
-		data['service_id'] = pingStatObject._id;
-		data['name'] = pingStatObject.name;
-		postToAPI(data, function (err) {
-			if (err) {
-				logger('error', err);
-			} else {
-				logger('info', 'Data posted!');
-			}
-		}, 3000);
-	});
+	// // duhet taru timeouti
+	// checkPing(pingStatObject.host, 2000, function (data) {
+	// 	// duhet fut timeout
+	// 	console.log(data);
+	// 	data['service_id'] = pingStatObject._id;
+	// 	data['name'] = pingStatObject.name;
+	// 	postToAPI(data, function (err) {
+	// 		if (err) {
+	// 			logger('error', err);
+	// 		} else {
+	// 			logger('info', 'Data posted!');
+	// 		}
+	// 	}, 3000);
+	// });
 }
 
 
 // blacklist module
 function monxBlacklist(blacklistObject){
-	var checkRBL = require('../modules/checkBlacklist.js');
-
 	checkRBL(blacklistObject.host, 80000, function(totalResults){
 		logger('info','Scan finished for: ' + blacklistObject.host);
 		//if(configs.debug) console.log('Result: ', results);
