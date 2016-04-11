@@ -12,10 +12,11 @@ var _ = require('lodash');
 //var checkRBL = require('../modules/checkBlacklist.js');
 //var checkPing = require('../modules/checkPing.js');
 
-// just a bunch of functions..
+//just a bunch of functions..
 
 function postToAPI (data) {
   //TODO https if
+  return;
   logger('info', 'Posting data to API');
   logger('debug', data);
   //if(configs.debug) console.log('Data received', data);
@@ -55,84 +56,44 @@ function postToAPI (data) {
 }
 
 
-// http status module
-function monxHttpStatus(httpStatObject){
-  // TODO replace 8000 with httpStatObject.timeout
-  checkHttpStatus(httpStatObject, 8000, function (data) {
-    // duhet fut timeout si parameter jareby
-    //double check here
-    //TODO: duhet ripare llogjika e ksaj ndoshta duhet me .then 
-    // if(data.status === 'ERROR'){
-    //   checkHttpStatus(httpStatObject, 8000, function (rechecked_data) {
-    //     console.log('PO RIKONTROLLOHET'); // me logger kjo kur ta tarosh
-    //     rechecked_data['service_id'] = httpStatObject._id;
-    //     rechecked_data['name'] = httpStatObject.name;
-        
-    //     console.log('CURRENT RECHECKER DATA'); // me logger kjo kur ta tarosh
-    //     console.log(httpStatObject); // me logger kjo kur ta tarosh
-        // if(httpStatObject.interval > 60 && rechecked_data.status === 'ERROR'){
-        //     httpStatObject.interval = 60;
-        //     console.log('UPDATING DATA TO SERVICEEEEEEE')
-        //     workEmmiter(httpStatObject,'service_updates');
-        // }
-        // else if(rechecked_data.status === 'OK' && httpStatObject.interval === 60 && httpStatObject.options.original_interval !== 60){
-        //     httpStatObject.interval = httpStatObject.options.original_interval;
-        //     workEmmiter(httpStatObject,'service_updates');
-        // }
-    //     postToAPI(rechecked_data, function (err) {
-    //       if (err) {
-    //         logger('error', err);
-    //       } else {
-    //         logger('info', 'Data posted!');
-    //       }
-    //     }, 3000);
-    //   });
-    // } else {
-      console.log(data);
-      data['service_id'] = httpStatObject._id;
-      data['name'] = httpStatObject.name;
-      postToAPI(data, function (err,cb) {
-        if (err) {
-          logger('error', err);
-          return(cb(err));
-        } else {
-          logger('info', 'Data posted!');
-          return(cb(err));
-        }
-      }, 3000);
-    //}
-  });
-}
-
-
 // actual work done 
 
 var tasksQueue = async.queue(function (tC, callback) {
-    console.log('Performing task: ' + tC.name);
+    console.log(tC);
+    console.log('Performing task: ' + tC._id);
     console.log('----------------------------------');
+    console.log('Waiting to be processed: ', tasksQueue.length());
     logger('info','Got type: ' + tC.type);
+
     if(tC.type === "blacklist"){
-      //callback(monxBlacklist(tC));
-      callback();
+      //monxBlacklist(tC);
     }
-    if(tC.type === "http_status"){
-      callback(monxHttpStatus(tC));
+    else if(tC.type === "http_status"){
+      checkHttpStatus(tC, 8000, function (data) {
+        console.log(data);
+        callback(data);
+        //data['service_id'] = tC._id;
+      });
     }
-    if(tC.type === "icmp_ping"){
+    else if(tC.type === "icmp_ping"){
       //monxPing(tC);
     }
-    if(tC.type === "api_route_check"){
+    else if(tC.type === "api_route_check"){
       // kontrollo 3-4 URL ne grup te nje API
     }
-    if(tC.type === "api_response_time"){
+    else if(tC.type === "api_response_time"){
       //monxPing(tC);
     }
-    //just in case 
-    setTimeout(function() {
-      callback('Task went longer than the timeout..');
-    }, 10000);
-// throttle aka task concurrency 
-}, 1);
+    else{
+      console.log(tC);
+      console.log('got weird data');
+      callback('bohh');      
+    }
+    // setTimeout(function() {
+    //   callback('Task went longer than the timeout..');
+    // }, 60000);
+// throttle aka task concurrency , e vej
+}, 15);
 
 
 function GetWorkToDo() {
@@ -140,10 +101,11 @@ function GetWorkToDo() {
     process.once('SIGINT', function() { conn.close(); });
     return conn.createChannel().then(function(ch) {
 
-      var ok = ch.assertQueue('all_checks', {durable: false});
+      var ok = ch.assertQueue('service_checks', {durable: false});
       // todo : error catching per kur nuk lidhet queueja
       ok = ok.then(function(_qok) {
-        return ch.consume('all_checks', function(msg) {
+        return ch.consume('service_checks', function(msg) {
+        //return ch.consume('all_checks', function(msg) {
           logger('info',' [x] Received a task');
           var toCheck = JSON.parse(msg.content.toString());
           //if(configs.debug) console.log(toCheck);
@@ -154,6 +116,7 @@ function GetWorkToDo() {
             if (err) {
               console.log(err);
             }
+            return;
           });
         }, {noAck: true});
       });
@@ -174,17 +137,6 @@ tasksQueue.drain = function() {
     console.log('All items have been processed.');
 };
 
-// _.each(tasksList, function(task) {
-//   tasksQueue.push({name: task}, function(err) {
-//     //Done
-//     if (err) {
-//       console.log(err);
-//     }
-
-//   });
-// });
-
-//Puts a tasks in front of the queue
 // tasksQueue.unshift({name: 'Most important task'}, function(err) {
 //     //Done
 //     if (err) {
