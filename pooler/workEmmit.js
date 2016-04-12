@@ -19,7 +19,7 @@ var workEmmiter = require('../modules/emmiter.js');
 function scheduler(taskList){
   logger('info','Hyme ne scheduler');
   taskList.forEach(function(task){
-    var randInt = task.interval*500+_.random(1000, 5000);
+    var randInt = task.interval*1000+_.random(1000, 5000);
     logger('info','Creating interval with ID ' + task._id);
     //TODO: kjo duhet me .then qe te mos ta bukosim queuen OSE
     // me limit OSE
@@ -51,7 +51,7 @@ function DbUpdateServices () {
 
 function startInterval (rabbit_task) {
   //if(configs.debug) console.log(services);
-  var randomInt = rabbit_task.interval*500+_.random(1000, 5000);
+  var randomInt = rabbit_task.interval*1000+_.random(1000, 5000);
   clearInterval(intervals[rabbit_task._id]);
   if(rabbit_task.running_status == true){
     logger('info','Creating interval with ID ' + rabbit_task._id);
