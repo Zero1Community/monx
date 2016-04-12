@@ -93,7 +93,7 @@ var tasksQueue = async.queue(function (tC, callback) {
     //   callback('Task went longer than the timeout..');
     // }, 60000);
 // throttle aka task concurrency , e vej
-}, 15);
+}, 50);
 
 
 function GetWorkToDo() {
@@ -101,10 +101,10 @@ function GetWorkToDo() {
     process.once('SIGINT', function() { conn.close(); });
     return conn.createChannel().then(function(ch) {
 
-      var ok = ch.assertQueue('service_checks', {durable: false});
+      var ok = ch.assertQueue('service_updates', {durable: false});
       // todo : error catching per kur nuk lidhet queueja
       ok = ok.then(function(_qok) {
-        return ch.consume('service_checks', function(msg) {
+        return ch.consume('service_updates', function(msg) {
         //return ch.consume('all_checks', function(msg) {
           logger('info',' [x] Received a task');
           var toCheck = JSON.parse(msg.content.toString());

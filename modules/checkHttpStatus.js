@@ -11,9 +11,9 @@ var https_module = require('https');
 function checkHttpStatus(data, timeout, cb) {
 	// duke parur errno.h nga headerat e kernelit variojne nga 35 deri te 133 momentalisht 
 	// + errorcodet e http 
-	    setTimeout(function() {
-						return cb({message: 'Operation Timed Out, ' + 999 , status_code : 999, status: 'ERROR'});						
-    }, 10000);
+	   //  setTimeout(function() {
+				// 		return cb({message: 'Operation Timed Out, ' + 999 , status_code : 999, status: 'ERROR'});						
+    // }, 10000);
 	var errno_h = {
 
 			EUSERS          :       'Too many users',
