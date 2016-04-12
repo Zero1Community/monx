@@ -93,7 +93,7 @@ var tasksQueue = async.queue(function (tC, callback) {
     //   callback('Task went longer than the timeout..');
     // }, 60000);
 // throttle aka task concurrency , e vej
-}, 50);
+}, 15);
 
 
 function GetWorkToDo() {
