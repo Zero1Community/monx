@@ -46,8 +46,9 @@ Install nginx
       deb http://nginx.org/packages/ubuntu/ codename nginx
       deb-src http://nginx.org/packages/ubuntu/ codename nginx
   Then we update the repos and install as follows:
-    $ apt-get update
-    $ apt-get install nginx
+  
+      $ apt-get update
+      $ apt-get install nginx
 
 Install redis
 
