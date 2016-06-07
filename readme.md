@@ -134,7 +134,7 @@ Alter the configs in the config dir according to the sample:
                         url: 'amqp://localhost',
                 },
                 mongodb: {
-                        url: 'mongodb://<USER>:<PASS>@ds031882.mongolab.com:31882/noprod'
+                        url: 'mongodb://<USER>:<PASS>@mongo_db_host|localhost:31882/noprod'
                 },
                 logs: {
                         app: true,
