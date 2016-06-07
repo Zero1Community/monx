@@ -32,8 +32,9 @@ Install nodemon:
     $ sudo npm install -g nodemon
 
 Install nginx
-    $ wget http://nginx.org/keys/nginx_signing.key
-    $ sudo apt-key add nginx_signing.key
+
+      $ wget http://nginx.org/keys/nginx_signing.key
+      $ sudo apt-key add nginx_signing.key
 
   For Debian replace codename with Debian distribution codename, and append the following to the end of the `/etc/apt/sources.list` file:
 
