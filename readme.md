@@ -27,21 +27,23 @@ Install pm2:
     $ npm install -g pm2
 
 Install nodemon:
+
     $ sudo npm install -g nodemon
 
 Install nginx
     $ wget http://nginx.org/keys/nginx_signing.key
     $ sudo apt-key add nginx_signing.key
 
-  For Debian replace codename with Debian distribution codename, and append the following to the end of the /etc/apt/sources.list file:
+  For Debian replace codename with Debian distribution codename, and append the following to the end of the `/etc/apt/sources.list` file:
 
       deb http://nginx.org/packages/debian/ codename nginx
       deb-src http://nginx.org/packages/debian/ codename nginx
 
-  For Ubuntu replace codename with Ubuntu distribution codename, and append the following to the end of the /etc/apt/sources.list file:
+  For Ubuntu replace codename with Ubuntu distribution codename, and append the following to the end of the `/etc/apt/sources.list` file:
 
       deb http://nginx.org/packages/ubuntu/ codename nginx
       deb-src http://nginx.org/packages/ubuntu/ codename nginx
+  Then we update the repos and install as follows:
     $ apt-get update
     $ apt-get install nginx
 
