@@ -19,6 +19,7 @@
 ## Installtion 
 
 Install nodejs ( from their installation script or by your own way )
+
     $ curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
     $ sudo apt-get install nodejs
 
@@ -72,11 +73,11 @@ Install mongo
 
 Clone the repo 
 
-  $ git clone git@github.com:aglipanci/monx.git
+    $ git clone git@github.com:aglipanci/monx.git
 
 Install the npm libraries
-  $ cd monx
-  $ npm install
+    $ cd monx
+    $ npm install
 
 
 Alter the configs in the config dir according to the samples
