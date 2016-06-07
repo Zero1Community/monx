@@ -19,8 +19,8 @@
 ## Installtion 
 
 Install nodejs ( from their installation script or by your own way )
-  $ curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
-  $ sudo apt-get install nodejs
+    $ curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+    $ sudo apt-get install nodejs
 
 Install pm2:
 
@@ -42,8 +42,8 @@ Install nginx
 
       deb http://nginx.org/packages/ubuntu/ codename nginx
       deb-src http://nginx.org/packages/ubuntu/ codename nginx
-  $ apt-get update
-  $ apt-get install nginx
+    $ apt-get update
+    $ apt-get install nginx
 
 Install redis
     $ sudo apt-get install build-essential
