@@ -93,7 +93,7 @@ Install redis
       $ sudo ./utils/install_server.sh
       $ sudo service redis_6379 restart
 
-Install rabbitmq
+Install rabbitmq (on debian )
 
     $ cd ~
     $ sudo echo "deb http://www.rabbitmq.com/debian/ testing main" >> /etc/apt/sources.list
@@ -113,4 +113,40 @@ Install the npm libraries
     $ npm install
 
 
-Alter the configs in the config dir according to the samples
+Alter the configs in the config dir according to the sample:
+
+        module.exports = {
+                debug : true,
+                api_url: 'http://localhost:3000/api/',
+                email: {
+                        service: 'Gmail',
+                        auth: {
+                                user: '',
+                                pass: ''
+                        },
+                        from: 'Monx <... @... >'
+                },
+                // for remote redis:
+                // redis: {
+                //   url: 'redis://user:pass@localhost:6379'
+                // },
+                rabbitmq: {
+                        url: 'amqp://localhost',
+                },
+                mongodb: {
+                        url: 'mongodb://<USER>:<PASS>@ds031882.mongolab.com:31882/noprod'
+                },
+                logs: {
+                        app: true,
+                        api: true,
+                        blacklist: true,
+                        https_tatus: true,
+                        ping: true,
+                        checker: true,
+                        emmiter: true,
+                        emmiter_lib: true,
+                        processor: true,
+                        mailer: true,
+                        model_services: true
+                }
+        }
