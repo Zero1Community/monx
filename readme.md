@@ -55,7 +55,6 @@ Configure nginx:
       as follows:
             server {
                 listen 443;
-
                     ssl    on;
                     ssl_certificate    /etc/ssl/ceftikata/monx.crt;
                     ssl_certificate_key    /etc/ssl/ceftikata/monx.key;
@@ -73,6 +72,7 @@ Configure nginx:
                     proxy_cache_bypass $http_upgrade;
                 }
             }
+    Then we:
       $ sudo ln -s /etc/nginx/sites-available/monx /etc/nginx/sites-enabled/
       $ sudo service nginx restart
 
