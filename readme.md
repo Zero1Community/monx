@@ -53,6 +53,8 @@ Install nginx
 Configure nginx:
       Generate a certificate with letsencrypt and crate the following file in `/etc/nginx/sites-available/monxSSL` 
       as follows:
+
+
             server {
                 listen 443;
                     ssl    on;
@@ -72,7 +74,9 @@ Configure nginx:
                     proxy_cache_bypass $http_upgrade;
                 }
             }
-    Then we:
+
+Then we:
+
       $ sudo ln -s /etc/nginx/sites-available/monx /etc/nginx/sites-enabled/
       $ sudo service nginx restart
 
