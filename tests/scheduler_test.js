@@ -12,7 +12,7 @@ var schedule = require('node-schedule');
 var when    = require('when');
 var amqp    = require('amqplib');
 var j = schedule;
- 
+
 
 //console.log(j.scheduledJobs);
 //j.cancelJob('jari');

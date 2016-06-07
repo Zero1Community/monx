@@ -75,15 +75,15 @@ var tasksQueue = async.queue(function (tC, callback) {
         //data['service_id'] = tC._id;
       });
     }
-    else if(tC.type === "icmp_ping"){
-      //monxPing(tC);
-    }
-    else if(tC.type === "api_route_check"){
-      // kontrollo 3-4 URL ne grup te nje API
-    }
-    else if(tC.type === "api_response_time"){
-      //monxPing(tC);
-    }
+    // else if(tC.type === "icmp_ping"){
+    //   //monxPing(tC);
+    // }
+    // else if(tC.type === "api_route_check"){
+    //   // kontrollo 3-4 URL ne grup te nje API
+    // }
+    // else if(tC.type === "api_response_time"){
+    //   //monxPing(tC);
+    // }
     else{
       console.log(tC);
       console.log('got weird data');
