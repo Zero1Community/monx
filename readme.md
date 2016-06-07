@@ -46,9 +46,35 @@ Install nginx
       deb http://nginx.org/packages/ubuntu/ codename nginx
       deb-src http://nginx.org/packages/ubuntu/ codename nginx
   Then we update the repos and install as follows:
-  
+
       $ apt-get update
       $ apt-get install nginx
+
+Configure nginx:
+      Generate a certificate with letsencrypt and crate the following file in `/etc/nginx/sites-available/monxSSL` 
+      as follows:
+            server {
+                listen 443;
+
+                    ssl    on;
+                    ssl_certificate    /etc/ssl/ceftikata/monx.crt;
+                    ssl_certificate_key    /etc/ssl/ceftikata/monx.key;
+
+                server_name  www.monx.me;
+
+                location / {
+                    proxy_pass http://127.0.0.1:3000;
+                    proxy_set_header        X-Real-IP       $remote_addr;
+                    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host $host;
+                    proxy_cache_bypass $http_upgrade;
+                }
+            }
+      $ sudo ln -s /etc/nginx/sites-available/monx /etc/nginx/sites-enabled/
+      $ sudo service nginx restart
 
 Install redis
 
@@ -78,6 +104,7 @@ Clone the repo
     $ git clone git@github.com:aglipanci/monx.git
 
 Install the npm libraries
+
     $ cd monx
     $ npm install
 
