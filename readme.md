@@ -48,16 +48,16 @@ Install nginx
     $ apt-get install nginx
 
 Install redis
-    $ sudo apt-get install build-essential
-    $ sudo apt-get install tcl8.5
-    $ cd /usr/local/src
-    $ sudo wget http://download.redis.io/releases/redis-stable.tar.gz
-    $ sudo tar xzf redis-stable.tar.gz
-    $ sudo cd redis-stable
-    $ sudo make
-    $ sudo make install
-    $ sudo ./utils/install_server.sh
-    $ sudo service redis_6379 restart
+      $ sudo apt-get install build-essential
+      $ sudo apt-get install tcl8.5
+      $ cd /usr/local/src
+      $ sudo wget http://download.redis.io/releases/redis-stable.tar.gz
+      $ sudo tar xzf redis-stable.tar.gz
+      $ sudo cd redis-stable
+      $ sudo make
+      $ sudo make install
+      $ sudo ./utils/install_server.sh
+      $ sudo service redis_6379 restart
 
 Install rabbitmq
 
