@@ -144,21 +144,21 @@ def checkHttpStatus(httpStatObject):
 
 
 
-def post_to_api(data):
+def post_to_api(pdata):
 	try :
 		api_url = 'https://www.monx.me/api/service-data/add'
-		pdata = {
-			'message': data['message'],
-			'status': data['status'],
-			'service_id': data['service_id'],
-			'user': data['user'],
-			'status_code': data['status_code'],
-			'name': data['name']
+		data = {
+			'message': pdata['message'],
+			'status': pdata['status'],
+			'service_id': pdata['service_id'],
+			'user': pdata['user'],
+			'status_code': pdata['status_code'],
+			'name': pdata['name']
 		}
 
 		req = Request(api_url)
 		req.add_header('Content-Type','application/json')
-		urlopen(req,json.dumps(data))
+		urlopen(req,json.dumps({'data' : data}))
 	except HTTPError as e:
 		print 'HTTP Post error' + str(e)
 
