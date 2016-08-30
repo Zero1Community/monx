@@ -8,10 +8,10 @@ var Notification = require('../models/notification.js');
 var configs      = require('../config/configs.js');
 var m            = require('../middlewares/middlewares.js');
 var util         = require('util');
+//var logger       = require('../modules/logger.js')('services', configs.logs.services);
 var logger       = require('../modules/logger.js');
 var mongoose     = require('mongoose');
 var workEmmiter  = require('../modules/emmiter.js');
-var logger       = require('../modules/logger.js')('services', configs.logs.services);
 
 
   //TODO: mini admin pannel 

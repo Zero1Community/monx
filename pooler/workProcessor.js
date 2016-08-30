@@ -1,7 +1,7 @@
 var configs = require('../config/configs.js');
 var amqp    = require('amqplib');
-//var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
-var logger  = require('../modules/logger.js');
+var logger  = require('../modules/logger.js')('workProcessor', configs.logs.processor);
+//var logger  = require('../modules/logger.js');
 
 
 //var checkRBL = require('../modules/checkBlacklist.js');

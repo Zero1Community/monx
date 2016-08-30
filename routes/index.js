@@ -5,7 +5,7 @@ var router       = express.Router();
 var m            = require('../middlewares/middlewares.js');
 var logger       = require('../modules/logger.js');
 var configs      = require('../config/configs.js');
-var logger       = require('../modules/logger.js')('dashboard', configs.logs.dashboard);
+//var logger       = require('../modules/logger.js')('dashboard', configs.logs.dashboard);
 var logger       = require('../modules/logger.js');
 
 router.get('/dashboard', m.isAuthenticated, function(req, res, next) {
