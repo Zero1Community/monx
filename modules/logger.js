@@ -66,8 +66,8 @@ module.exports = logger;
 //module.exports = initLogger;
 
 //for express
-// module.exports.stream = {
-//     write: function(message, encoding){
-//         logger.info(message, {module:'app'});
-//     }
-// };
+module.exports.stream = {
+    write: function(message, encoding){
+        logger.info(message, {module:'app'});
+    }
+};
