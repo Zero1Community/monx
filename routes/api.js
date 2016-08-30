@@ -43,8 +43,9 @@ router.post('/service-data/add', function(req, res){
 	// TODO: duhet bo extend ky dhe duhet kaluar me poshte
 	// mbasi eshte gjetur objekti ne menyre qe te fusim edhe EMRIN e sherbimit te subjekti
 	var data = req.body.data;
-	logger('debug', 'API data from post: ')
-	logger('debug', data);
+	logger('info', 'API data from post: ')
+	//logger('debug', data);
+	console.log(data)
 
 	if (!data['source']) {
 		data['source'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
