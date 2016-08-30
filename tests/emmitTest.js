@@ -19,7 +19,7 @@ var workEmmiter = require('../modules/emmiter.js');
 function scheduler(taskList){
   logger('info','Hyme ne scheduler');
   taskList.forEach(function(task){
-    var randInt = task.interval*1000+_.random(1000, 5000);
+    var randInt = task.interval*1000 + _.random(1000, 5000);
     logger('info','Creating interval with ID ' + task._id);
     //TODO: kjo duhet me .then qe te mos ta bukosim queuen OSE
     // me limit OSE
@@ -30,21 +30,19 @@ function scheduler(taskList){
     intervals[task._id] = setInterval(function(task) {
       logger('info','[scheduler ] Po monitorojme '+ task.name);
       logger('info','[scheduler ] Me interval '+ randInt);
-      //workEmmiter(task,'all_checks');
-      workEmmiter(task,'service_checks');
+      workEmmiter(task,'all_checks');
     }, randInt, task);
   });
 }
 
-function DbUpdateServices () {
-
+function DbUpdateServices(){
   mongoose.connect(configs.mongodb.url);
-  logger('info','Duke marre nga DB');
+  logger('info','Getting data from the DB');
 
   Service.find({running_status : true}, function(err, services) {
     //TODO: po kur nuk gje gjo ?
     logger('debug',services);
-    scheduler(services);
+    //scheduler(services);
     mongoose.connection.close();
   });
 }
@@ -59,51 +57,50 @@ function startInterval (rabbit_task) {
       //let's emmit the work on RabbitMQ
       logger('info','[start interval ] Po monitorojme '+ rabbit_task.name);
       logger('info','[start interval ] Me interval '+ randomInt);
-      //workEmmiter(rabbit_task,'all_checks');
-      workEmmiter(rabbit_task,'service_checks');
+      workEmmiter(rabbit_task,'all_checks');
       //if(configs.debug) console.log(task);
     }, randomInt , rabbit_task);
   }
 }
 
+function ListenForServiceUpdates () {
+  amqp.connect(configs.rabbitmq.url).then(function(conn) {
+    process.once('SIGINT', function() { conn.close(); });
+    return conn.createChannel().then(function(ch) {
+
+      var ok = ch.assertQueue('service_updates', {durable: false});
+      // todo : error catching per kur nuk lidhet queueja
+      ok = ok.then(function(_qok) {
+        return ch.consume('service_updates', function(msg) {
+          logger('info',' [x] Received a service update task');
+          var toCheck = JSON.parse(msg.content.toString());
+          //if(configs.debug) console.log(toCheck);
+          startInterval(toCheck);
+          workEmmiter(toCheck,'all_checks');
+          //if(configs.debug) console.log(msg);
+        }, {noAck: true});
+      }).catch(function (err){
+        logger('error',err);
+        process.exit(1);
+      });
 
 
-DbUpdateServices();
-
-amqp.connect(configs.rabbitmq.url).then(function(conn) {
-  process.once('SIGINT', function() { conn.close(); });
-  return conn.createChannel().then(function(ch) {
-
-    var ok = ch.assertQueue('service_updates', {durable: false});
-    // todo : error catching per kur nuk lidhet queueja
-    ok = ok.then(function(_qok) {
-      return ch.consume('service_updates', function(msg) {
-        logger('info',' [x] Received a service update task');
-        var toCheck = JSON.parse(msg.content.toString());
-        //if(configs.debug) console.log(toCheck);
-        startInterval(toCheck);
-        //workEmmiter(toCheck,'all_checks');
-        workEmmiter(toCheck,'service_checks');
-        //if(configs.debug) console.log(msg);
-      }, {noAck: true});
+      // TODO: handle the errors here and catch the .exit(1); its ugly, its bad and I should feel bad
+      return ok.then(function (consumeOk) {
+        logger('info',' [*] Waiting for messages. To exit press CTRL+C');
+      }).catch(function (err){
+        logger('error',err);
+        process.exit(1);
+      });
     }).catch(function (err){
       logger('error',err);
       process.exit(1);
     });
-
-
-    // TODO: handle the errors here and catch the .exit(1); its ugly, its bad and I should feel bad
-    return ok.then(function (consumeOk) {
-      logger('info',' [*] Waiting for messages. To exit press CTRL+C');
-    }).catch(function (err){
-      logger('error',err);
-      process.exit(1);
-    });
-  }).catch(function (err){
+  }).then(null, logger('info',console.warn)).catch(function (err){
     logger('error',err);
     process.exit(1);
   });
-}).then(null, logger('info',console.warn)).catch(function (err){
-  logger('error',err);
-  process.exit(1);
-});
+}
+
+DbUpdateServices();
+//ListenForServiceUpdates();
