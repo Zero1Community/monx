@@ -9,7 +9,10 @@ var Service  = require('../models/service.js');
 var _        = require('underscore');
 
 //var logger   = require('../modules/logger.js')('workEmmit', configs.logs.emmiter);
-var logger   = require('../modules/logger.js');
+function logger(level,msg){
+  console.log(level + ' ' + msg);
+}
+
 
 var intervals = [];
 var total_services = [];

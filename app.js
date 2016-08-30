@@ -10,7 +10,7 @@ var m                = require('./middlewares/middlewares.js');
 var paginate         = require('express-paginate');
 var moment           = require('moment');
 var configs          = require('./config/configs.js');
-//var logger           = require('./modules/logger.js')('app', configs.logs.app);
+var logger           = require('./modules/logger.js')('app', configs.logs.app);
 var logger           = require('./modules/logger.js');
 var mongoose         = require('mongoose');
 

@@ -6,7 +6,7 @@ var crypto      = require('crypto');
 var Mailer      = require('../modules/mailer.js');
 var async       = require('async');
 var configs     = require('../config/configs.js');
-//var logger      = require('../modules/logger.js')('users', configs.logs.users);
+var logger      = require('../modules/logger.js')('users', configs.logs.users);
 var logger      = require('../modules/logger.js');
 var bCrypt      = require('bcrypt-nodejs');
 

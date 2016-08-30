@@ -1,7 +1,7 @@
 var express      = require('express');
 var router       = express.Router();
 var dns          = require('dns');
-//var checkRBL     = require('../modules/checkBlacklist.js');
+var checkRBL     = require('../modules/checkBlacklist.js');
 var Service      = require('../models/service.js');
 var ServiceData  = require('../models/service_data.js');
 var Notification = require('../models/notification.js');
@@ -11,7 +11,7 @@ var util         = require('util');
 var logger       = require('../modules/logger.js');
 var mongoose     = require('mongoose');
 var workEmmiter  = require('../modules/emmiter.js');
-//var logger       = require('../modules/logger.js')('services', configs.logs.services);
+var logger       = require('../modules/logger.js')('services', configs.logs.services);
 var logger       = require('../modules/logger.js');
 
 

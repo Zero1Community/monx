@@ -62,8 +62,8 @@ function initLogger(prefix, status){
 }
 
 
+module.exports = initLogger;
 module.exports = logger;
-//module.exports = initLogger;
 
 //for express
 module.exports.stream = {
