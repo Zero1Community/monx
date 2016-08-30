@@ -49,7 +49,7 @@ amqp.connect(configs.rabbitmq.url).then(function(conn) {
 				logger('info',' [x] Received a task');
 				var toCheck = JSON.parse(msg.content.toString());
 				//if(configs.debug) console.log(toCheck);
-				logger('debug',toCheck);
+				logger('info',toCheck);
 				processWork(toCheck);
 			}, {noAck: true});
 		});
@@ -94,7 +94,7 @@ function processWork(tC,callback){
 function postToAPI (data) {
 	//TODO https if
 	logger('info', 'Posting data to API');
-	logger('debug', data);
+	logger('info', data);
 	//if(configs.debug) console.log('Data received', data);
 	var options = {
 		uri: configs.api_url + 'service-data/add',
@@ -113,11 +113,11 @@ function postToAPI (data) {
 		}
 	};
 	if(data.dump != null){
-		logger('debug', 'Adding content to API Call');
+		logger('info', 'Adding content to API Call');
 		options.json.data.content = data.dump;
 	}
 	else{
-		logger('debug', 'No HTML error content added to API call ');
+		logger('info', 'No HTML error content added to API call ');
 	}
 
 	request(options, function(error, response, body){
@@ -126,7 +126,7 @@ function postToAPI (data) {
 			logger('error',error);
 		} else {
 			logger('info','Data posted to API!');
-			logger('debug',response.statusCode);
+			logger('info',response.statusCode);
 		}
 	});
 }
@@ -219,7 +219,7 @@ function monxBlacklist(blacklistObject){
 			else{
 				cleanStatus.push(totalResults[i]);
 			}
-			logger('debug',totalResults[i]);
+			logger('info',totalResults[i]);
 		}
 	// TODO: FIX THIS, unable to reach API
 	//   Error
