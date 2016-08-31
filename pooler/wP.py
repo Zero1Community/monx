@@ -178,8 +178,8 @@ def processWork(tC):
 	data['user'] = tC['user']
 	data['name'] = tC['name']
 	data['service_id'] = tC['_id']
-	print data
-	#post_to_api(data)
+	#print data
+	post_to_api(data)
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
