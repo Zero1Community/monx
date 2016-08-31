@@ -5,6 +5,7 @@ import errno
 import sys
 import pika
 import json
+import time
 import signal
 
 def checkHttpStatus(httpStatObject):
@@ -144,23 +145,23 @@ def checkHttpStatus(httpStatObject):
 
 
 
-def post_to_api(pdata):
-	try :
-		api_url = 'http://localhost:3000/api/service-data/add'
-		data = {
-			'message': pdata['message'],
-			'status': pdata['status'],
-			'service_id': pdata['service_id'],
-			'user': pdata['user'],
-			'status_code': pdata['status_code'],
-			'name': pdata['name']
-		}
+# def post_to_api(pdata):
+# 	try :
+# 		api_url = 'http://localhost:3000/api/service-data/add'
+# 		data = {
+# 			'message': pdata['message'],
+# 			'status': pdata['status'],
+# 			'service_id': pdata['service_id'],
+# 			'user': pdata['user'],
+# 			'status_code': pdata['status_code'],
+# 			'name': pdata['name']
+# 		}
 
-		req = Request(api_url)
-		req.add_header('Content-Type','application/json')
-		urlopen(req,json.dumps({'data' : data}))
-	except HTTPError as e:
-		print 'HTTP Post error' + str(e)
+# 		req = Request(api_url)
+# 		req.add_header('Content-Type','application/json')
+# 		urlopen(req,json.dumps({'data' : data}))
+# 	except HTTPError as e:
+# 		print 'HTTP Post error' + str(e)
 
 # TODO: port scan, ssl check, smtp, ping and other stuff like that
 def processWork(tC):
@@ -178,19 +179,22 @@ def processWork(tC):
 	data['name'] = tC['name']
 	data['service_id'] = tC['_id']
 	print data
-	post_to_api(data)
+	#post_to_api(data)
 
-connection = pika.BlockingConnection()
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
-# TODO: add exeptions here
-for method_frame, properties, body in channel.consume('service_checks'):
-		processWork(json.loads(body))
-		channel.basic_ack(method_frame.delivery_tag)
-		# Escape out of the loop after 10 messages
-		#if method_frame.delivery_tag == 10:
-		#    break
 
-# Cancel the consumer and return any pending messages
-requeued_messages = channel.cancel()
-print 'Requeued %i messages' % requeued_messages
-connection.close()
+channel.queue_declare(queue='service_checks', durable=False)
+print(' [*] Waiting for messages. To exit press CTRL+C')
+
+def callback(ch, method, properties, body):
+    print(" [x] Received %r" % body)
+    print json.loads(body)    
+    time.sleep(body.count(b'.'))
+    print(" [x] Done")
+    ch.basic_ack(delivery_tag = method.delivery_tag)
+
+channel.basic_qos(prefetch_count=1)
+channel.basic_consume(callback,queue='service_checks')
+
+channel.start_consuming()
