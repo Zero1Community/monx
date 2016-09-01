@@ -143,7 +143,6 @@ def checkHttpStatus(httpStatObject):
 
 
 def post_to_api(pdata):
-	try :
 		api_url = 'http://localhost:3000/api/service-data/add'
 		data = {
 			'message': pdata['message'],
@@ -156,10 +155,14 @@ def post_to_api(pdata):
 
 		req = Request(api_url)
 		req.add_header('Content-Type','application/json')
+	try :
 		urlopen(req,json.dumps({'data' : data}))
-
 	except HTTPError as e:
-		print 'HTTP Post error' + str(e)
+		print 'HTTP Issue while posting to API ' + str(e)
+	except URLError as e:
+		print 'L4 Issue while posting to API ' + str(e)
+	except SocketError as e:
+		print 'Socket Issue while posting to API ' + str(e)
 
 
 # TODO: port scan, ssl check, smtp, ping and other stuff like that

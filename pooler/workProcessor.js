@@ -12,22 +12,6 @@ var workEmmiter  = require('../modules/emmiter.js');
 var request = require('request');
 var http = require('http');
 
-
-
-var memwatch = require('memwatch-next');
-var heapdump = require('heapdump');
-
-
-memwatch.on('leak', function(info) {
- console.error(info);
- var file = '/home/monx/monx/workprocessor_' + process.pid + '-' + Date.now() + '.heapsnapshot';
- heapdump.writeSnapshot(file, function(err){
-   if (err) logger('error',err);
-   else logger('info','Wrote snapshot: ' + file);
-  });
-});
-
-
 // TODO: error handling post to api
 
 
@@ -221,19 +205,7 @@ function monxBlacklist(blacklistObject){
 			}
 			logger('info',totalResults[i]);
 		}
-	// TODO: FIX THIS, unable to reach API
-	//   Error
-	// { [Error: connect ECONNREFUSED]
-	//   code: 'ECONNREFUSED',
-	//   errno: 'ECONNREFUSED',
-	//   syscall: 'connect' }
-	// undefined
-	// Error
-	// { [Error: connect ECONNREFUSED]
-	//   code: 'ECONNREFUSED',
-	//   errno: 'ECONNREFUSED',
-	//   syscall: 'connect' }
-	// undefined
+
 		var data = {
 			message: {
 				listed : blackStatus,
