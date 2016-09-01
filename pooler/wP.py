@@ -155,7 +155,7 @@ def post_to_api(pdata):
 
 		req = Request(api_url)
 		req.add_header('Content-Type','application/json')
-	try :
+	try:
 		urlopen(req,json.dumps({'data' : data}))
 	except HTTPError as e:
 		print 'HTTP Issue while posting to API ' + str(e)
