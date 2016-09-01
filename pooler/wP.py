@@ -133,13 +133,10 @@ def checkHttpStatus(httpStatObject):
 				return {'message': 'HTTP issues, error code: ' + str(e.code) , 'status_code' : str(e.reason), 'status': 'ERROR'}	    
 	except URLError as e:
 	# errore layer 4 
-			#print 'Connectivity issues, error code: ', str(e.reason) , " " , httpStatObject['host']
 			return {'message': 'Connectivity issues, error code: ' + str(e.reason) , 'status_code' : str(e.reason), 'status': 'ERROR'}	    
 	except SocketError as e:
-			#print 'Connectivity issues, error code: ', str(e.errno) , " " , httpStatObject['host']
 			return {'message': 'Socket issue, error code: ' + str(e.errno) , 'status_code' : str(e.errno), 'status': 'ERROR'}
 	else:
-			#print response.code , error_list[str(response.code)] , " " , httpStatObject['host']
 			return {'message': 'Status OK ', 'status_code' : response.code, 'status': 'OK'}
 
 
@@ -199,5 +196,4 @@ def callback(ch, method, properties, body):
 
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(callback,queue='service_checks')
-
 channel.start_consuming()
