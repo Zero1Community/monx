@@ -147,7 +147,7 @@ def checkHttpStatus(httpStatObject):
 
 def post_to_api(pdata):
 	try :
-		api_url = 'http://localhost:3000/service-data/add'
+		api_url = 'http://localhost:3000/api/service-data/add'
 		data = {
 			'message': pdata['message'],
 			'status': pdata['status'],
@@ -160,8 +160,10 @@ def post_to_api(pdata):
 		req = Request(api_url)
 		req.add_header('Content-Type','application/json')
 		urlopen(req,json.dumps({'data' : data}))
+
 	except HTTPError as e:
 		print 'HTTP Post error' + str(e)
+
 
 # TODO: port scan, ssl check, smtp, ping and other stuff like that
 def processWork(tC):
@@ -190,6 +192,7 @@ print(' [*] Waiting for messages. To exit press CTRL+C')
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body)
     print json.loads(body)    
+    processWork(json.loads(body))
     time.sleep(body.count(b'.'))
     print(" [x] Done")
     ch.basic_ack(delivery_tag = method.delivery_tag)
