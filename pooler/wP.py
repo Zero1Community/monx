@@ -147,7 +147,7 @@ def checkHttpStatus(httpStatObject):
 
 def post_to_api(pdata):
 	try :
-		api_url = 'http://localhost:3000/api/service-data/add'
+		api_url = 'http://localhost:3000/service-data/add'
 		data = {
 			'message': pdata['message'],
 			'status': pdata['status'],
